@@ -1,0 +1,14 @@
+{
+  "name": "archontic-wars-starknet",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "mprocs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mprocs": "^0.7.1"
+  }
+}

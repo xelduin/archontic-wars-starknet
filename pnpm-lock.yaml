@@ -1,0 +1,18 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  mprocs:
+    specifier: ^0.7.1
+    version: 0.7.1
+
+packages:
+
+  /mprocs@0.7.1:
+    resolution: {integrity: sha512-v22SIwcOphZm6XLdNfeHf4ZDYHqV1hghyfqNLwmZ604lEXlEkiuazYBWUz3xEB2GdABEAKfCZ8qiOVIoREM6CQ==}
+    engines: {node: '>=0.10.0'}
+    hasBin: true
+    dev: false

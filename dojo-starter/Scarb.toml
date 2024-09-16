@@ -7,6 +7,8 @@ version = "0.1.0"
 sierra-replace-ids = true
 
 [scripts]
+dev = "./scripts/dev.sh"
+torii = "./scripts/torii.sh"
 migrate = "sozo build && sozo migrate apply"
 spawn = "./scripts/spawn.sh"
 move = "./scripts/move.sh"

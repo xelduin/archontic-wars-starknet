@@ -1,0 +1,10 @@
+procs:
+  client:
+    cwd: client
+    shell: pnpm run dev
+  contracts:
+    cwd: dojo-starter
+    shell: scarb run dev
+  torii:
+    cwd: dojo-starter
+    shell: scarb run torii
