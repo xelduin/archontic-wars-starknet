@@ -5,7 +5,7 @@ pushd $(dirname "$0")/..
 (
     sleep 5
 
-    sozo build
+    sozo build --typescript --manifest-path ./Scarb.toml --bindings-output ../client/src/dojo/
 
     sozo migrate apply
 ) &
