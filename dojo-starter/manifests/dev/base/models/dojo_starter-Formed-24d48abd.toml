@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x164dfd975e1358eb15cb8b116b5e327a3b645827015d2b72d800afd548501aa"
+original_class_hash = "0x164dfd975e1358eb15cb8b116b5e327a3b645827015d2b72d800afd548501aa"
+abi = "manifests/dev/base/abis/models/dojo_starter-Formed-24d48abd.json"
+tag = "dojo_starter-Formed"
+qualified_path = "dojo_starter::systems::formations::formations::formed"
+manifest_name = "dojo_starter-Formed-24d48abd"
+
+[[members]]
+name = "player"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "direction"
+type = "Position"
+key = false

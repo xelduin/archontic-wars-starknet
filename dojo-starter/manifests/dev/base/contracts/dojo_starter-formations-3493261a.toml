@@ -1,0 +1,11 @@
+kind = "DojoContract"
+class_hash = "0x1dfe68cfc139ffbbf32124d850c09f928a9d6ccbaba227b09bf7507e6926821"
+original_class_hash = "0x1dfe68cfc139ffbbf32124d850c09f928a9d6ccbaba227b09bf7507e6926821"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-formations-3493261a.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-formations"
+systems = ["spawn"]
+manifest_name = "dojo_starter-formations-3493261a"

@@ -23,15 +23,6 @@ export function createSystemCalls(
   const spawn = async (account: Account) => {
     const entityId = getEntityIdFromKeys([BigInt(account.address)]) as Entity;
 
-    const movesId = uuid();
-    Moves.addOverride(movesId, {
-      entity: entityId,
-      value: {
-        player: BigInt(entityId),
-        remaining: (getComponentValue(Moves, entityId)?.remaining || 0) + 100,
-      },
-    });
-
     const positionId = uuid();
     Position.addOverride(positionId, {
       entity: entityId,
@@ -45,7 +36,7 @@ export function createSystemCalls(
     });
 
     try {
-      await client.actions.spawn({
+      await client.formations.spawn({
         account,
       });
 
@@ -54,9 +45,11 @@ export function createSystemCalls(
       await new Promise<void>((resolve) => {
         defineSystem(
           world,
-          [Has(Moves), HasValue(Moves, { player: BigInt(account.address) })],
+          [
+            Has(Position),
+            HasValue(Position, { player: BigInt(account.address) }),
+          ],
           () => {
-            console.info("HELLO");
             resolve();
           }
         );
@@ -64,10 +57,8 @@ export function createSystemCalls(
     } catch (e) {
       console.log(e);
       Position.removeOverride(positionId);
-      Moves.removeOverride(movesId);
     } finally {
       Position.removeOverride(positionId);
-      Moves.removeOverride(movesId);
     }
   };
 

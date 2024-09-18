@@ -42,6 +42,20 @@ systems = [
 ]
 manifest_name = "dojo_starter-actions-7a1c7102"
 
+[[contracts]]
+kind = "DojoContract"
+address = "0x9de49fd17558ef8ce459ac2a038622b1476b6febee7edad8bcd4e1134fe958"
+class_hash = "0x1dfe68cfc139ffbbf32124d850c09f928a9d6ccbaba227b09bf7507e6926821"
+original_class_hash = "0x1dfe68cfc139ffbbf32124d850c09f928a9d6ccbaba227b09bf7507e6926821"
+base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
+abi = "manifests/dev/deployment/abis/contracts/dojo_starter-formations-3493261a.json"
+reads = []
+writes = ["dojo_starter-Position"]
+init_calldata = []
+tag = "dojo_starter-formations"
+systems = ["spawn"]
+manifest_name = "dojo_starter-formations-3493261a"
+
 [[models]]
 kind = "DojoModel"
 class_hash = "0x72c6666cfeebc41544f502cfe9c32ad7b91fce12881709420335794dfcb324a"
@@ -59,6 +73,25 @@ key = true
 [[models.members]]
 name = "directions"
 type = "Array<Direction>"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x164dfd975e1358eb15cb8b116b5e327a3b645827015d2b72d800afd548501aa"
+original_class_hash = "0x164dfd975e1358eb15cb8b116b5e327a3b645827015d2b72d800afd548501aa"
+abi = "manifests/dev/deployment/abis/models/dojo_starter-Formed-24d48abd.json"
+tag = "dojo_starter-Formed"
+qualified_path = "dojo_starter::systems::formations::formations::formed"
+manifest_name = "dojo_starter-Formed-24d48abd"
+
+[[models.members]]
+name = "player"
+type = "ContractAddress"
+key = true
+
+[[models.members]]
+name = "direction"
+type = "Position"
 key = false
 
 [[models]]
