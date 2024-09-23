@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x84e243f594bac679e448ada52e1b9a661acead90ecb950eeac07a719fa3bb7"
-original_class_hash = "0x84e243f594bac679e448ada52e1b9a661acead90ecb950eeac07a719fa3bb7"
+class_hash = "0x30a40b07bcfd74b57e418935ccc04007bb49d0f800ccb2a2b637f73b88ae672"
+original_class_hash = "0x30a40b07bcfd74b57e418935ccc04007bb49d0f800ccb2a2b637f73b88ae672"
 abi = "manifests/dev/base/abis/models/dojo_starter-LooshBalance-1b3f3b11.json"
 tag = "dojo_starter-LooshBalance"
 qualified_path = "dojo_starter::models::loosh_balance::loosh_balance"
@@ -8,7 +8,7 @@ manifest_name = "dojo_starter-LooshBalance-1b3f3b11"
 
 [[members]]
 name = "entity"
-type = "ContractAddress"
+type = "u32"
 key = true
 
 [[members]]

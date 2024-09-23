@@ -363,26 +363,26 @@
   },
   {
     "type": "impl",
-    "name": "ownerImpl",
-    "interface_name": "dojo_starter::models::owner::Iowner"
+    "name": "dust_pool_enteredImpl",
+    "interface_name": "dojo_starter::systems::dust_system::dust_system::Idust_pool_entered"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::owner::Owner",
+    "name": "dojo_starter::systems::dust_system::dust_system::DustPoolEntered",
     "members": [
       {
-        "name": "entity",
+        "name": "body_id",
         "type": "core::integer::u32"
       },
       {
-        "name": "owner_address",
-        "type": "core::starknet::contract_address::ContractAddress"
+        "name": "pool_id",
+        "type": "core::integer::u32"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::owner::Iowner",
+    "name": "dojo_starter::systems::dust_system::dust_system::Idust_pool_entered",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::owner::Owner"
+            "type": "dojo_starter::systems::dust_system::dust_system::DustPoolEntered"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::owner::owner::Event",
+    "name": "dojo_starter::systems::dust_system::dust_system::dust_pool_entered::Event",
     "kind": "enum",
     "variants": []
   }

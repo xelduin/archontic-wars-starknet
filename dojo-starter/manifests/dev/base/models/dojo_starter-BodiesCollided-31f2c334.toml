@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x7816285522d5fd0774c796e6d67272fb5bb18f187a18d6ce043981c6a05433a"
+original_class_hash = "0x7816285522d5fd0774c796e6d67272fb5bb18f187a18d6ce043981c6a05433a"
+abi = "manifests/dev/base/abis/models/dojo_starter-BodiesCollided-31f2c334.json"
+tag = "dojo_starter-BodiesCollided"
+qualified_path = "dojo_starter::systems::body_movement::body_movement::bodies_collided"
+manifest_name = "dojo_starter-BodiesCollided-31f2c334"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "target_id"
+type = "u32"
+key = false
+
+[[members]]
+name = "mass_change_body"
+type = "i64"
+key = false
+
+[[members]]
+name = "mass_change_target"
+type = "i64"
+key = false

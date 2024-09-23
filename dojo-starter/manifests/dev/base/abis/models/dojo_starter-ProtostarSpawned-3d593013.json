@@ -363,26 +363,30 @@
   },
   {
     "type": "impl",
-    "name": "ownerImpl",
-    "interface_name": "dojo_starter::models::owner::Iowner"
+    "name": "protostar_spawnedImpl",
+    "interface_name": "dojo_starter::systems::body_creation::body_creation::Iprotostar_spawned"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::owner::Owner",
+    "name": "dojo_starter::systems::body_creation::body_creation::ProtostarSpawned",
     "members": [
       {
-        "name": "entity",
+        "name": "archetype_id",
         "type": "core::integer::u32"
       },
       {
-        "name": "owner_address",
-        "type": "core::starknet::contract_address::ContractAddress"
+        "name": "x",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "y",
+        "type": "core::integer::u64"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::owner::Iowner",
+    "name": "dojo_starter::systems::body_creation::body_creation::Iprotostar_spawned",
     "items": [
       {
         "type": "function",
@@ -390,7 +394,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::owner::Owner"
+            "type": "dojo_starter::systems::body_creation::body_creation::ProtostarSpawned"
           }
         ],
         "outputs": [],
@@ -400,7 +404,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::owner::owner::Event",
+    "name": "dojo_starter::systems::body_creation::body_creation::protostar_spawned::Event",
     "kind": "enum",
     "variants": []
   }

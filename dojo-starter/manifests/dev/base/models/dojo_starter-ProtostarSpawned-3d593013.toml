@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x339b8ce28cc8580120e7c524263092326025e0a81f623db23af9706870ff724"
+original_class_hash = "0x339b8ce28cc8580120e7c524263092326025e0a81f623db23af9706870ff724"
+abi = "manifests/dev/base/abis/models/dojo_starter-ProtostarSpawned-3d593013.json"
+tag = "dojo_starter-ProtostarSpawned"
+qualified_path = "dojo_starter::systems::body_creation::body_creation::protostar_spawned"
+manifest_name = "dojo_starter-ProtostarSpawned-3d593013"
+
+[[members]]
+name = "archetype_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "x"
+type = "u64"
+key = false
+
+[[members]]
+name = "y"
+type = "u64"
+key = false

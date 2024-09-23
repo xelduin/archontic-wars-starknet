@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x6c2ba3ec6d8197741b928064b6a3e6578c5778281dd2de25c9cde8912a0ef1e"
+original_class_hash = "0x6c2ba3ec6d8197741b928064b6a3e6578c5778281dd2de25c9cde8912a0ef1e"
+abi = "manifests/dev/base/abis/models/dojo_starter-LooshTransferred-2f915f92.json"
+tag = "dojo_starter-LooshTransferred"
+qualified_path = "dojo_starter::systems::loosh::loosh::loosh_transferred"
+manifest_name = "dojo_starter-LooshTransferred-2f915f92"
+
+[[members]]
+name = "sender"
+type = "u32"
+key = true
+
+[[members]]
+name = "receiver"
+type = "u32"
+key = false
+
+[[members]]
+name = "amount"
+type = "u64"
+key = false

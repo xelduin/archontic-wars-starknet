@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x4c4c2f6f119fb098b160d0e5a3a988fd11f0e231648a6bdf479080027ac212e"
+original_class_hash = "0x4c4c2f6f119fb098b160d0e5a3a988fd11f0e231648a6bdf479080027ac212e"
+abi = "manifests/dev/base/abis/models/dojo_starter-AsteroidsFormed-47175954.json"
+tag = "dojo_starter-AsteroidsFormed"
+qualified_path = "dojo_starter::systems::body_creation::body_creation::asteroids_formed"
+manifest_name = "dojo_starter-AsteroidsFormed-47175954"
+
+[[members]]
+name = "star_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "cluster_id"
+type = "u32"
+key = false

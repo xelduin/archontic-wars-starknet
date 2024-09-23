@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x46662af050790a5b0bfa27a824d3e94177e38be7a6099fd9bcc390420cbc039"
-original_class_hash = "0x46662af050790a5b0bfa27a824d3e94177e38be7a6099fd9bcc390420cbc039"
+class_hash = "0x38beadea11be121a1c58802408fa5f633f23aac1f2d0f15e0fb2f80f91af048"
+original_class_hash = "0x38beadea11be121a1c58802408fa5f633f23aac1f2d0f15e0fb2f80f91af048"
 abi = "manifests/dev/base/abis/models/dojo_starter-Incubation-3de7afb2.json"
 tag = "dojo_starter-Incubation"
 qualified_path = "dojo_starter::models::incubation::incubation"
@@ -8,7 +8,7 @@ manifest_name = "dojo_starter-Incubation-3de7afb2"
 
 [[members]]
 name = "entity"
-type = "ContractAddress"
+type = "u32"
 key = true
 
 [[members]]

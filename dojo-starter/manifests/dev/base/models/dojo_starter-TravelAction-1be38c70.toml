@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x2e4ae20ee5c00831cf77f94cf754f246b19059c2e7f0a52bfd290f6233bc76d"
-original_class_hash = "0x2e4ae20ee5c00831cf77f94cf754f246b19059c2e7f0a52bfd290f6233bc76d"
+class_hash = "0x5b105dd6a3d08d2b65aeaf97d1ed5447182262a4f6e4c86a4dd971e4281a0b1"
+original_class_hash = "0x5b105dd6a3d08d2b65aeaf97d1ed5447182262a4f6e4c86a4dd971e4281a0b1"
 abi = "manifests/dev/base/abis/models/dojo_starter-TravelAction-1be38c70.json"
 tag = "dojo_starter-TravelAction"
 qualified_path = "dojo_starter::models::travel_action::travel_action"
@@ -8,7 +8,7 @@ manifest_name = "dojo_starter-TravelAction-1be38c70"
 
 [[members]]
 name = "entity"
-type = "ContractAddress"
+type = "u32"
 key = true
 
 [[members]]

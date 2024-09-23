@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x1032f8735deb132fc4e700ed950e7336b031d45766fe13f40a90f67c4cd54d5"
+original_class_hash = "0x1032f8735deb132fc4e700ed950e7336b031d45766fe13f40a90f67c4cd54d5"
+abi = "manifests/dev/base/abis/models/dojo_starter-StarFormed-4b442116.json"
+tag = "dojo_starter-StarFormed"
+qualified_path = "dojo_starter::systems::body_creation::body_creation::star_formed"
+manifest_name = "dojo_starter-StarFormed-4b442116"
+
+[[members]]
+name = "protostar_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "timestamp"
+type = "u64"
+key = false

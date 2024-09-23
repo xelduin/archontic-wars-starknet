@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x56008e4db591a574adf31af3e513b38ba2f920015d399885c17bdc928986fa0"
-original_class_hash = "0x56008e4db591a574adf31af3e513b38ba2f920015d399885c17bdc928986fa0"
+class_hash = "0x32bfe49bded21656c1f72d4ed15ad3cad7f2fe84bfd99288dc5c5c4a72507da"
+original_class_hash = "0x32bfe49bded21656c1f72d4ed15ad3cad7f2fe84bfd99288dc5c5c4a72507da"
 abi = "manifests/dev/base/abis/models/dojo_starter-Owner-4375b147.json"
 tag = "dojo_starter-Owner"
 qualified_path = "dojo_starter::models::owner::owner"
@@ -8,7 +8,7 @@ manifest_name = "dojo_starter-Owner-4375b147"
 
 [[members]]
 name = "entity"
-type = "ContractAddress"
+type = "u32"
 key = true
 
 [[members]]

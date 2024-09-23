@@ -1,0 +1,16 @@
+kind = "DojoContract"
+class_hash = "0x2496b488fffbcd46ab03c0cc03da69bb1ebb18591561e742f6b693c5730311c"
+original_class_hash = "0x2496b488fffbcd46ab03c0cc03da69bb1ebb18591561e742f6b693c5730311c"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-body_creation-3fc869c7.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-body_creation"
+systems = [
+    "spawn_protostar",
+    "form_star",
+    "form_asteroids",
+    "define_new_asteroid_cluster",
+]
+manifest_name = "dojo_starter-body_creation-3fc869c7"

@@ -363,26 +363,34 @@
   },
   {
     "type": "impl",
-    "name": "ownerImpl",
-    "interface_name": "dojo_starter::models::owner::Iowner"
+    "name": "bodies_collidedImpl",
+    "interface_name": "dojo_starter::systems::body_movement::body_movement::Ibodies_collided"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::owner::Owner",
+    "name": "dojo_starter::systems::body_movement::body_movement::BodiesCollided",
     "members": [
       {
-        "name": "entity",
+        "name": "body_id",
         "type": "core::integer::u32"
       },
       {
-        "name": "owner_address",
-        "type": "core::starknet::contract_address::ContractAddress"
+        "name": "target_id",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "mass_change_body",
+        "type": "core::integer::i64"
+      },
+      {
+        "name": "mass_change_target",
+        "type": "core::integer::i64"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::owner::Iowner",
+    "name": "dojo_starter::systems::body_movement::body_movement::Ibodies_collided",
     "items": [
       {
         "type": "function",
@@ -390,7 +398,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::owner::Owner"
+            "type": "dojo_starter::systems::body_movement::body_movement::BodiesCollided"
           }
         ],
         "outputs": [],
@@ -400,7 +408,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::owner::owner::Event",
+    "name": "dojo_starter::systems::body_movement::body_movement::bodies_collided::Event",
     "kind": "enum",
     "variants": []
   }

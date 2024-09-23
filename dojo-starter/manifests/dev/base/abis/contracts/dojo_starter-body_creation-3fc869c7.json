@@ -128,17 +128,70 @@
   },
   {
     "type": "impl",
-    "name": "FormationsImpl",
-    "interface_name": "dojo_starter::systems::formations::IFormations"
+    "name": "BodyCreationImpl",
+    "interface_name": "dojo_starter::systems::body_creation::IBodyCreation"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::formations::IFormations",
+    "name": "dojo_starter::systems::body_creation::IBodyCreation",
     "items": [
       {
         "type": "function",
-        "name": "spawn",
-        "inputs": [],
+        "name": "spawn_protostar",
+        "inputs": [
+          {
+            "name": "archetype_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "x",
+            "type": "core::integer::u64"
+          },
+          {
+            "name": "y",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "form_star",
+        "inputs": [
+          {
+            "name": "protostar_id",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "form_asteroids",
+        "inputs": [
+          {
+            "name": "star_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "cluster_id",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "define_new_asteroid_cluster",
+        "inputs": [
+          {
+            "name": "star_id",
+            "type": "core::integer::u32"
+          }
+        ],
         "outputs": [],
         "state_mutability": "external"
       }
@@ -147,11 +200,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::formations::formations::IDojoInit"
+    "interface_name": "dojo_starter::systems::body_creation::body_creation::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::formations::formations::IDojoInit",
+    "name": "dojo_starter::systems::body_creation::body_creation::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -211,7 +264,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::formations::formations::Event",
+    "name": "dojo_starter::systems::body_creation::body_creation::Event",
     "kind": "enum",
     "variants": [
       {

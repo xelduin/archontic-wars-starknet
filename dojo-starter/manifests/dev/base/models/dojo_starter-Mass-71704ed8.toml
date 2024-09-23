@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x2d58f519fa7d6e49c4f94597f084f112c68f34bb705e6c1eacebddbb657bd90"
-original_class_hash = "0x2d58f519fa7d6e49c4f94597f084f112c68f34bb705e6c1eacebddbb657bd90"
+class_hash = "0x28316812fb7ecab473c66222df96bb879fa3ed63ac67051effb5e76781d1dc7"
+original_class_hash = "0x28316812fb7ecab473c66222df96bb879fa3ed63ac67051effb5e76781d1dc7"
 abi = "manifests/dev/base/abis/models/dojo_starter-Mass-71704ed8.json"
 tag = "dojo_starter-Mass"
 qualified_path = "dojo_starter::models::mass::mass"
@@ -8,7 +8,7 @@ manifest_name = "dojo_starter-Mass-71704ed8"
 
 [[members]]
 name = "entity"
-type = "ContractAddress"
+type = "u32"
 key = true
 
 [[members]]

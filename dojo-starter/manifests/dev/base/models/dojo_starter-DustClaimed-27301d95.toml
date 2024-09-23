@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x708540292bcb6c17101ec450bf058d669ec36d00522a15f3d5c28f8475606e2"
+original_class_hash = "0x708540292bcb6c17101ec450bf058d669ec36d00522a15f3d5c28f8475606e2"
+abi = "manifests/dev/base/abis/models/dojo_starter-DustClaimed-27301d95.json"
+tag = "dojo_starter-DustClaimed"
+qualified_path = "dojo_starter::systems::dust_system::dust_system::dust_claimed"
+manifest_name = "dojo_starter-DustClaimed-27301d95"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "amount"
+type = "u64"
+key = false
