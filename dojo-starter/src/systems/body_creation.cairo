@@ -60,7 +60,7 @@ mod body_creation {
     impl BodyCreationImpl of IBodyCreation<ContractState> {
         fn spawn_protostar(ref world: IWorldDispatcher, archetype_id: u32, x: u64, y: u64) {
             // Retrieve the current caller's address
-            let player = get_caller_address();
+            //let player = get_caller_address();
 
             // 1. Check if player has enough Loosh to reference the archetype.
             // 2. Call reference_archetype(archetype_id).

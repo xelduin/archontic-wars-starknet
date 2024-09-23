@@ -128,40 +128,24 @@
   },
   {
     "type": "impl",
-    "name": "LooshImpl",
-    "interface_name": "dojo_starter::systems::loosh::ILoosh"
+    "name": "LooshSystemImpl",
+    "interface_name": "dojo_starter::systems::loosh_system::ILooshSystem"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::loosh::ILoosh",
+    "name": "dojo_starter::systems::loosh_system::ILooshSystem",
     "items": [
-      {
-        "type": "function",
-        "name": "claim_loosh",
-        "inputs": [
-          {
-            "name": "body_id",
-            "type": "core::integer::u32"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
       {
         "type": "function",
         "name": "send_loosh",
         "inputs": [
           {
-            "name": "sender_id",
-            "type": "core::integer::u32"
-          },
-          {
-            "name": "receiver_id",
-            "type": "core::integer::u32"
+            "name": "receiver",
+            "type": "core::starknet::contract_address::ContractAddress"
           },
           {
             "name": "amount",
-            "type": "core::integer::u64"
+            "type": "core::integer::u128"
           }
         ],
         "outputs": [],
@@ -172,12 +156,8 @@
         "name": "consume_loosh",
         "inputs": [
           {
-            "name": "body_id",
-            "type": "core::integer::u32"
-          },
-          {
             "name": "amount",
-            "type": "core::integer::u64"
+            "type": "core::integer::u128"
           }
         ],
         "outputs": [],
@@ -206,7 +186,7 @@
         ],
         "outputs": [
           {
-            "type": "core::integer::u64"
+            "type": "core::integer::u128"
           }
         ],
         "state_mutability": "external"
@@ -216,11 +196,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::loosh::loosh::IDojoInit"
+    "interface_name": "dojo_starter::systems::loosh_system::loosh_system::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::loosh::loosh::IDojoInit",
+    "name": "dojo_starter::systems::loosh_system::loosh_system::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -280,7 +260,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::loosh::loosh::Event",
+    "name": "dojo_starter::systems::loosh_system::loosh_system::Event",
     "kind": "enum",
     "variants": [
       {

@@ -5,5 +5,5 @@ use starknet::ContractAddress;
 pub struct Owner {
     #[key]
     pub entity: u32,
-    pub owner_address: ContractAddress,
+    pub address: ContractAddress,
 }
