@@ -4,6 +4,6 @@ use starknet::ContractAddress;
 #[dojo::model]
 pub struct Owner {
     #[key]
-    pub entity: ContractAddress,
+    pub entity: u32,
     pub owner_address: ContractAddress,
 }

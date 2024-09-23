@@ -4,7 +4,7 @@ use starknet::ContractAddress;
 #[dojo::model]
 pub struct Incubation {
     #[key]
-    pub entity: ContractAddress,
+    pub entity: u32,
     pub creation_ts: u64,
     pub end_ts: u64,
 }

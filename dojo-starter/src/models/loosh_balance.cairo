@@ -4,6 +4,6 @@ use starknet::ContractAddress;
 #[dojo::model]
 pub struct LooshBalance {
     #[key]
-    pub entity: ContractAddress,
+    pub entity: u32,
     pub loosh: u128,
 }
