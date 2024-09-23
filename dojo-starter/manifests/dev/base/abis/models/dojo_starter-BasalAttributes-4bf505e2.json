@@ -363,74 +363,26 @@
   },
   {
     "type": "impl",
-    "name": "movesImpl",
-    "interface_name": "dojo_starter::models::Imoves"
-  },
-  {
-    "type": "enum",
-    "name": "dojo_starter::models::Direction",
-    "variants": [
-      {
-        "name": "None",
-        "type": "()"
-      },
-      {
-        "name": "Left",
-        "type": "()"
-      },
-      {
-        "name": "Right",
-        "type": "()"
-      },
-      {
-        "name": "Up",
-        "type": "()"
-      },
-      {
-        "name": "Down",
-        "type": "()"
-      }
-    ]
-  },
-  {
-    "type": "enum",
-    "name": "core::bool",
-    "variants": [
-      {
-        "name": "False",
-        "type": "()"
-      },
-      {
-        "name": "True",
-        "type": "()"
-      }
-    ]
+    "name": "basal_attributesImpl",
+    "interface_name": "dojo_starter::models::basal_attributes::Ibasal_attributes"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::Moves",
+    "name": "dojo_starter::models::basal_attributes::BasalAttributes",
     "members": [
       {
-        "name": "player",
+        "name": "entity",
         "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "remaining",
+        "name": "attributes",
         "type": "core::integer::u8"
-      },
-      {
-        "name": "last_direction",
-        "type": "dojo_starter::models::Direction"
-      },
-      {
-        "name": "can_move",
-        "type": "core::bool"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::Imoves",
+    "name": "dojo_starter::models::basal_attributes::Ibasal_attributes",
     "items": [
       {
         "type": "function",
@@ -438,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::Moves"
+            "type": "dojo_starter::models::basal_attributes::BasalAttributes"
           }
         ],
         "outputs": [],
@@ -448,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::moves::Event",
+    "name": "dojo_starter::models::basal_attributes::basal_attributes::Event",
     "kind": "enum",
     "variants": []
   }

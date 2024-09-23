@@ -363,54 +363,26 @@
   },
   {
     "type": "impl",
-    "name": "formedImpl",
-    "interface_name": "dojo_starter::systems::formations::formations::Iformed"
+    "name": "ownerImpl",
+    "interface_name": "dojo_starter::models::owner::Iowner"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::Vec2",
+    "name": "dojo_starter::models::owner::Owner",
     "members": [
       {
-        "name": "x",
-        "type": "core::integer::u32"
-      },
-      {
-        "name": "y",
-        "type": "core::integer::u32"
-      }
-    ]
-  },
-  {
-    "type": "struct",
-    "name": "dojo_starter::models::Position",
-    "members": [
-      {
-        "name": "player",
+        "name": "entity",
         "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "vec",
-        "type": "dojo_starter::models::Vec2"
-      }
-    ]
-  },
-  {
-    "type": "struct",
-    "name": "dojo_starter::systems::formations::formations::Formed",
-    "members": [
-      {
-        "name": "player",
+        "name": "owner_address",
         "type": "core::starknet::contract_address::ContractAddress"
-      },
-      {
-        "name": "direction",
-        "type": "dojo_starter::models::Position"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::formations::formations::Iformed",
+    "name": "dojo_starter::models::owner::Iowner",
     "items": [
       {
         "type": "function",
@@ -418,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::formations::formations::Formed"
+            "type": "dojo_starter::models::owner::Owner"
           }
         ],
         "outputs": [],
@@ -428,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::formations::formations::formed::Event",
+    "name": "dojo_starter::models::owner::owner::Event",
     "kind": "enum",
     "variants": []
   }

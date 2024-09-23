@@ -363,8 +363,8 @@
   },
   {
     "type": "impl",
-    "name": "positionImpl",
-    "interface_name": "dojo_starter::models::position::Iposition"
+    "name": "travel_actionImpl",
+    "interface_name": "dojo_starter::models::travel_action::Itravel_action"
   },
   {
     "type": "struct",
@@ -382,21 +382,29 @@
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::position::Position",
+    "name": "dojo_starter::models::travel_action::TravelAction",
     "members": [
       {
         "name": "entity",
         "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "vec",
+        "name": "depart_ts",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "arrival_ts",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "target_position",
         "type": "dojo_starter::models::vec2::Vec2"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::position::Iposition",
+    "name": "dojo_starter::models::travel_action::Itravel_action",
     "items": [
       {
         "type": "function",
@@ -404,7 +412,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::position::Position"
+            "type": "dojo_starter::models::travel_action::TravelAction"
           }
         ],
         "outputs": [],
@@ -414,7 +422,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::position::position::Event",
+    "name": "dojo_starter::models::travel_action::travel_action::Event",
     "kind": "enum",
     "variants": []
   }

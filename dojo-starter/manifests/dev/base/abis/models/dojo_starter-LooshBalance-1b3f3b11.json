@@ -363,52 +363,26 @@
   },
   {
     "type": "impl",
-    "name": "movedImpl",
-    "interface_name": "dojo_starter::systems::actions::actions::Imoved"
-  },
-  {
-    "type": "enum",
-    "name": "dojo_starter::models::Direction",
-    "variants": [
-      {
-        "name": "None",
-        "type": "()"
-      },
-      {
-        "name": "Left",
-        "type": "()"
-      },
-      {
-        "name": "Right",
-        "type": "()"
-      },
-      {
-        "name": "Up",
-        "type": "()"
-      },
-      {
-        "name": "Down",
-        "type": "()"
-      }
-    ]
+    "name": "loosh_balanceImpl",
+    "interface_name": "dojo_starter::models::loosh_balance::Iloosh_balance"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::actions::actions::Moved",
+    "name": "dojo_starter::models::loosh_balance::LooshBalance",
     "members": [
       {
-        "name": "player",
+        "name": "entity",
         "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "direction",
-        "type": "dojo_starter::models::Direction"
+        "name": "loosh",
+        "type": "core::integer::u128"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::actions::actions::Imoved",
+    "name": "dojo_starter::models::loosh_balance::Iloosh_balance",
     "items": [
       {
         "type": "function",
@@ -416,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::actions::actions::Moved"
+            "type": "dojo_starter::models::loosh_balance::LooshBalance"
           }
         ],
         "outputs": [],
@@ -426,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::actions::actions::moved::Event",
+    "name": "dojo_starter::models::loosh_balance::loosh_balance::Event",
     "kind": "enum",
     "variants": []
   }

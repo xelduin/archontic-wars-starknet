@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x56008e4db591a574adf31af3e513b38ba2f920015d399885c17bdc928986fa0"
+original_class_hash = "0x56008e4db591a574adf31af3e513b38ba2f920015d399885c17bdc928986fa0"
+abi = "manifests/dev/base/abis/models/dojo_starter-Owner-4375b147.json"
+tag = "dojo_starter-Owner"
+qualified_path = "dojo_starter::models::owner::owner"
+manifest_name = "dojo_starter-Owner-4375b147"
+
+[[members]]
+name = "entity"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "owner_address"
+type = "ContractAddress"
+key = false

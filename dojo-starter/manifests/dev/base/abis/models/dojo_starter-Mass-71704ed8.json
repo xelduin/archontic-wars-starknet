@@ -363,52 +363,26 @@
   },
   {
     "type": "impl",
-    "name": "directions_availableImpl",
-    "interface_name": "dojo_starter::models::Idirections_available"
-  },
-  {
-    "type": "enum",
-    "name": "dojo_starter::models::Direction",
-    "variants": [
-      {
-        "name": "None",
-        "type": "()"
-      },
-      {
-        "name": "Left",
-        "type": "()"
-      },
-      {
-        "name": "Right",
-        "type": "()"
-      },
-      {
-        "name": "Up",
-        "type": "()"
-      },
-      {
-        "name": "Down",
-        "type": "()"
-      }
-    ]
+    "name": "massImpl",
+    "interface_name": "dojo_starter::models::mass::Imass"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::DirectionsAvailable",
+    "name": "dojo_starter::models::mass::Mass",
     "members": [
       {
-        "name": "player",
+        "name": "entity",
         "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "directions",
-        "type": "core::array::Array::<dojo_starter::models::Direction>"
+        "name": "mass",
+        "type": "core::integer::u64"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::Idirections_available",
+    "name": "dojo_starter::models::mass::Imass",
     "items": [
       {
         "type": "function",
@@ -416,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::DirectionsAvailable"
+            "type": "dojo_starter::models::mass::Mass"
           }
         ],
         "outputs": [],
@@ -426,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::directions_available::Event",
+    "name": "dojo_starter::models::mass::mass::Event",
     "kind": "enum",
     "variants": []
   }

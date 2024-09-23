@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x46662af050790a5b0bfa27a824d3e94177e38be7a6099fd9bcc390420cbc039"
+original_class_hash = "0x46662af050790a5b0bfa27a824d3e94177e38be7a6099fd9bcc390420cbc039"
+abi = "manifests/dev/base/abis/models/dojo_starter-Incubation-3de7afb2.json"
+tag = "dojo_starter-Incubation"
+qualified_path = "dojo_starter::models::incubation::incubation"
+manifest_name = "dojo_starter-Incubation-3de7afb2"
+
+[[members]]
+name = "entity"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "creation_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "end_ts"
+type = "u64"
+key = false

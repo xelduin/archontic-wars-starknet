@@ -1,13 +1,13 @@
 kind = "DojoModel"
-class_hash = "0x6531637b0bbd741f8823b127d8958ed10a483dd1f2d7654975c1d7d7cbdab65"
-original_class_hash = "0x6531637b0bbd741f8823b127d8958ed10a483dd1f2d7654975c1d7d7cbdab65"
+class_hash = "0x5b4be0629c4cf540d6659358cb232af2e5d6b65a09cd0ab938397fbc9315ef3"
+original_class_hash = "0x5b4be0629c4cf540d6659358cb232af2e5d6b65a09cd0ab938397fbc9315ef3"
 abi = "manifests/dev/base/abis/models/dojo_starter-Position-2ac8b4c1.json"
 tag = "dojo_starter-Position"
-qualified_path = "dojo_starter::models::position"
+qualified_path = "dojo_starter::models::position::position"
 manifest_name = "dojo_starter-Position-2ac8b4c1"
 
 [[members]]
-name = "player"
+name = "entity"
 type = "ContractAddress"
 key = true
 

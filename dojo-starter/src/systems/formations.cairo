@@ -1,4 +1,4 @@
-use dojo_starter::models::Position;
+use dojo_starter::models::position::Position;
 
 // define the interface
 #[dojo::interface]
@@ -11,16 +11,7 @@ trait IFormations {
 mod formations {
     use super::{IFormations};
     use starknet::{ContractAddress, get_caller_address};
-    use dojo_starter::models::{Vec2, Position};
-
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct Formed {
-        #[key]
-        player: ContractAddress,
-        direction: Position,
-    }
+    use dojo_starter::models::{vec2::Vec2, position::Position};
 
     #[abi(embed_v0)]
     impl FormationsImpl of IFormations<ContractState> {
@@ -32,14 +23,7 @@ mod formations {
             // 1. Set the player's remaining moves to 100.
             // 2. Move the player's position 10 units in both the x and y direction.
 
-            set!(
-                world,
-                (
-                    Position {
-                        player, vec: Vec2 { x: 27, y: 30 }
-                    },
-                )
-            );
+            set!(world, (Position { entity: player, vec: Vec2 { x: 27, y: 30 } },));
         }
     }
 }
