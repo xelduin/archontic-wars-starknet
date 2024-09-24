@@ -137,6 +137,22 @@
     "items": [
       {
         "type": "function",
+        "name": "l1_receive_loosh",
+        "inputs": [
+          {
+            "name": "receiver",
+            "type": "core::starknet::contract_address::ContractAddress"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u128"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
         "name": "send_loosh",
         "inputs": [
           {

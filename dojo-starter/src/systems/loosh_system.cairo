@@ -4,6 +4,7 @@ use dojo::world::IWorldDispatcher;
 // Define the interface
 #[dojo::interface]
 trait ILooshSystem {
+    fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn consume_loosh(ref world: IWorldDispatcher, amount: u128);
     fn reference_archetype(ref world: IWorldDispatcher, archetype_id: u32);
@@ -28,8 +29,22 @@ mod loosh_system {
         amount: u128,
     }
 
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::event]
+    #[dojo::model]
+    struct LooshMinted {
+        #[key]
+        receiver: ContractAddress,
+        amount: u128,
+    }
+
     #[abi(embed_v0)]
     impl LooshSystemImpl of ILooshSystem<ContractState> {
+        fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
+            // Check that the incoming message comes from the authorized L1 contract
+            InternalLooshSystemImpl::mint_loosh(world, receiver, amount);
+        }
+
         fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
             let sender = get_caller_address();
 
@@ -95,6 +110,19 @@ mod loosh_system {
             );
 
             emit!(world, (LooshTransferred { sender, receiver, amount }));
+        }
+
+        fn mint_loosh(world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
+            // Check that the incoming message comes from the authorized L1 contract
+            let current_loosh_balance = get!(world, receiver, (LooshBalance));
+
+            set!(
+                world,
+                (LooshBalance {
+                    address: receiver, balance: current_loosh_balance.balance + amount
+                })
+            );
+            emit!(world, (LooshMinted { receiver, amount }));
         }
     }
 }

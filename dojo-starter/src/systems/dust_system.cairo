@@ -1,5 +1,3 @@
-use starknet::{ContractAddress, get_caller_address};
-
 // Define the interface for the Dust system
 #[dojo::interface]
 trait IDustSystem {
