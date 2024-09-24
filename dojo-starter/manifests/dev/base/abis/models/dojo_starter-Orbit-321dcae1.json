@@ -363,26 +363,26 @@
   },
   {
     "type": "impl",
-    "name": "dust_consumedImpl",
-    "interface_name": "dojo_starter::systems::dust_system::dust_system::Idust_consumed"
+    "name": "orbitImpl",
+    "interface_name": "dojo_starter::models::orbit::Iorbit"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::dust_system::dust_system::DustConsumed",
+    "name": "dojo_starter::models::orbit::Orbit",
     "members": [
       {
-        "name": "body_id",
+        "name": "entity",
         "type": "core::integer::u32"
       },
       {
-        "name": "amount",
-        "type": "core::integer::u128"
+        "name": "orbit_center",
+        "type": "core::integer::u32"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust_system::dust_system::Idust_consumed",
+    "name": "dojo_starter::models::orbit::Iorbit",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::dust_system::dust_system::DustConsumed"
+            "type": "dojo_starter::models::orbit::Orbit"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::dust_system::dust_system::dust_consumed::Event",
+    "name": "dojo_starter::models::orbit::orbit::Event",
     "kind": "enum",
     "variants": []
   }

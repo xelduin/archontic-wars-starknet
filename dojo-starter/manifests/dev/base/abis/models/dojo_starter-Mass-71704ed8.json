@@ -377,6 +377,10 @@
       {
         "name": "mass",
         "type": "core::integer::u64"
+      },
+      {
+        "name": "orbit_mass",
+        "type": "core::integer::u64"
       }
     ]
   },

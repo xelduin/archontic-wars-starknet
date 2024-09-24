@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x708540292bcb6c17101ec450bf058d669ec36d00522a15f3d5c28f8475606e2"
-original_class_hash = "0x708540292bcb6c17101ec450bf058d669ec36d00522a15f3d5c28f8475606e2"
+class_hash = "0x181044def114a07467a439c0f47fc4b3315a71a494ff9f2f29d7e8417ca092c"
+original_class_hash = "0x181044def114a07467a439c0f47fc4b3315a71a494ff9f2f29d7e8417ca092c"
 abi = "manifests/dev/base/abis/models/dojo_starter-DustClaimed-27301d95.json"
 tag = "dojo_starter-DustClaimed"
 qualified_path = "dojo_starter::systems::dust_system::dust_system::dust_claimed"
@@ -13,5 +13,5 @@ key = true
 
 [[members]]
 name = "amount"
-type = "u64"
+type = "u128"
 key = false

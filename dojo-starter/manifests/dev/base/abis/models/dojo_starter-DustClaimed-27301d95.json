@@ -376,7 +376,7 @@
       },
       {
         "name": "amount",
-        "type": "core::integer::u64"
+        "type": "core::integer::u128"
       }
     ]
   },

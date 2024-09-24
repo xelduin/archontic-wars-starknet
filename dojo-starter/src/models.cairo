@@ -6,3 +6,7 @@ mod position;
 mod mass;
 mod travel_action;
 mod vec2;
+mod dust_balance;
+mod dust_emission;
+mod dust_accretion;
+mod orbit;
