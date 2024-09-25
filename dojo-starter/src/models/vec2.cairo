@@ -1,7 +1,7 @@
 #[derive(Serde, Copy, Drop, Introspect)]
 pub struct Vec2 {
-    pub x: u32,
-    pub y: u32,
+    pub x: u64,
+    pub y: u64,
 }
 
 #[generate_trait]

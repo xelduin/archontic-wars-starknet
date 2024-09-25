@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x5b105dd6a3d08d2b65aeaf97d1ed5447182262a4f6e4c86a4dd971e4281a0b1"
-original_class_hash = "0x5b105dd6a3d08d2b65aeaf97d1ed5447182262a4f6e4c86a4dd971e4281a0b1"
+class_hash = "0x77baf409e36ef28267df73d8a09915324b0f7c89637c2b8f2bb02ce04ba0c5"
+original_class_hash = "0x77baf409e36ef28267df73d8a09915324b0f7c89637c2b8f2bb02ce04ba0c5"
 abi = "manifests/dev/base/abis/models/dojo_starter-TravelAction-1be38c70.json"
 tag = "dojo_starter-TravelAction"
 qualified_path = "dojo_starter::models::travel_action::travel_action"

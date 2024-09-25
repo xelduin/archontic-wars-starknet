@@ -86,24 +86,7 @@ mod dust_system {
         }
 
         fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32) {
-            InternalDustSystemImpl::update_pool(world, pool_id);
-
-            let child_mass = get!(world, body_id, (Mass));
-            let parent_mass = get!(world, pool_id, (Mass));
-            let parent_emission = get!(world, pool_id, (DustEmission));
-
-            let min_allowed_mass = child_mass.mass * 10;
-            assert(parent_mass.mass >= min_allowed_mass, 'pool mass too low');
-
-            set!(
-                world,
-                (DustAccretion {
-                    entity: body_id,
-                    debt: parent_emission.ARPS * child_mass.mass.try_into().unwrap()
-                })
-            );
-
-            emit!(world, (DustPoolEntered { body_id, pool_id }));
+            InternalDustSystemImpl::enter_dust_pool(world, body_id, pool_id);
         }
 
         fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
@@ -155,6 +138,27 @@ mod dust_system {
 
     #[generate_trait]
     impl InternalDustSystemImpl of InternalDustSystemTrait {
+        fn enter_dust_pool(world: IWorldDispatcher, body_id: u32, pool_id: u32) {
+            Self::update_pool(world, pool_id);
+
+            let child_mass = get!(world, body_id, (Mass));
+            let parent_mass = get!(world, pool_id, (Mass));
+            let parent_emission = get!(world, pool_id, (DustEmission));
+
+            let min_allowed_mass = child_mass.mass * 10;
+            assert(parent_mass.mass >= min_allowed_mass, 'pool mass too low');
+
+            set!(
+                world,
+                (DustAccretion {
+                    entity: body_id,
+                    debt: parent_emission.ARPS * child_mass.mass.try_into().unwrap()
+                })
+            );
+
+            emit!(world, (DustPoolEntered { body_id, pool_id }));
+        }
+
         fn get_updated_ARPS(world: IWorldDispatcher, body_id: u32) -> u128 {
             let pool_mass = get!(world, body_id, (Mass));
             let pool_emission = get!(world, body_id, (DustEmission));

@@ -1,6 +1,6 @@
 kind = "DojoContract"
-class_hash = "0x685ef2c4a6dbf253b74247e0f71db259085691febf2ef8870401738a444abe"
-original_class_hash = "0x685ef2c4a6dbf253b74247e0f71db259085691febf2ef8870401738a444abe"
+class_hash = "0x3cdb86d38336034048e6d8024e9028850712fe59159c2aee78eeabf649dcc85"
+original_class_hash = "0x3cdb86d38336034048e6d8024e9028850712fe59159c2aee78eeabf649dcc85"
 base_class_hash = "0x0"
 abi = "manifests/dev/base/abis/contracts/dojo_starter-loosh_system-50c10825.json"
 reads = []
@@ -10,7 +10,7 @@ tag = "dojo_starter-loosh_system"
 systems = [
     "l1_receive_loosh",
     "send_loosh",
-    "consume_loosh",
+    "burn_loosh",
     "reference_archetype",
 ]
 manifest_name = "dojo_starter-loosh_system-50c10825"

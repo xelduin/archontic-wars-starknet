@@ -10,3 +10,5 @@ mod dust_balance;
 mod dust_emission;
 mod dust_accretion;
 mod orbit;
+mod loosh_sink;
+mod cosmic_body;

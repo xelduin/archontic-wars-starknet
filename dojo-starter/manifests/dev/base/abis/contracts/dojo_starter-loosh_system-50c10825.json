@@ -169,7 +169,7 @@
       },
       {
         "type": "function",
-        "name": "consume_loosh",
+        "name": "burn_loosh",
         "inputs": [
           {
             "name": "amount",

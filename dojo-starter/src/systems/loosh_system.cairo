@@ -6,7 +6,7 @@ use dojo::world::IWorldDispatcher;
 trait ILooshSystem {
     fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
-    fn consume_loosh(ref world: IWorldDispatcher, amount: u128);
+    fn burn_loosh(ref world: IWorldDispatcher, amount: u128);
     fn reference_archetype(ref world: IWorldDispatcher, archetype_id: u32);
     fn get_archetype_reference_cost(ref world: IWorldDispatcher, archetype_id: u32) -> u128;
 }
@@ -18,6 +18,7 @@ mod loosh_system {
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use dojo_starter::models::loosh_balance::LooshBalance;
     use dojo_starter::models::owner::Owner;
+    use dojo_starter::models::{loosh_sink::LooshSink};
 
     #[derive(Copy, Drop, Serde)]
     #[dojo::event]
@@ -51,10 +52,10 @@ mod loosh_system {
             InternalLooshSystemImpl::transfer_loosh(world, sender, receiver, amount);
         }
 
-        fn consume_loosh(ref world: IWorldDispatcher, amount: u128,) {
+        fn burn_loosh(ref world: IWorldDispatcher, amount: u128,) {
             let sender = get_caller_address();
 
-            InternalLooshSystemImpl::transfer_loosh(world, sender, get_contract_address(), amount);
+            InternalLooshSystemImpl::burn_loosh(world, sender, amount);
         }
 
 
@@ -123,6 +124,24 @@ mod loosh_system {
                 })
             );
             emit!(world, (LooshMinted { receiver, amount }));
+        }
+
+        fn burn_loosh(world: IWorldDispatcher, address: ContractAddress, amount: u128,) {
+            Self::transfer_loosh(world, address, get_contract_address(), amount);
+        }
+
+
+        fn spend_loosh(world: IWorldDispatcher, spender: ContractAddress, sink: LooshSink) {
+            let cost = Self::get_loosh_cost(world, sink);
+            Self::burn_loosh(world, spender, cost);
+        }
+
+        fn get_loosh_cost(world: IWorldDispatcher, sink: LooshSink) -> u128 {
+            match sink {
+                LooshSink::CreateProtostar => 100,
+                LooshSink::FormStar => 20,
+                LooshSink::CreateAsteroidCluster => 10,
+            }
         }
     }
 }
