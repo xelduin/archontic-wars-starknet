@@ -1,5 +1,6 @@
 use starknet::{ContractAddress};
 use dojo::world::IWorldDispatcher;
+use dojo_starter::models::loosh_sink::LooshSink;
 
 // Define the interface
 #[dojo::interface]
@@ -14,7 +15,7 @@ trait ILooshSystem {
 // Dojo decorator
 #[dojo::contract]
 mod loosh_system {
-    use super::ILooshSystem;
+    use super::{ILooshSystem, get_loosh_cost};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use dojo_starter::models::loosh_balance::LooshBalance;
     use dojo_starter::models::owner::Owner;
@@ -132,17 +133,16 @@ mod loosh_system {
 
 
         fn spend_loosh(world: IWorldDispatcher, spender: ContractAddress, sink: LooshSink) {
-            let cost = Self::get_loosh_cost(world, sink);
+            let cost = get_loosh_cost(sink);
             Self::burn_loosh(world, spender, cost);
-        }
-
-        fn get_loosh_cost(world: IWorldDispatcher, sink: LooshSink) -> u128 {
-            match sink {
-                LooshSink::CreateProtostar => 100,
-                LooshSink::FormStar => 20,
-                LooshSink::CreateAsteroidCluster => 10,
-            }
         }
     }
 }
 
+fn get_loosh_cost(sink: LooshSink) -> u128 {
+    match sink {
+        LooshSink::CreateProtostar => 100,
+        LooshSink::FormStar => 20,
+        LooshSink::CreateAsteroidCluster => 10,
+    }
+}

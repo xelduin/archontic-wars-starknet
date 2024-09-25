@@ -21,7 +21,7 @@ mod body_creation {
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use dojo_starter::systems::{
         dust_system::dust_system::{InternalDustSystemImpl},
-        loosh_system::loosh_system::{InternalLooshSystemImpl},
+        loosh_system::loosh_system::{InternalLooshSystemImpl, get_loosh_cost},
     };
 
     // Structure to represent a ProtostarSpawned event
@@ -125,7 +125,9 @@ mod body_creation {
             let cluster_mass = get!(world, cluster_id, (Mass));
             set!(
                 world,
-                (Mass { entity: cluster_id, mass: cluster_mass.mass + asteroid_mass, orbit_mass: 0 })
+                (Mass {
+                    entity: cluster_id, mass: cluster_mass.mass + asteroid_mass, orbit_mass: 0
+                })
             );
 
             // Emit an event for asteroid formation

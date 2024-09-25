@@ -1,3 +1,8 @@
+use dojo_starter::models::{
+    dust_emission::DustEmission, dust_accretion::DustAccretion, orbit::Orbit, mass::Mass
+};
+
+
 // Define the interface for the Dust system
 #[dojo::interface]
 trait IDustSystem {
@@ -13,7 +18,7 @@ trait IDustSystem {
 // Dojo decorator
 #[dojo::contract]
 mod dust_system {
-    use super::IDustSystem;
+    use super::{IDustSystem, calculate_ARPS, calculate_unclaimed_dust};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
         dust_balance::DustBalance, dust_accretion::DustAccretion, dust_emission::DustEmission,
@@ -115,7 +120,7 @@ mod dust_system {
         }
 
         fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
-            InternalDustSystemImpl::update_pool(world, body_id);
+            InternalDustSystemImpl::update_emission(world, body_id);
         }
 
         fn get_dust_balance(ref world: IWorldDispatcher, body_id: u32) -> u128 {
@@ -139,7 +144,7 @@ mod dust_system {
     #[generate_trait]
     impl InternalDustSystemImpl of InternalDustSystemTrait {
         fn enter_dust_pool(world: IWorldDispatcher, body_id: u32, pool_id: u32) {
-            Self::update_pool(world, pool_id);
+            Self::update_emission(world, pool_id);
 
             let child_mass = get!(world, body_id, (Mass));
             let parent_mass = get!(world, pool_id, (Mass));
@@ -159,26 +164,20 @@ mod dust_system {
             emit!(world, (DustPoolEntered { body_id, pool_id }));
         }
 
-        fn get_updated_ARPS(world: IWorldDispatcher, body_id: u32) -> u128 {
-            let pool_mass = get!(world, body_id, (Mass));
-            let pool_emission = get!(world, body_id, (DustEmission));
+        fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
+            Self::claim_dust(world, body_id);
 
-            let current_ts = get_block_timestamp();
-            let reward_per_share = pool_emission.emission_rate
-                / pool_mass.orbit_mass.try_into().unwrap();
-            let elapsed_ts = current_ts - pool_emission.last_update_ts;
-            let ARPS_change = reward_per_share * elapsed_ts.try_into().unwrap();
-
-            let updated_ARPS = pool_emission.ARPS + ARPS_change;
-
-            return updated_ARPS;
+            emit!(world, (DustPoolExited { body_id, pool_id }));
         }
 
-        fn update_pool(world: IWorldDispatcher, body_id: u32) {
+
+        fn update_emission(world: IWorldDispatcher, body_id: u32) {
             let current_ts = get_block_timestamp();
 
-            let updated_ARPS = Self::get_updated_ARPS(world, body_id);
             let dust_emission = get!(world, body_id, (DustEmission));
+            let body_mass = get!(world, body_id, (Mass));
+
+            let updated_ARPS = calculate_ARPS(current_ts, dust_emission, body_mass);
 
             set!(
                 world,
@@ -191,32 +190,17 @@ mod dust_system {
             );
         }
 
-        fn get_unclaimed_dust(world: IWorldDispatcher, body_id: u32) -> u128 {
-            let body_orbit = get!(world, body_id, (Orbit));
-            let updated_ARPS = Self::get_updated_ARPS(world, body_orbit.orbit_center);
-
-            // unclaimed dust
-            let body_mass = get!(world, body_id, (Mass));
-            let current_body_accretion = get!(world, body_id, (DustAccretion));
-            let updated_body_accretion = updated_ARPS * body_mass.mass.try_into().unwrap();
-            let unclaimed_dust = updated_body_accretion - current_body_accretion.debt;
-
-            return unclaimed_dust;
-        }
-
         fn claim_dust(world: IWorldDispatcher, body_id: u32) {
-            // Check if claim dust was called without update_pool
-            // If so, we need to update because get_unclaimed_dust is always current
             let orbit = get!(world, body_id, (Orbit));
             let pool_id = orbit.orbit_center;
+            Self::update_emission(world, pool_id);
+
             let pool_emission = get!(world, pool_id, (DustEmission));
-            let current_ts = get_block_timestamp();
-            if current_ts > pool_emission.last_update_ts {
-                Self::update_pool(world, pool_id);
-            }
+            let body_accretion = get!(world, body_id, (DustAccretion));
+            let body_mass = get!(world, body_id, (Mass));
+            let unclaimed_dust = calculate_unclaimed_dust(pool_emission, body_accretion, body_mass);
 
             let current_dust = get!(world, body_id, (DustBalance));
-            let unclaimed_dust = Self::get_unclaimed_dust(world, body_id);
             let new_dust_balance = current_dust.balance + unclaimed_dust;
 
             set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
@@ -224,4 +208,24 @@ mod dust_system {
             emit!(world, (DustClaimed { body_id, amount: unclaimed_dust }));
         }
     }
+}
+
+fn calculate_unclaimed_dust(
+    dust_emission: DustEmission, dust_accretion: DustAccretion, body_mass: Mass
+) -> u128 {
+    let updated_body_accretion = dust_emission.ARPS * body_mass.mass.try_into().unwrap();
+    let unclaimed_dust = updated_body_accretion - dust_accretion.debt;
+
+    return unclaimed_dust;
+}
+
+
+fn calculate_ARPS(current_ts: u64, pool_emission: DustEmission, pool_mass: Mass) -> u128 {
+    let reward_per_share = pool_emission.emission_rate / pool_mass.orbit_mass.try_into().unwrap();
+    let elapsed_ts = current_ts - pool_emission.last_update_ts;
+    let ARPS_change = reward_per_share * elapsed_ts.try_into().unwrap();
+
+    let updated_ARPS = pool_emission.ARPS + ARPS_change;
+
+    return updated_ARPS;
 }
