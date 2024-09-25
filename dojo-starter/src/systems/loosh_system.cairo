@@ -136,6 +136,13 @@ mod loosh_system {
             let cost = get_loosh_cost(sink);
             Self::burn_loosh(world, spender, cost);
         }
+
+        fn spend_loosh_for_travel(
+            world: IWorldDispatcher, spender: ContractAddress, distance: u64
+        ) {
+            let cost = distance.try_into().unwrap() * 5_u128;
+            Self::burn_loosh(world, spender, cost);
+        }
     }
 }
 

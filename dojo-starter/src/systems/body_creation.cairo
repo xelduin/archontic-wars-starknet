@@ -3,10 +3,10 @@ use starknet::{ContractAddress, get_caller_address};
 // Define the interface for the Body creation system
 #[dojo::interface]
 trait IBodyCreation {
-    fn spawn_protostar(ref world: IWorldDispatcher, x: u64, y: u64);
+    fn create_protostar(ref world: IWorldDispatcher, x: u64, y: u64);
     fn form_star(ref world: IWorldDispatcher, protostar_id: u32);
     fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32);
-    fn define_new_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32);
+    fn create_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32);
 }
 
 // Dojo decorator
@@ -67,7 +67,26 @@ mod body_creation {
 
     #[abi(embed_v0)]
     impl BodyCreationImpl of IBodyCreation<ContractState> {
-        fn spawn_protostar(ref world: IWorldDispatcher, x: u64, y: u64) {
+        fn create_protostar(ref world: IWorldDispatcher, x: u64, y: u64) {
+            InternalBodyCreationImpl::create_protostar(world, x, y);
+        }
+
+        fn form_star(ref world: IWorldDispatcher, protostar_id: u32) {
+            InternalBodyCreationImpl::form_star(world, protostar_id);
+        }
+
+        fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32) {
+            InternalBodyCreationImpl::form_asteroids(world, star_id, cluster_id);
+        }
+
+        fn create_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32) {
+            InternalBodyCreationImpl::create_asteroid_cluster(world, star_id);
+        }
+    }
+
+    #[generate_trait]
+    impl InternalBodyCreationImpl of InternalBodyCreationTrait {
+        fn create_protostar(world: IWorldDispatcher, x: u64, y: u64) {
             // Retrieve the current caller's address
             let player = get_caller_address();
 
@@ -97,44 +116,7 @@ mod body_creation {
             emit!(world, (ProtostarSpawned { body_id, x, y }));
         }
 
-        fn form_star(ref world: IWorldDispatcher, protostar_id: u32) {
-            // 1. Check ownership: ensure the caller is the owner of the protostar.
-            let player = get_caller_address();
-            let protostar_owner = get!(world, protostar_id, (Owner));
-            assert(player == protostar_owner.address, 'isnt owner');
-
-            // 2. Check if the incubation period is over.
-            let protostar_incubation = get!(world, protostar_id, (Incubation));
-            let current_ts = get_block_timestamp();
-            assert(current_ts >= protostar_incubation.end_ts, 'incubation period not over');
-
-            InternalLooshSystemImpl::spend_loosh(world, player, LooshSink::FormStar);
-
-            set!(world, (CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
-        }
-
-        fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32) {
-            // 1. Verify that the body is a Star.
-            let star_body = get!(world, star_id, (CosmicBody));
-            assert(star_body.body_type == CosmicBodyType::Star, 'not a star');
-
-            let asteroid_mass = 100;
-            // 4. Call consume_dust for dust processing.
-            //InternalDustSystemImpl::spend_dust(world, star_id, cluster_id)
-
-            let cluster_mass = get!(world, cluster_id, (Mass));
-            set!(
-                world,
-                (Mass {
-                    entity: cluster_id, mass: cluster_mass.mass + asteroid_mass, orbit_mass: 0
-                })
-            );
-
-            // Emit an event for asteroid formation
-            emit!(world, (AsteroidsFormed { star_id, cluster_id }));
-        }
-
-        fn define_new_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32) {
+        fn create_asteroid_cluster(world: IWorldDispatcher, star_id: u32) {
             let star_body = get!(world, star_id, (CosmicBody));
             assert(star_body.body_type == CosmicBodyType::Star, 'not a star');
 
@@ -156,6 +138,43 @@ mod body_creation {
             InternalDustSystemImpl::enter_dust_pool(world, body_id, star_id);
 
             emit!(world, (AsteroidClusterDefined { star_id, cluster_id: body_id }));
+        }
+
+        fn form_star(world: IWorldDispatcher, protostar_id: u32) {
+            // 1. Check ownership: ensure the caller is the owner of the protostar.
+            let player = get_caller_address();
+            let protostar_owner = get!(world, protostar_id, (Owner));
+            assert(player == protostar_owner.address, 'isnt owner');
+
+            // 2. Check if the incubation period is over.
+            let protostar_incubation = get!(world, protostar_id, (Incubation));
+            let current_ts = get_block_timestamp();
+            assert(current_ts >= protostar_incubation.end_ts, 'incubation period not over');
+
+            InternalLooshSystemImpl::spend_loosh(world, player, LooshSink::FormStar);
+
+            set!(world, (CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
+        }
+
+        fn form_asteroids(world: IWorldDispatcher, star_id: u32, cluster_id: u32) {
+            // 1. Verify that the body is a Star.
+            let star_body = get!(world, star_id, (CosmicBody));
+            assert(star_body.body_type == CosmicBodyType::Star, 'not a star');
+
+            let asteroid_mass = 100;
+            // 4. Call consume_dust for dust processing.
+            //InternalDustSystemImpl::spend_dust(world, star_id, cluster_id)
+
+            let cluster_mass = get!(world, cluster_id, (Mass));
+            set!(
+                world,
+                (Mass {
+                    entity: cluster_id, mass: cluster_mass.mass + asteroid_mass, orbit_mass: 0
+                })
+            );
+
+            // Emit an event for asteroid formation
+            emit!(world, (AsteroidsFormed { star_id, cluster_id }));
         }
     }
 }

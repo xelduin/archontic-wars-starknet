@@ -95,24 +95,7 @@ mod dust_system {
         }
 
         fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
-            InternalDustSystemImpl::claim_dust(world, body_id);
-
-            let body_orbit = get!(world, body_id, (Orbit));
-            let pool_id = body_orbit.orbit_center;
-
-            let child_mass = get!(world, body_id, (Mass));
-            let parent_mass = get!(world, pool_id, (Mass));
-
-            set!(
-                world,
-                (Mass {
-                    entity: pool_id,
-                    mass: parent_mass.mass,
-                    orbit_mass: parent_mass.orbit_mass - child_mass.mass
-                })
-            );
-
-            emit!(world, (DustPoolExited { body_id, pool_id }));
+            InternalDustSystemImpl::exit_dust_pool(world, body_id);
         }
 
         fn claim_dust(ref world: IWorldDispatcher, body_id: u32) {
@@ -164,12 +147,14 @@ mod dust_system {
             emit!(world, (DustPoolEntered { body_id, pool_id }));
         }
 
-        fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
+        fn exit_dust_pool(world: IWorldDispatcher, body_id: u32) {
             Self::claim_dust(world, body_id);
+
+            let body_orbit = get!(world, body_id, (Orbit));
+            let pool_id = body_orbit.orbit_center;
 
             emit!(world, (DustPoolExited { body_id, pool_id }));
         }
-
 
         fn update_emission(world: IWorldDispatcher, body_id: u32) {
             let current_ts = get_block_timestamp();

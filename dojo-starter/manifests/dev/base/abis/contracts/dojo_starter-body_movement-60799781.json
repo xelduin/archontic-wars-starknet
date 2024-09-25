@@ -132,24 +132,34 @@
     "interface_name": "dojo_starter::systems::body_movement::IBodyMovement"
   },
   {
+    "type": "struct",
+    "name": "dojo_starter::models::vec2::Vec2",
+    "members": [
+      {
+        "name": "x",
+        "type": "core::integer::u64"
+      },
+      {
+        "name": "y",
+        "type": "core::integer::u64"
+      }
+    ]
+  },
+  {
     "type": "interface",
     "name": "dojo_starter::systems::body_movement::IBodyMovement",
     "items": [
       {
         "type": "function",
-        "name": "move_body",
+        "name": "begin_travel",
         "inputs": [
           {
             "name": "body_id",
             "type": "core::integer::u32"
           },
           {
-            "name": "x",
-            "type": "core::integer::u64"
-          },
-          {
-            "name": "y",
-            "type": "core::integer::u64"
+            "name": "target_position",
+            "type": "dojo_starter::models::vec2::Vec2"
           }
         ],
         "outputs": [],
@@ -177,22 +187,6 @@
         "inputs": [
           {
             "name": "body_id",
-            "type": "core::integer::u32"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "collide_bodies",
-        "inputs": [
-          {
-            "name": "body_id",
-            "type": "core::integer::u32"
-          },
-          {
-            "name": "target_id",
             "type": "core::integer::u32"
           }
         ],

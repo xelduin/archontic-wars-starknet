@@ -137,7 +137,7 @@
     "items": [
       {
         "type": "function",
-        "name": "spawn_protostar",
+        "name": "create_protostar",
         "inputs": [
           {
             "name": "x",
@@ -181,7 +181,7 @@
       },
       {
         "type": "function",
-        "name": "define_new_asteroid_cluster",
+        "name": "create_asteroid_cluster",
         "inputs": [
           {
             "name": "star_id",
