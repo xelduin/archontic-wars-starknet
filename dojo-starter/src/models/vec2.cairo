@@ -1,4 +1,4 @@
-use dojo_starter::utils::{abs_u64, max_u64};
+use dojo_starter::utils::math::{abs_u64, max_u64};
 
 #[derive(Serde, Copy, Drop, Introspect)]
 pub struct Vec2 {

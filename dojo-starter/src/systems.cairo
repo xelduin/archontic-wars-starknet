@@ -4,6 +4,8 @@ pub mod creation {
 
 pub mod authority {
     pub mod contracts;
+    #[cfg(test)]
+    mod tests;
 }
 
 pub mod movement {
