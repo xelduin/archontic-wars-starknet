@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "dust_claimedImpl",
-    "interface_name": "dojo_starter::systems::dust_system::dust_system::Idust_claimed"
+    "interface_name": "dojo_starter::systems::dust_systems::dust_systems::Idust_claimed"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::dust_system::dust_system::DustClaimed",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::DustClaimed",
     "members": [
       {
         "name": "body_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust_system::dust_system::Idust_claimed",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::Idust_claimed",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::dust_system::dust_system::DustClaimed"
+            "type": "dojo_starter::systems::dust_systems::dust_systems::DustClaimed"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::dust_system::dust_system::dust_claimed::Event",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::dust_claimed::Event",
     "kind": "enum",
     "variants": []
   }

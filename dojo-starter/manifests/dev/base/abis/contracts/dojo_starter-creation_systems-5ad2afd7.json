@@ -128,8 +128,8 @@
   },
   {
     "type": "impl",
-    "name": "BodyCreationImpl",
-    "interface_name": "dojo_starter::systems::body_creation::IBodyCreation"
+    "name": "CreationSystemsImpl",
+    "interface_name": "dojo_starter::systems::creation_systems::ICreationSystems"
   },
   {
     "type": "struct",
@@ -147,7 +147,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::body_creation::IBodyCreation",
+    "name": "dojo_starter::systems::creation_systems::ICreationSystems",
     "items": [
       {
         "type": "function",
@@ -221,11 +221,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::body_creation::body_creation::IDojoInit"
+    "interface_name": "dojo_starter::systems::creation_systems::creation_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::body_creation::body_creation::IDojoInit",
+    "name": "dojo_starter::systems::creation_systems::creation_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -285,7 +285,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::body_creation::body_creation::Event",
+    "name": "dojo_starter::systems::creation_systems::creation_systems::Event",
     "kind": "enum",
     "variants": [
       {

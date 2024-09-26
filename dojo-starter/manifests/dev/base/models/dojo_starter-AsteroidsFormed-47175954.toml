@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x4c4c2f6f119fb098b160d0e5a3a988fd11f0e231648a6bdf479080027ac212e"
-original_class_hash = "0x4c4c2f6f119fb098b160d0e5a3a988fd11f0e231648a6bdf479080027ac212e"
+class_hash = "0x1741d1f8ec09edf09a63f097f8b6aec2d54195b5e65bc9015a8d4136f03113d"
+original_class_hash = "0x1741d1f8ec09edf09a63f097f8b6aec2d54195b5e65bc9015a8d4136f03113d"
 abi = "manifests/dev/base/abis/models/dojo_starter-AsteroidsFormed-47175954.json"
 tag = "dojo_starter-AsteroidsFormed"
-qualified_path = "dojo_starter::systems::body_creation::body_creation::asteroids_formed"
+qualified_path = "dojo_starter::systems::creation_systems::creation_systems::asteroids_formed"
 manifest_name = "dojo_starter-AsteroidsFormed-47175954"
 
 [[members]]

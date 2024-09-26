@@ -1,0 +1,17 @@
+kind = "DojoContract"
+class_hash = "0x86f3bbe482fb573bf694c8181e984f2a58033805b69125f27d1d3d0413853"
+original_class_hash = "0x86f3bbe482fb573bf694c8181e984f2a58033805b69125f27d1d3d0413853"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-creation_systems-5ad2afd7.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-creation_systems"
+systems = [
+    "create_galaxy",
+    "create_protostar",
+    "form_star",
+    "form_asteroids",
+    "create_asteroid_cluster",
+]
+manifest_name = "dojo_starter-creation_systems-5ad2afd7"

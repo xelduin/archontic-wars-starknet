@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "dust_pool_enteredImpl",
-    "interface_name": "dojo_starter::systems::dust_system::dust_system::Idust_pool_entered"
+    "interface_name": "dojo_starter::systems::dust_systems::dust_systems::Idust_pool_entered"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::dust_system::dust_system::DustPoolEntered",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::DustPoolEntered",
     "members": [
       {
         "name": "body_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust_system::dust_system::Idust_pool_entered",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::Idust_pool_entered",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::dust_system::dust_system::DustPoolEntered"
+            "type": "dojo_starter::systems::dust_systems::dust_systems::DustPoolEntered"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::dust_system::dust_system::dust_pool_entered::Event",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::dust_pool_entered::Event",
     "kind": "enum",
     "variants": []
   }

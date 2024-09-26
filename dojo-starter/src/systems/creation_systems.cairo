@@ -3,7 +3,7 @@ use dojo_starter::models::vec2::Vec2;
 
 // Define the interface for the Body creation system
 #[dojo::interface]
-trait IBodyCreation {
+trait ICreationSystems {
     fn create_galaxy(ref world: IWorldDispatcher);
     fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, galaxy_id: u32);
     fn form_star(ref world: IWorldDispatcher, protostar_id: u32);
@@ -13,8 +13,8 @@ trait IBodyCreation {
 
 // Dojo decorator
 #[dojo::contract]
-mod body_creation {
-    use super::IBodyCreation;
+mod creation_systems {
+    use super::ICreationSystems;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
         owner::Owner, position::Position, mass::Mass, incubation::Incubation, loosh_sink::LooshSink,
@@ -22,10 +22,11 @@ mod body_creation {
     };
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use dojo_starter::systems::{
-        dust_system::dust_system::{InternalDustSystemImpl},
-        loosh_system::loosh_system::{InternalLooshSystemImpl, get_loosh_cost},
+        dust_systems::dust_systems::{InternalDustSystemsImpl},
+        loosh_systems::loosh_systems::{InternalLooshSystemsImpl, get_loosh_cost},
         authority_systems::authority_systems::{InternalAuthoritySystemsImpl},
         mass_systems::mass_systems::{InternalMassSystemsImpl},
+        movement_systems::movement_systems::{InternalMovementSystemsImpl}
     };
 
     // Structure to represent a ProtostarSpawned event
@@ -70,34 +71,34 @@ mod body_creation {
     }
 
     #[abi(embed_v0)]
-    impl BodyCreationImpl of IBodyCreation<ContractState> {
+    impl CreationSystemsImpl of ICreationSystems<ContractState> {
         fn create_galaxy(ref world: IWorldDispatcher) {
-            InternalBodyCreationImpl::create_galaxy(world);
+            InternalCreationSystemsImpl::create_galaxy(world);
         }
 
         fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, galaxy_id: u32) {
-            InternalBodyCreationImpl::create_protostar(world, coords, galaxy_id);
+            InternalCreationSystemsImpl::create_protostar(world, coords, galaxy_id);
         }
 
         fn form_star(ref world: IWorldDispatcher, protostar_id: u32) {
-            InternalBodyCreationImpl::form_star(world, protostar_id);
+            InternalCreationSystemsImpl::form_star(world, protostar_id);
         }
 
         fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32, amount: u64) {
-            InternalBodyCreationImpl::form_asteroids(world, star_id, cluster_id, amount);
+            InternalCreationSystemsImpl::form_asteroids(world, star_id, cluster_id, amount);
         }
 
         fn create_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32) {
-            InternalBodyCreationImpl::create_asteroid_cluster(world, star_id);
+            InternalCreationSystemsImpl::create_asteroid_cluster(world, star_id);
         }
     }
 
     #[generate_trait]
-    impl InternalBodyCreationImpl of InternalBodyCreationTrait {
+    impl InternalCreationSystemsImpl of InternalCreationSystemsTrait {
         fn create_galaxy(world: IWorldDispatcher) {
             let player = get_caller_address();
 
-            InternalLooshSystemImpl::spend_loosh(world, player, LooshSink::CreateGalaxy);
+            InternalLooshSystemsImpl::spend_loosh(world, player, LooshSink::CreateGalaxy);
 
             let body_id = world.uuid();
             set!(world, (CosmicBody { entity: body_id, body_type: CosmicBodyType::Galaxy },));
@@ -107,14 +108,14 @@ mod body_creation {
             let mass = 10000;
             InternalMassSystemsImpl::increase_mass(world, body_id, mass);
 
-            InternalDustSystemImpl::form_dust_pool(world, body_id);
+            InternalDustSystemsImpl::form_dust_pool(world, body_id);
         }
 
         fn create_protostar(world: IWorldDispatcher, coords: Vec2, galaxy_id: u32) {
             // Retrieve the current caller's address
             let player = get_caller_address();
 
-            InternalLooshSystemImpl::spend_loosh(world, player, LooshSink::CreateProtostar);
+            InternalLooshSystemsImpl::spend_loosh(world, player, LooshSink::CreateProtostar);
 
             let body_id = world.uuid();
             let creation_ts = get_block_timestamp();
@@ -135,8 +136,8 @@ mod body_creation {
             let mass = 1000;
             InternalMassSystemsImpl::increase_mass(world, body_id, mass);
 
-            InternalBodyMovementImpl::enter_orbit(world, body_id, galaxy_id);
-            InternalDustSystemImpl::enter_dust_pool(world, body_id, galaxy_id);
+            InternalMovementSystemsImpl::enter_orbit(world, body_id, galaxy_id);
+            InternalDustSystemsImpl::enter_dust_pool(world, body_id, galaxy_id);
 
             emit!(world, (ProtostarSpawned { body_id, x: coords.x, y: coords.y }));
         }
@@ -146,7 +147,7 @@ mod body_creation {
             assert(star_body.body_type == CosmicBodyType::Star, 'not a star');
 
             let player = get_caller_address();
-            InternalLooshSystemImpl::spend_loosh(world, player, LooshSink::CreateAsteroidCluster);
+            InternalLooshSystemsImpl::spend_loosh(world, player, LooshSink::CreateAsteroidCluster);
 
             let body_id = world.uuid();
             let star_position = get!(world, star_id, (Position));
@@ -160,8 +161,8 @@ mod body_creation {
             );
             InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
 
-            InternalBodyMovementImpl::enter_orbit(world, body_id, star_id);
-            InternalDustSystemImpl::enter_dust_pool(world, body_id, star_id);
+            InternalMovementSystemsImpl::enter_orbit(world, body_id, star_id);
+            InternalDustSystemsImpl::enter_dust_pool(world, body_id, star_id);
 
             emit!(world, (AsteroidClusterDefined { star_id, cluster_id: body_id }));
         }
@@ -173,7 +174,7 @@ mod body_creation {
             let current_ts = get_block_timestamp();
             assert(current_ts >= protostar_incubation.end_ts, 'incubation period not over');
 
-            InternalLooshSystemImpl::spend_loosh(world, player, LooshSink::FormStar);
+            InternalLooshSystemsImpl::spend_loosh(world, player, LooshSink::FormStar);
 
             set!(world, (CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
         }
@@ -184,7 +185,7 @@ mod body_creation {
 
             let cluster_mass = get!(world, cluster_id, (Mass));
             let dust_cost = mass * 1;
-            InternalDustSystemImpl::consume_dust(world, star_id, mass.try_into().unwrap());
+            InternalDustSystemsImpl::consume_dust(world, star_id, mass.try_into().unwrap());
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
             // Emit an event for asteroid formation
             emit!(world, (AsteroidsFormed { star_id, cluster_id }));

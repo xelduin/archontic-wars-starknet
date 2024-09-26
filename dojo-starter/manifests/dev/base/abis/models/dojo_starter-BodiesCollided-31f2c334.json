@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "bodies_collidedImpl",
-    "interface_name": "dojo_starter::systems::body_movement::body_movement::Ibodies_collided"
+    "interface_name": "dojo_starter::systems::movement_systems::movement_systems::Ibodies_collided"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::body_movement::body_movement::BodiesCollided",
+    "name": "dojo_starter::systems::movement_systems::movement_systems::BodiesCollided",
     "members": [
       {
         "name": "body_id",
@@ -390,7 +390,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::body_movement::body_movement::Ibodies_collided",
+    "name": "dojo_starter::systems::movement_systems::movement_systems::Ibodies_collided",
     "items": [
       {
         "type": "function",
@@ -398,7 +398,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::body_movement::body_movement::BodiesCollided"
+            "type": "dojo_starter::systems::movement_systems::movement_systems::BodiesCollided"
           }
         ],
         "outputs": [],
@@ -408,7 +408,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::body_movement::body_movement::bodies_collided::Event",
+    "name": "dojo_starter::systems::movement_systems::movement_systems::bodies_collided::Event",
     "kind": "enum",
     "variants": []
   }

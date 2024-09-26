@@ -2,7 +2,7 @@ use dojo_starter::models::vec2::Vec2;
 
 // Define the interface for the Body movement system
 #[dojo::interface]
-trait IBodyMovement {
+trait IMovementSystems {
     fn begin_travel(ref world: IWorldDispatcher, body_id: u32, target_position: Vec2);
     fn enter_orbit(ref world: IWorldDispatcher, body_id: u32, orbit_center: u32);
     fn exit_orbit(ref world: IWorldDispatcher, body_id: u32);
@@ -10,13 +10,13 @@ trait IBodyMovement {
 
 // Dojo decorator
 #[dojo::contract]
-mod body_movement {
-    use super::IBodyMovement;
+mod movement_systems {
+    use super::IMovementSystems;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
         position::Position, vec2::{Vec2, Vec2Impl}, travel_action::TravelAction, orbit::Orbit
     };
-    use dojo_starter::systems::{loosh_system::loosh_system::{InternalLooshSystemImpl}};
+    use dojo_starter::systems::{loosh_systems::loosh_systems::{InternalLooshSystemsImpl}};
 
 
     // Structure to represent a BodyMoved event
@@ -63,22 +63,22 @@ mod body_movement {
     }
 
     #[abi(embed_v0)]
-    impl BodyMovementImpl of IBodyMovement<ContractState> {
+    impl MovementSystemsImpl of IMovementSystems<ContractState> {
         fn begin_travel(ref world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
-            InternalBodyMovementImpl::begin_travel(world, body_id, target_position);
+            InternalMovementSystemsImpl::begin_travel(world, body_id, target_position);
         }
 
         fn enter_orbit(ref world: IWorldDispatcher, body_id: u32, orbit_center: u32) {
-            InternalBodyMovementImpl::enter_orbit(world, body_id, orbit_center);
+            InternalMovementSystemsImpl::enter_orbit(world, body_id, orbit_center);
         }
 
         fn exit_orbit(ref world: IWorldDispatcher, body_id: u32) {
-            InternalBodyMovementImpl::exit_orbit(world, body_id);
+            InternalMovementSystemsImpl::exit_orbit(world, body_id);
         }
     }
 
     #[generate_trait]
-    impl InternalBodyMovementImpl of InternalBodyMovementTrait {
+    impl InternalMovementSystemsImpl of InternalMovementSystemsTrait {
         fn begin_travel(world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
             let body_position = get!(world, body_id, (Position));
 
@@ -89,7 +89,7 @@ mod body_movement {
             let distance = target_position.chebyshev_distance(body_position.vec);
 
             let player = get_caller_address();
-            InternalLooshSystemImpl::spend_loosh_for_travel(world, player, distance);
+            InternalLooshSystemsImpl::spend_loosh_for_travel(world, player, distance);
 
             let time_per_coordinate = 60 * 15;
             let total_travel_time = time_per_coordinate * distance;

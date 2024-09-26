@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "body_entered_orbitImpl",
-    "interface_name": "dojo_starter::systems::body_movement::body_movement::Ibody_entered_orbit"
+    "interface_name": "dojo_starter::systems::movement_systems::movement_systems::Ibody_entered_orbit"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::body_movement::body_movement::BodyEnteredOrbit",
+    "name": "dojo_starter::systems::movement_systems::movement_systems::BodyEnteredOrbit",
     "members": [
       {
         "name": "body_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::body_movement::body_movement::Ibody_entered_orbit",
+    "name": "dojo_starter::systems::movement_systems::movement_systems::Ibody_entered_orbit",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::body_movement::body_movement::BodyEnteredOrbit"
+            "type": "dojo_starter::systems::movement_systems::movement_systems::BodyEnteredOrbit"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::body_movement::body_movement::body_entered_orbit::Event",
+    "name": "dojo_starter::systems::movement_systems::movement_systems::body_entered_orbit::Event",
     "kind": "enum",
     "variants": []
   }

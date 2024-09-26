@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x7574d3792264012019ebec87e2e3e71a6900144f5e0b52eba3315ae47e54ed"
-original_class_hash = "0x7574d3792264012019ebec87e2e3e71a6900144f5e0b52eba3315ae47e54ed"
+class_hash = "0x2a9ae850c48ee7bd6c273d31e974049824b99c49ec2f68d9c12f6ad63f4ddb7"
+original_class_hash = "0x2a9ae850c48ee7bd6c273d31e974049824b99c49ec2f68d9c12f6ad63f4ddb7"
 abi = "manifests/dev/base/abis/models/dojo_starter-BodyEnteredOrbit-579b4194.json"
 tag = "dojo_starter-BodyEnteredOrbit"
-qualified_path = "dojo_starter::systems::body_movement::body_movement::body_entered_orbit"
+qualified_path = "dojo_starter::systems::movement_systems::movement_systems::body_entered_orbit"
 manifest_name = "dojo_starter-BodyEnteredOrbit-579b4194"
 
 [[members]]

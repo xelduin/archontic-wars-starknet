@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x5dfc7af909427d43018caf2cfef6b20a57ffe91cf97975b95506c59478cb010"
-original_class_hash = "0x5dfc7af909427d43018caf2cfef6b20a57ffe91cf97975b95506c59478cb010"
+class_hash = "0x22d4099d61019d173de64fbcc97725d3070d5224af329c27bff2ce163db7e85"
+original_class_hash = "0x22d4099d61019d173de64fbcc97725d3070d5224af329c27bff2ce163db7e85"
 abi = "manifests/dev/base/abis/models/dojo_starter-AsteroidClusterDefined-112fe115.json"
 tag = "dojo_starter-AsteroidClusterDefined"
-qualified_path = "dojo_starter::systems::body_creation::body_creation::asteroid_cluster_defined"
+qualified_path = "dojo_starter::systems::creation_systems::creation_systems::asteroid_cluster_defined"
 manifest_name = "dojo_starter-AsteroidClusterDefined-112fe115"
 
 [[members]]

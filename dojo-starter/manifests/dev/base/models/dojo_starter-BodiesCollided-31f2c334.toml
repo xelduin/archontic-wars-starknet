@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x7816285522d5fd0774c796e6d67272fb5bb18f187a18d6ce043981c6a05433a"
-original_class_hash = "0x7816285522d5fd0774c796e6d67272fb5bb18f187a18d6ce043981c6a05433a"
+class_hash = "0x7153c948bc66a3c406bcd6d56a6d83b87a6fada927de1968d41e3e6f689a7bc"
+original_class_hash = "0x7153c948bc66a3c406bcd6d56a6d83b87a6fada927de1968d41e3e6f689a7bc"
 abi = "manifests/dev/base/abis/models/dojo_starter-BodiesCollided-31f2c334.json"
 tag = "dojo_starter-BodiesCollided"
-qualified_path = "dojo_starter::systems::body_movement::body_movement::bodies_collided"
+qualified_path = "dojo_starter::systems::movement_systems::movement_systems::bodies_collided"
 manifest_name = "dojo_starter-BodiesCollided-31f2c334"
 
 [[members]]

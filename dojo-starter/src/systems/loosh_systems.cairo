@@ -4,7 +4,7 @@ use dojo_starter::models::loosh_sink::LooshSink;
 
 // Define the interface
 #[dojo::interface]
-trait ILooshSystem {
+trait ILooshSystems {
     fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn burn_loosh(ref world: IWorldDispatcher, amount: u128);
@@ -14,8 +14,8 @@ trait ILooshSystem {
 
 // Dojo decorator
 #[dojo::contract]
-mod loosh_system {
-    use super::{ILooshSystem, get_loosh_cost};
+mod loosh_systems {
+    use super::{ILooshSystems, get_loosh_cost};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use dojo_starter::models::loosh_balance::LooshBalance;
     use dojo_starter::models::owner::Owner;
@@ -41,22 +41,22 @@ mod loosh_system {
     }
 
     #[abi(embed_v0)]
-    impl LooshSystemImpl of ILooshSystem<ContractState> {
+    impl LooshSystemsImpl of ILooshSystems<ContractState> {
         fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
             // Check that the incoming message comes from the authorized L1 contract
-            InternalLooshSystemImpl::mint_loosh(world, receiver, amount);
+            InternalLooshSystemsImpl::mint_loosh(world, receiver, amount);
         }
 
         fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
             let sender = get_caller_address();
 
-            InternalLooshSystemImpl::transfer_loosh(world, sender, receiver, amount);
+            InternalLooshSystemsImpl::transfer_loosh(world, sender, receiver, amount);
         }
 
         fn burn_loosh(ref world: IWorldDispatcher, amount: u128,) {
             let sender = get_caller_address();
 
-            InternalLooshSystemImpl::burn_loosh(world, sender, amount);
+            InternalLooshSystemsImpl::burn_loosh(world, sender, amount);
         }
 
 
@@ -69,7 +69,7 @@ mod loosh_system {
             // 1. Call get_archetype_reference_cost(archetype_id) to get cost.
             let cost = 0;
 
-            InternalLooshSystemImpl::transfer_loosh(world, sender, owner.address, cost);
+            InternalLooshSystemsImpl::transfer_loosh(world, sender, owner.address, cost);
         }
 
         fn get_archetype_reference_cost(
@@ -88,7 +88,7 @@ mod loosh_system {
     }
 
     #[generate_trait]
-    pub impl InternalLooshSystemImpl of InternalLooshSystemTrait {
+    pub impl InternalLooshSystemsImpl of InternalLooshSystemsTrait {
         fn transfer_loosh(
             world: IWorldDispatcher,
             sender: ContractAddress,

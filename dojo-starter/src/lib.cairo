@@ -1,8 +1,8 @@
 mod systems {
-    mod body_creation;
-    mod body_movement;
-    mod dust_system;
-    mod loosh_system;
+    mod creation_systems;
+    mod movement_systems;
+    mod dust_systems;
+    mod loosh_systems;
     mod authority_systems;
     mod mass_systems;
 }

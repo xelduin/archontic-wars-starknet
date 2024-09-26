@@ -128,63 +128,23 @@
   },
   {
     "type": "impl",
-    "name": "LooshSystemImpl",
-    "interface_name": "dojo_starter::systems::loosh_system::ILooshSystem"
+    "name": "DustSystemImpl",
+    "interface_name": "dojo_starter::systems::dust_systems::IDustSystem"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::loosh_system::ILooshSystem",
+    "name": "dojo_starter::systems::dust_systems::IDustSystem",
     "items": [
       {
         "type": "function",
-        "name": "l1_receive_loosh",
+        "name": "enter_dust_pool",
         "inputs": [
           {
-            "name": "receiver",
-            "type": "core::starknet::contract_address::ContractAddress"
+            "name": "body_id",
+            "type": "core::integer::u32"
           },
           {
-            "name": "amount",
-            "type": "core::integer::u128"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "send_loosh",
-        "inputs": [
-          {
-            "name": "receiver",
-            "type": "core::starknet::contract_address::ContractAddress"
-          },
-          {
-            "name": "amount",
-            "type": "core::integer::u128"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "burn_loosh",
-        "inputs": [
-          {
-            "name": "amount",
-            "type": "core::integer::u128"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "reference_archetype",
-        "inputs": [
-          {
-            "name": "archetype_id",
+            "name": "pool_id",
             "type": "core::integer::u32"
           }
         ],
@@ -193,10 +153,46 @@
       },
       {
         "type": "function",
-        "name": "get_archetype_reference_cost",
+        "name": "exit_dust_pool",
         "inputs": [
           {
-            "name": "archetype_id",
+            "name": "body_id",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "claim_dust",
+        "inputs": [
+          {
+            "name": "body_id",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "update_dust_pool",
+        "inputs": [
+          {
+            "name": "body_id",
+            "type": "core::integer::u32"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "get_dust_balance",
+        "inputs": [
+          {
+            "name": "body_id",
             "type": "core::integer::u32"
           }
         ],
@@ -206,17 +202,33 @@
           }
         ],
         "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "consume_dust",
+        "inputs": [
+          {
+            "name": "body_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "amount",
+            "type": "core::integer::u128"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
       }
     ]
   },
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::loosh_system::loosh_system::IDojoInit"
+    "interface_name": "dojo_starter::systems::dust_systems::dust_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::loosh_system::loosh_system::IDojoInit",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -276,7 +288,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::loosh_system::loosh_system::Event",
+    "name": "dojo_starter::systems::dust_systems::dust_systems::Event",
     "kind": "enum",
     "variants": [
       {

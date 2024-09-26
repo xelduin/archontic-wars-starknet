@@ -1,0 +1,15 @@
+kind = "DojoContract"
+class_hash = "0x54e5da04e969c762b1566b4507efdbef669a2a8c7442511c43523260ffffc88"
+original_class_hash = "0x54e5da04e969c762b1566b4507efdbef669a2a8c7442511c43523260ffffc88"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-movement_systems-3b0b90be.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-movement_systems"
+systems = [
+    "begin_travel",
+    "enter_orbit",
+    "exit_orbit",
+]
+manifest_name = "dojo_starter-movement_systems-3b0b90be"

@@ -16,7 +16,7 @@ trait IDustSystem {
 
 // Dojo decorator
 #[dojo::contract]
-mod dust_system {
+mod dust_systems {
     use super::{IDustSystem, calculate_ARPS, calculate_unclaimed_dust};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
@@ -76,19 +76,19 @@ mod dust_system {
     #[abi(embed_v0)]
     impl DustSystemImpl of IDustSystem<ContractState> {
         fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32) {
-            InternalDustSystemImpl::enter_dust_pool(world, body_id, pool_id);
+            InternalDustSystemsImpl::enter_dust_pool(world, body_id, pool_id);
         }
 
         fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
-            InternalDustSystemImpl::exit_dust_pool(world, body_id);
+            InternalDustSystemsImpl::exit_dust_pool(world, body_id);
         }
 
         fn claim_dust(ref world: IWorldDispatcher, body_id: u32) {
-            InternalDustSystemImpl::claim_dust(world, body_id);
+            InternalDustSystemsImpl::claim_dust(world, body_id);
         }
 
         fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
-            InternalDustSystemImpl::update_emission(world, body_id);
+            InternalDustSystemsImpl::update_emission(world, body_id);
         }
 
         fn get_dust_balance(ref world: IWorldDispatcher, body_id: u32) -> u128 {
@@ -98,12 +98,12 @@ mod dust_system {
         }
 
         fn consume_dust(ref world: IWorldDispatcher, body_id: u32, amount: u128) {
-            InternalDustSystemImpl::consume_dust(world, body_id, amount);
+            InternalDustSystemsImpl::consume_dust(world, body_id, amount);
         }
     }
 
     #[generate_trait]
-    impl InternalDustSystemImpl of InternalDustSystemTrait {
+    impl InternalDustSystemsImpl of InternalDustSystemsTrait {
         fn form_dust_pool(world: IWorldDispatcher, body_id: u32) {
             let cosmic_body_type = get!(world, body_id, (CosmicBody));
             assert(cosmic_body_type.body_type == CosmicBodyType::Galaxy, 'must be galaxy');

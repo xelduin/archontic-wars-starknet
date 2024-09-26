@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x47b4261696d5bc60a6fd0bf7b2b18000d4fc83d2230192796cb11eb780ea070"
-original_class_hash = "0x47b4261696d5bc60a6fd0bf7b2b18000d4fc83d2230192796cb11eb780ea070"
+class_hash = "0x44d03428f6d80c8ce0950835e08294df87714cef0016d97341158763140f943"
+original_class_hash = "0x44d03428f6d80c8ce0950835e08294df87714cef0016d97341158763140f943"
 abi = "manifests/dev/base/abis/models/dojo_starter-BodyMoved-67a1ead8.json"
 tag = "dojo_starter-BodyMoved"
-qualified_path = "dojo_starter::systems::body_movement::body_movement::body_moved"
+qualified_path = "dojo_starter::systems::movement_systems::movement_systems::body_moved"
 manifest_name = "dojo_starter-BodyMoved-67a1ead8"
 
 [[members]]
