@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "loosh_transferredImpl",
-    "interface_name": "dojo_starter::systems::loosh_systems::loosh_systems::Iloosh_transferred"
+    "interface_name": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::Iloosh_transferred"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::loosh_systems::loosh_systems::LooshTransferred",
+    "name": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::LooshTransferred",
     "members": [
       {
         "name": "sender",
@@ -386,7 +386,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::loosh_systems::loosh_systems::Iloosh_transferred",
+    "name": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::Iloosh_transferred",
     "items": [
       {
         "type": "function",
@@ -394,7 +394,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::loosh_systems::loosh_systems::LooshTransferred"
+            "type": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::LooshTransferred"
           }
         ],
         "outputs": [],
@@ -404,7 +404,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::loosh_systems::loosh_systems::loosh_transferred::Event",
+    "name": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::loosh_transferred::Event",
     "kind": "enum",
     "variants": []
   }

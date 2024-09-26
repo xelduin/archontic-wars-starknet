@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x3c5f97aac1d919df5e877810278850a85382a5c96cab03763fce44dd89fe4a8"
-original_class_hash = "0x3c5f97aac1d919df5e877810278850a85382a5c96cab03763fce44dd89fe4a8"
+class_hash = "0x1076a21f462c39d88abb7364d5619f38bd77d8fa1be4b233e3494ecb550ef69"
+original_class_hash = "0x1076a21f462c39d88abb7364d5619f38bd77d8fa1be4b233e3494ecb550ef69"
 abi = "manifests/dev/base/abis/models/dojo_starter-StarFormed-4b442116.json"
 tag = "dojo_starter-StarFormed"
-qualified_path = "dojo_starter::systems::creation_systems::creation_systems::star_formed"
+qualified_path = "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::star_formed"
 manifest_name = "dojo_starter-StarFormed-4b442116"
 
 [[members]]

@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "dust_pool_formedImpl",
-    "interface_name": "dojo_starter::systems::dust_systems::dust_systems::Idust_pool_formed"
+    "interface_name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::Idust_pool_formed"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::DustPoolFormed",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::DustPoolFormed",
     "members": [
       {
         "name": "body_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::Idust_pool_formed",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::Idust_pool_formed",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::dust_systems::dust_systems::DustPoolFormed"
+            "type": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::DustPoolFormed"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::dust_pool_formed::Event",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::dust_pool_formed::Event",
     "kind": "enum",
     "variants": []
   }

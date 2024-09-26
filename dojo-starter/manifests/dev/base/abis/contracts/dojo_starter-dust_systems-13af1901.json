@@ -129,11 +129,11 @@
   {
     "type": "impl",
     "name": "DustSystemImpl",
-    "interface_name": "dojo_starter::systems::dust_systems::IDustSystem"
+    "interface_name": "dojo_starter::systems::dust::contracts::dust_systems::IDustSystem"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust_systems::IDustSystem",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::IDustSystem",
     "items": [
       {
         "type": "function",
@@ -164,11 +164,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::dust_systems::dust_systems::IDojoInit"
+    "interface_name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::IDojoInit",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -228,7 +228,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::Event",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::Event",
     "kind": "enum",
     "variants": [
       {

@@ -129,11 +129,11 @@
   {
     "type": "impl",
     "name": "LooshSystemsImpl",
-    "interface_name": "dojo_starter::systems::loosh_systems::ILooshSystems"
+    "interface_name": "dojo_starter::systems::loosh::contracts::loosh_systems::ILooshSystems"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::loosh_systems::ILooshSystems",
+    "name": "dojo_starter::systems::loosh::contracts::loosh_systems::ILooshSystems",
     "items": [
       {
         "type": "function",
@@ -184,11 +184,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::loosh_systems::loosh_systems::IDojoInit"
+    "interface_name": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::loosh_systems::loosh_systems::IDojoInit",
+    "name": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -248,7 +248,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::loosh_systems::loosh_systems::Event",
+    "name": "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::Event",
     "kind": "enum",
     "variants": [
       {

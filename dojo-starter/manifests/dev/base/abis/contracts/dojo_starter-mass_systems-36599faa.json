@@ -129,11 +129,11 @@
   {
     "type": "impl",
     "name": "MassSystemsImpl",
-    "interface_name": "dojo_starter::systems::mass_systems::IMassSystems"
+    "interface_name": "dojo_starter::systems::mass::contracts::mass_systems::IMassSystems"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::mass_systems::IMassSystems",
+    "name": "dojo_starter::systems::mass::contracts::mass_systems::IMassSystems",
     "items": [
       {
         "type": "function",
@@ -160,11 +160,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::mass_systems::mass_systems::IDojoInit"
+    "interface_name": "dojo_starter::systems::mass::contracts::mass_systems::mass_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::mass_systems::mass_systems::IDojoInit",
+    "name": "dojo_starter::systems::mass::contracts::mass_systems::mass_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -224,7 +224,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::mass_systems::mass_systems::Event",
+    "name": "dojo_starter::systems::mass::contracts::mass_systems::mass_systems::Event",
     "kind": "enum",
     "variants": [
       {

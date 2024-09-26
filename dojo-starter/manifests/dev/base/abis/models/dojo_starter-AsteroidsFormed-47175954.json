@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "asteroids_formedImpl",
-    "interface_name": "dojo_starter::systems::creation_systems::creation_systems::Iasteroids_formed"
+    "interface_name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Iasteroids_formed"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::AsteroidsFormed",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::AsteroidsFormed",
     "members": [
       {
         "name": "star_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::Iasteroids_formed",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Iasteroids_formed",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::creation_systems::creation_systems::AsteroidsFormed"
+            "type": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::AsteroidsFormed"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::asteroids_formed::Event",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::asteroids_formed::Event",
     "kind": "enum",
     "variants": []
   }

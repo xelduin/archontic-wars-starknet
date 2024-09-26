@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "protostar_spawnedImpl",
-    "interface_name": "dojo_starter::systems::creation_systems::creation_systems::Iprotostar_spawned"
+    "interface_name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Iprotostar_spawned"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::ProtostarSpawned",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::ProtostarSpawned",
     "members": [
       {
         "name": "body_id",
@@ -386,7 +386,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::Iprotostar_spawned",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Iprotostar_spawned",
     "items": [
       {
         "type": "function",
@@ -394,7 +394,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::creation_systems::creation_systems::ProtostarSpawned"
+            "type": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::ProtostarSpawned"
           }
         ],
         "outputs": [],
@@ -404,7 +404,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::protostar_spawned::Event",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::protostar_spawned::Event",
     "kind": "enum",
     "variants": []
   }

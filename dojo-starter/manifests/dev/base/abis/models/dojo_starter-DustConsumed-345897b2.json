@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "dust_consumedImpl",
-    "interface_name": "dojo_starter::systems::dust_systems::dust_systems::Idust_consumed"
+    "interface_name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::Idust_consumed"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::DustConsumed",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::DustConsumed",
     "members": [
       {
         "name": "body_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::Idust_consumed",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::Idust_consumed",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::dust_systems::dust_systems::DustConsumed"
+            "type": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::DustConsumed"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::dust_systems::dust_systems::dust_consumed::Event",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::dust_consumed::Event",
     "kind": "enum",
     "variants": []
   }

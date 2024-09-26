@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "body_movedImpl",
-    "interface_name": "dojo_starter::systems::movement_systems::movement_systems::Ibody_moved"
+    "interface_name": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::Ibody_moved"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::movement_systems::movement_systems::BodyMoved",
+    "name": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::BodyMoved",
     "members": [
       {
         "name": "body_id",
@@ -386,7 +386,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::movement_systems::movement_systems::Ibody_moved",
+    "name": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::Ibody_moved",
     "items": [
       {
         "type": "function",
@@ -394,7 +394,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::movement_systems::movement_systems::BodyMoved"
+            "type": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::BodyMoved"
           }
         ],
         "outputs": [],
@@ -404,7 +404,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::movement_systems::movement_systems::body_moved::Event",
+    "name": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::body_moved::Event",
     "kind": "enum",
     "variants": []
   }

@@ -16,7 +16,9 @@ mod movement_systems {
     use dojo_starter::models::{
         position::Position, vec2::{Vec2, Vec2Impl}, travel_action::TravelAction, orbit::Orbit
     };
-    use dojo_starter::systems::{loosh_systems::loosh_systems::{InternalLooshSystemsImpl}};
+    use dojo_starter::systems::{
+        loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl}
+    };
 
 
     // Structure to represent a BodyMoved event

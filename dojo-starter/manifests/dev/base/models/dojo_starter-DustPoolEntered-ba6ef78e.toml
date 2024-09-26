@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x79ba47dc3c3bf8a770d409fac3dcdbc9019b802244ad4820c5584ddef35ff13"
-original_class_hash = "0x79ba47dc3c3bf8a770d409fac3dcdbc9019b802244ad4820c5584ddef35ff13"
+class_hash = "0x2cb1ebf7afe043db600cea78ffa70173b298bf417d2664a907459c1c0ffcdcd"
+original_class_hash = "0x2cb1ebf7afe043db600cea78ffa70173b298bf417d2664a907459c1c0ffcdcd"
 abi = "manifests/dev/base/abis/models/dojo_starter-DustPoolEntered-ba6ef78e.json"
 tag = "dojo_starter-DustPoolEntered"
-qualified_path = "dojo_starter::systems::dust_systems::dust_systems::dust_pool_entered"
+qualified_path = "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::dust_pool_entered"
 manifest_name = "dojo_starter-DustPoolEntered-ba6ef78e"
 
 [[members]]

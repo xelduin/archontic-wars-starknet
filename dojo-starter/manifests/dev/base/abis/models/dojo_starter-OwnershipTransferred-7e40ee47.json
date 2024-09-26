@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "ownership_transferredImpl",
-    "interface_name": "dojo_starter::systems::authority_systems::authority_systems::Iownership_transferred"
+    "interface_name": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::Iownership_transferred"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::authority_systems::authority_systems::OwnershipTransferred",
+    "name": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::OwnershipTransferred",
     "members": [
       {
         "name": "body_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::authority_systems::authority_systems::Iownership_transferred",
+    "name": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::Iownership_transferred",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::authority_systems::authority_systems::OwnershipTransferred"
+            "type": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::OwnershipTransferred"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::authority_systems::authority_systems::ownership_transferred::Event",
+    "name": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::ownership_transferred::Event",
     "kind": "enum",
     "variants": []
   }

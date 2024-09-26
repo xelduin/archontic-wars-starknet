@@ -22,11 +22,11 @@ mod creation_systems {
     };
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use dojo_starter::systems::{
-        dust_systems::dust_systems::{InternalDustSystemsImpl},
-        loosh_systems::loosh_systems::{InternalLooshSystemsImpl, get_loosh_cost},
-        authority_systems::authority_systems::{InternalAuthoritySystemsImpl},
-        mass_systems::mass_systems::{InternalMassSystemsImpl},
-        movement_systems::movement_systems::{InternalMovementSystemsImpl}
+        dust::contracts::dust_systems::dust_systems::{InternalDustSystemsImpl},
+        loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl, get_loosh_cost},
+        authority::contracts::authority_systems::authority_systems::{InternalAuthoritySystemsImpl},
+        mass::contracts::mass_systems::mass_systems::{InternalMassSystemsImpl},
+        movement::contracts::movement_systems::movement_systems::{InternalMovementSystemsImpl}
     };
 
     // Structure to represent a ProtostarSpawned event

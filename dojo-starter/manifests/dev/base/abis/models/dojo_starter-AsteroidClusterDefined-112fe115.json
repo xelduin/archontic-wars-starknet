@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "asteroid_cluster_definedImpl",
-    "interface_name": "dojo_starter::systems::creation_systems::creation_systems::Iasteroid_cluster_defined"
+    "interface_name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Iasteroid_cluster_defined"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::AsteroidClusterDefined",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::AsteroidClusterDefined",
     "members": [
       {
         "name": "star_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::Iasteroid_cluster_defined",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Iasteroid_cluster_defined",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::creation_systems::creation_systems::AsteroidClusterDefined"
+            "type": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::AsteroidClusterDefined"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::asteroid_cluster_defined::Event",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::asteroid_cluster_defined::Event",
     "kind": "enum",
     "variants": []
   }

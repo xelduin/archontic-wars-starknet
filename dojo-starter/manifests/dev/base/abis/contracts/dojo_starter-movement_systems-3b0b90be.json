@@ -129,7 +129,7 @@
   {
     "type": "impl",
     "name": "MovementSystemsImpl",
-    "interface_name": "dojo_starter::systems::movement_systems::IMovementSystems"
+    "interface_name": "dojo_starter::systems::movement::contracts::movement_systems::IMovementSystems"
   },
   {
     "type": "struct",
@@ -147,7 +147,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::movement_systems::IMovementSystems",
+    "name": "dojo_starter::systems::movement::contracts::movement_systems::IMovementSystems",
     "items": [
       {
         "type": "function",
@@ -198,11 +198,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::movement_systems::movement_systems::IDojoInit"
+    "interface_name": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::movement_systems::movement_systems::IDojoInit",
+    "name": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -262,7 +262,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::movement_systems::movement_systems::Event",
+    "name": "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::Event",
     "kind": "enum",
     "variants": [
       {

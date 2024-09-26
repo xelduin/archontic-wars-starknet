@@ -129,11 +129,11 @@
   {
     "type": "impl",
     "name": "AuthoritySystemsImpl",
-    "interface_name": "dojo_starter::systems::authority_systems::IAuthoritySystems"
+    "interface_name": "dojo_starter::systems::authority::contracts::authority_systems::IAuthoritySystems"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::authority_systems::IAuthoritySystems",
+    "name": "dojo_starter::systems::authority::contracts::authority_systems::IAuthoritySystems",
     "items": [
       {
         "type": "function",
@@ -156,11 +156,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::authority_systems::authority_systems::IDojoInit"
+    "interface_name": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::authority_systems::authority_systems::IDojoInit",
+    "name": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -220,7 +220,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::authority_systems::authority_systems::Event",
+    "name": "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::Event",
     "kind": "enum",
     "variants": [
       {

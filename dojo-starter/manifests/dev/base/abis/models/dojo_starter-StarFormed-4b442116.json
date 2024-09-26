@@ -364,11 +364,11 @@
   {
     "type": "impl",
     "name": "star_formedImpl",
-    "interface_name": "dojo_starter::systems::creation_systems::creation_systems::Istar_formed"
+    "interface_name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Istar_formed"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::StarFormed",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::StarFormed",
     "members": [
       {
         "name": "protostar_id",
@@ -382,7 +382,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::Istar_formed",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Istar_formed",
     "items": [
       {
         "type": "function",
@@ -390,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::systems::creation_systems::creation_systems::StarFormed"
+            "type": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::StarFormed"
           }
         ],
         "outputs": [],
@@ -400,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::creation_systems::creation_systems::star_formed::Event",
+    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::star_formed::Event",
     "kind": "enum",
     "variants": []
   }

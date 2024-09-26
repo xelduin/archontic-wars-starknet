@@ -1,9 +1,9 @@
 kind = "DojoModel"
-class_hash = "0x497a814db9b151a59bfd7078c2c47d0990278197a5ce8590bf9d15579bec703"
-original_class_hash = "0x497a814db9b151a59bfd7078c2c47d0990278197a5ce8590bf9d15579bec703"
+class_hash = "0x2f3e37567b6b86a132304081a6a6b4d79007959852f05664d13977a1242242a"
+original_class_hash = "0x2f3e37567b6b86a132304081a6a6b4d79007959852f05664d13977a1242242a"
 abi = "manifests/dev/base/abis/models/dojo_starter-LooshTransferred-2f915f92.json"
 tag = "dojo_starter-LooshTransferred"
-qualified_path = "dojo_starter::systems::loosh_systems::loosh_systems::loosh_transferred"
+qualified_path = "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::loosh_transferred"
 manifest_name = "dojo_starter-LooshTransferred-2f915f92"
 
 [[members]]
