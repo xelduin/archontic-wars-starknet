@@ -371,6 +371,14 @@
     "name": "dojo_starter::models::cosmic_body::CosmicBodyType",
     "variants": [
       {
+        "name": "None",
+        "type": "()"
+      },
+      {
+        "name": "Galaxy",
+        "type": "()"
+      },
+      {
         "name": "Protostar",
         "type": "()"
       },

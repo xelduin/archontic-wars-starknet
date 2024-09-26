@@ -148,6 +148,7 @@ mod loosh_system {
 
 fn get_loosh_cost(sink: LooshSink) -> u128 {
     match sink {
+        LooshSink::CreateGalaxy => 1000,
         LooshSink::CreateProtostar => 100,
         LooshSink::FormStar => 20,
         LooshSink::CreateAsteroidCluster => 10,

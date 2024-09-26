@@ -6,7 +6,6 @@ use dojo_starter::models::{
 // Define the interface for the Dust system
 #[dojo::interface]
 trait IDustSystem {
-    fn form_dust_pool(ref world: IWorldDispatcher, body_id: u32);
     fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32);
     fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32);
     fn claim_dust(ref world: IWorldDispatcher, body_id: u32);
@@ -22,7 +21,7 @@ mod dust_system {
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
         dust_balance::DustBalance, dust_accretion::DustAccretion, dust_emission::DustEmission,
-        orbit::Orbit, mass::Mass
+        orbit::Orbit, mass::Mass, cosmic_body::{CosmicBody, CosmicBodyType}
     };
 
     // Structure to represent a DustPoolFormed event
@@ -76,20 +75,6 @@ mod dust_system {
 
     #[abi(embed_v0)]
     impl DustSystemImpl of IDustSystem<ContractState> {
-        fn form_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
-            let emission_rate = 1000;
-            let current_ts = get_block_timestamp();
-
-            set!(
-                world,
-                (DustEmission {
-                    entity: body_id, emission_rate, ARPS: 0, last_update_ts: current_ts
-                })
-            );
-
-            emit!(world, (DustPoolFormed { body_id, timestamp: current_ts }));
-        }
-
         fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32) {
             InternalDustSystemImpl::enter_dust_pool(world, body_id, pool_id);
         }
@@ -119,6 +104,23 @@ mod dust_system {
 
     #[generate_trait]
     impl InternalDustSystemImpl of InternalDustSystemTrait {
+        fn form_dust_pool(world: IWorldDispatcher, body_id: u32) {
+            let cosmic_body_type = get!(world, body_id, (CosmicBody));
+            assert(cosmic_body_type.body_type == CosmicBodyType::Galaxy, 'must be galaxy');
+
+            let emission_rate = 1000;
+            let current_ts = get_block_timestamp();
+
+            set!(
+                world,
+                (DustEmission {
+                    entity: body_id, emission_rate, ARPS: 0, last_update_ts: current_ts
+                })
+            );
+
+            emit!(world, (DustPoolFormed { body_id, timestamp: current_ts }));
+        }
+
         fn enter_dust_pool(world: IWorldDispatcher, body_id: u32, pool_id: u32) {
             Self::update_emission(world, pool_id);
 

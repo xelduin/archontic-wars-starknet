@@ -1,9 +1,11 @@
 use starknet::{ContractAddress, get_caller_address};
+use dojo_starter::models::vec2::Vec2;
 
 // Define the interface for the Body creation system
 #[dojo::interface]
 trait IBodyCreation {
-    fn create_protostar(ref world: IWorldDispatcher, x: u64, y: u64);
+    fn create_galaxy(ref world: IWorldDispatcher);
+    fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, galaxy_id: u32);
     fn form_star(ref world: IWorldDispatcher, protostar_id: u32);
     fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32, amount: u64);
     fn create_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32);
@@ -69,8 +71,12 @@ mod body_creation {
 
     #[abi(embed_v0)]
     impl BodyCreationImpl of IBodyCreation<ContractState> {
-        fn create_protostar(ref world: IWorldDispatcher, x: u64, y: u64) {
-            InternalBodyCreationImpl::create_protostar(world, x, y);
+        fn create_galaxy(ref world: IWorldDispatcher) {
+            InternalBodyCreationImpl::create_galaxy(world);
+        }
+
+        fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, galaxy_id: u32) {
+            InternalBodyCreationImpl::create_protostar(world, coords, galaxy_id);
         }
 
         fn form_star(ref world: IWorldDispatcher, protostar_id: u32) {
@@ -88,7 +94,23 @@ mod body_creation {
 
     #[generate_trait]
     impl InternalBodyCreationImpl of InternalBodyCreationTrait {
-        fn create_protostar(world: IWorldDispatcher, x: u64, y: u64) {
+        fn create_galaxy(world: IWorldDispatcher) {
+            let player = get_caller_address();
+
+            InternalLooshSystemImpl::spend_loosh(world, player, LooshSink::CreateGalaxy);
+
+            let body_id = world.uuid();
+            set!(world, (CosmicBody { entity: body_id, body_type: CosmicBodyType::Galaxy },));
+
+            InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
+
+            let mass = 10000;
+            InternalMassSystemsImpl::increase_mass(world, body_id, mass);
+
+            InternalDustSystemImpl::form_dust_pool(world, body_id);
+        }
+
+        fn create_protostar(world: IWorldDispatcher, coords: Vec2, galaxy_id: u32) {
             // Retrieve the current caller's address
             let player = get_caller_address();
 
@@ -97,7 +119,6 @@ mod body_creation {
             let body_id = world.uuid();
             let creation_ts = get_block_timestamp();
             let incubation_period = 60 * 1000;
-            let mass = 1000;
 
             set!(
                 world,
@@ -106,15 +127,17 @@ mod body_creation {
                     Incubation {
                         entity: body_id, creation_ts, end_ts: creation_ts + incubation_period
                     },
-                    Position { entity: body_id, vec: Vec2 { x, y } }
+                    Position { entity: body_id, vec: coords }
                 )
             );
-
-            InternalMassSystemsImpl::increase_mass(world, body_id, mass);
             InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
-            let pool_id = 0; //TODO
-            InternalDustSystemImpl::enter_dust_pool(world, body_id, pool_id);
-            emit!(world, (ProtostarSpawned { body_id, x, y }));
+
+            let mass = 1000;
+            InternalMassSystemsImpl::increase_mass(world, body_id, mass);
+
+            InternalDustSystemImpl::enter_dust_pool(world, body_id, galaxy_id);
+
+            emit!(world, (ProtostarSpawned { body_id, x: coords.x, y: coords.y }));
         }
 
         fn create_asteroid_cluster(world: IWorldDispatcher, star_id: u32) {
