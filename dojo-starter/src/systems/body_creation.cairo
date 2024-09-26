@@ -135,6 +135,7 @@ mod body_creation {
             let mass = 1000;
             InternalMassSystemsImpl::increase_mass(world, body_id, mass);
 
+            InternalBodyMovementImpl::enter_orbit(world, body_id, galaxy_id);
             InternalDustSystemImpl::enter_dust_pool(world, body_id, galaxy_id);
 
             emit!(world, (ProtostarSpawned { body_id, x: coords.x, y: coords.y }));
@@ -157,8 +158,9 @@ mod body_creation {
                     Position { entity: body_id, vec: star_position.vec },
                 )
             );
-
             InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
+
+            InternalBodyMovementImpl::enter_orbit(world, body_id, star_id);
             InternalDustSystemImpl::enter_dust_pool(world, body_id, star_id);
 
             emit!(world, (AsteroidClusterDefined { star_id, cluster_id: body_id }));
