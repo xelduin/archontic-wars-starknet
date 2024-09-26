@@ -6,12 +6,8 @@ use dojo_starter::models::{
 // Define the interface for the Dust system
 #[dojo::interface]
 trait IDustSystem {
-    fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32);
-    fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32);
     fn claim_dust(ref world: IWorldDispatcher, body_id: u32);
     fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32);
-    fn get_dust_balance(ref world: IWorldDispatcher, body_id: u32) -> u128;
-    fn consume_dust(ref world: IWorldDispatcher, body_id: u32, amount: u128);
 }
 
 // Dojo decorator
@@ -75,30 +71,12 @@ mod dust_systems {
 
     #[abi(embed_v0)]
     impl DustSystemImpl of IDustSystem<ContractState> {
-        fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32) {
-            InternalDustSystemsImpl::enter_dust_pool(world, body_id, pool_id);
-        }
-
-        fn exit_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
-            InternalDustSystemsImpl::exit_dust_pool(world, body_id);
-        }
-
         fn claim_dust(ref world: IWorldDispatcher, body_id: u32) {
             InternalDustSystemsImpl::claim_dust(world, body_id);
         }
 
         fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
             InternalDustSystemsImpl::update_emission(world, body_id);
-        }
-
-        fn get_dust_balance(ref world: IWorldDispatcher, body_id: u32) -> u128 {
-            let dust_balance = get!(world, body_id, (DustBalance));
-
-            return dust_balance.balance;
-        }
-
-        fn consume_dust(ref world: IWorldDispatcher, body_id: u32, amount: u128) {
-            InternalDustSystemsImpl::consume_dust(world, body_id, amount);
         }
     }
 

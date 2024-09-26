@@ -8,8 +8,6 @@ trait ILooshSystems {
     fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn burn_loosh(ref world: IWorldDispatcher, amount: u128);
-    fn reference_archetype(ref world: IWorldDispatcher, archetype_id: u32);
-    fn get_archetype_reference_cost(ref world: IWorldDispatcher, archetype_id: u32) -> u128;
 }
 
 // Dojo decorator
@@ -57,33 +55,6 @@ mod loosh_systems {
             let sender = get_caller_address();
 
             InternalLooshSystemsImpl::burn_loosh(world, sender, amount);
-        }
-
-
-        fn reference_archetype(
-            ref world: IWorldDispatcher, archetype_id: u32
-        ) { // Get the cost for referencing an archetype
-            let sender = get_caller_address();
-
-            let owner = get!(world, archetype_id, (Owner));
-            // 1. Call get_archetype_reference_cost(archetype_id) to get cost.
-            let cost = 0;
-
-            InternalLooshSystemsImpl::transfer_loosh(world, sender, owner.address, cost);
-        }
-
-        fn get_archetype_reference_cost(
-            ref world: IWorldDispatcher, archetype_id: u32,
-        ) -> u128 { // Return the cost in Loosh for referencing the specified archetype
-            // 1. Lookup the cost from predefined archetype data.
-            // return cost;
-            let archetype_reference_cost = 0;
-
-            if archetype_id == 0 {
-                return 0;
-            } else {
-                return archetype_reference_cost;
-            }
         }
     }
 

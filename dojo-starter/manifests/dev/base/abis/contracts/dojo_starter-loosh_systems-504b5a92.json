@@ -178,34 +178,6 @@
         ],
         "outputs": [],
         "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "reference_archetype",
-        "inputs": [
-          {
-            "name": "archetype_id",
-            "type": "core::integer::u32"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "get_archetype_reference_cost",
-        "inputs": [
-          {
-            "name": "archetype_id",
-            "type": "core::integer::u32"
-          }
-        ],
-        "outputs": [
-          {
-            "type": "core::integer::u128"
-          }
-        ],
-        "state_mutability": "external"
       }
     ]
   },
