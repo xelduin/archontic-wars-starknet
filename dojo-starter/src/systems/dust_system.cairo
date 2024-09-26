@@ -113,14 +113,7 @@ mod dust_system {
         }
 
         fn consume_dust(ref world: IWorldDispatcher, body_id: u32, amount: u128) {
-            let dust_balance = get!(world, body_id, (DustBalance));
-            assert(dust_balance.balance >= amount, 'not enough dust');
-
-            let new_dust_balance = dust_balance.balance - amount;
-
-            set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
-
-            emit!(world, (DustConsumed { body_id, amount }));
+            InternalDustSystemImpl::consume_dust(world, body_id, amount);
         }
     }
 
@@ -191,6 +184,17 @@ mod dust_system {
             set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
 
             emit!(world, (DustClaimed { body_id, amount: unclaimed_dust }));
+        }
+
+        fn consume_dust(world: IWorldDispatcher, body_id: u32, amount: u128) {
+            let dust_balance = get!(world, body_id, (DustBalance));
+            assert(dust_balance.balance >= amount, 'not enough dust');
+
+            let new_dust_balance = dust_balance.balance - amount;
+
+            set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
+
+            emit!(world, (DustConsumed { body_id, amount }));
         }
     }
 }

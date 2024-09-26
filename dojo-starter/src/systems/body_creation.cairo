@@ -5,7 +5,7 @@ use starknet::{ContractAddress, get_caller_address};
 trait IBodyCreation {
     fn create_protostar(ref world: IWorldDispatcher, x: u64, y: u64);
     fn form_star(ref world: IWorldDispatcher, protostar_id: u32);
-    fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32);
+    fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32, amount: u64);
     fn create_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32);
 }
 
@@ -22,6 +22,8 @@ mod body_creation {
     use dojo_starter::systems::{
         dust_system::dust_system::{InternalDustSystemImpl},
         loosh_system::loosh_system::{InternalLooshSystemImpl, get_loosh_cost},
+        authority_systems::authority_systems::{InternalAuthoritySystemsImpl},
+        mass_systems::mass_systems::{InternalMassSystemsImpl},
     };
 
     // Structure to represent a ProtostarSpawned event
@@ -75,8 +77,8 @@ mod body_creation {
             InternalBodyCreationImpl::form_star(world, protostar_id);
         }
 
-        fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32) {
-            InternalBodyCreationImpl::form_asteroids(world, star_id, cluster_id);
+        fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32, amount: u64) {
+            InternalBodyCreationImpl::form_asteroids(world, star_id, cluster_id, amount);
         }
 
         fn create_asteroid_cluster(ref world: IWorldDispatcher, star_id: u32) {
@@ -100,19 +102,18 @@ mod body_creation {
             set!(
                 world,
                 (
+                    CosmicBody { entity: body_id, body_type: CosmicBodyType::Protostar },
                     Incubation {
                         entity: body_id, creation_ts, end_ts: creation_ts + incubation_period
                     },
-                    Owner { entity: body_id, address: player },
-                    Mass { entity: body_id, mass, orbit_mass: 0 },
                     Position { entity: body_id, vec: Vec2 { x, y } }
                 )
             );
 
+            InternalMassSystemsImpl::increase_mass(world, body_id, mass);
+            InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
             let pool_id = 0; //TODO
-
             InternalDustSystemImpl::enter_dust_pool(world, body_id, pool_id);
-
             emit!(world, (ProtostarSpawned { body_id, x, y }));
         }
 
@@ -131,22 +132,18 @@ mod body_creation {
                 (
                     CosmicBody { entity: body_id, body_type: CosmicBodyType::AsteroidCluster },
                     Position { entity: body_id, vec: star_position.vec },
-                    Owner { entity: body_id, address: player },
                 )
             );
 
+            InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
             InternalDustSystemImpl::enter_dust_pool(world, body_id, star_id);
 
             emit!(world, (AsteroidClusterDefined { star_id, cluster_id: body_id }));
         }
 
         fn form_star(world: IWorldDispatcher, protostar_id: u32) {
-            // 1. Check ownership: ensure the caller is the owner of the protostar.
             let player = get_caller_address();
-            let protostar_owner = get!(world, protostar_id, (Owner));
-            assert(player == protostar_owner.address, 'isnt owner');
 
-            // 2. Check if the incubation period is over.
             let protostar_incubation = get!(world, protostar_id, (Incubation));
             let current_ts = get_block_timestamp();
             assert(current_ts >= protostar_incubation.end_ts, 'incubation period not over');
@@ -156,23 +153,14 @@ mod body_creation {
             set!(world, (CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
         }
 
-        fn form_asteroids(world: IWorldDispatcher, star_id: u32, cluster_id: u32) {
-            // 1. Verify that the body is a Star.
+        fn form_asteroids(world: IWorldDispatcher, star_id: u32, cluster_id: u32, mass: u64) {
             let star_body = get!(world, star_id, (CosmicBody));
             assert(star_body.body_type == CosmicBodyType::Star, 'not a star');
 
-            let asteroid_mass = 100;
-            // 4. Call consume_dust for dust processing.
-            //InternalDustSystemImpl::spend_dust(world, star_id, cluster_id)
-
             let cluster_mass = get!(world, cluster_id, (Mass));
-            set!(
-                world,
-                (Mass {
-                    entity: cluster_id, mass: cluster_mass.mass + asteroid_mass, orbit_mass: 0
-                })
-            );
-
+            let dust_cost = mass * 1;
+            InternalDustSystemImpl::consume_dust(world, star_id, mass.try_into().unwrap());
+            InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
             // Emit an event for asteroid formation
             emit!(world, (AsteroidsFormed { star_id, cluster_id }));
         }

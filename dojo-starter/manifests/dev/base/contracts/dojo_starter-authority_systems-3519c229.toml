@@ -1,0 +1,11 @@
+kind = "DojoContract"
+class_hash = "0x13f8ffecbf418e0a169be69b2479f6ccd6ab16fcd34f932bb2026a088c2b636"
+original_class_hash = "0x13f8ffecbf418e0a169be69b2479f6ccd6ab16fcd34f932bb2026a088c2b636"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-authority_systems-3519c229.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-authority_systems"
+systems = ["transfer_ownership"]
+manifest_name = "dojo_starter-authority_systems-3519c229"

@@ -128,68 +128,24 @@
   },
   {
     "type": "impl",
-    "name": "BodyCreationImpl",
-    "interface_name": "dojo_starter::systems::body_creation::IBodyCreation"
+    "name": "AuthoritySystemsImpl",
+    "interface_name": "dojo_starter::systems::authority_systems::IAuthoritySystems"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::body_creation::IBodyCreation",
+    "name": "dojo_starter::systems::authority_systems::IAuthoritySystems",
     "items": [
       {
         "type": "function",
-        "name": "create_protostar",
+        "name": "transfer_ownership",
         "inputs": [
           {
-            "name": "x",
-            "type": "core::integer::u64"
-          },
-          {
-            "name": "y",
-            "type": "core::integer::u64"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "form_star",
-        "inputs": [
-          {
-            "name": "protostar_id",
-            "type": "core::integer::u32"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "form_asteroids",
-        "inputs": [
-          {
-            "name": "star_id",
+            "name": "body_id",
             "type": "core::integer::u32"
           },
           {
-            "name": "cluster_id",
-            "type": "core::integer::u32"
-          },
-          {
-            "name": "amount",
-            "type": "core::integer::u64"
-          }
-        ],
-        "outputs": [],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "create_asteroid_cluster",
-        "inputs": [
-          {
-            "name": "star_id",
-            "type": "core::integer::u32"
+            "name": "new_owner",
+            "type": "core::starknet::contract_address::ContractAddress"
           }
         ],
         "outputs": [],
@@ -200,11 +156,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::body_creation::body_creation::IDojoInit"
+    "interface_name": "dojo_starter::systems::authority_systems::authority_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::body_creation::body_creation::IDojoInit",
+    "name": "dojo_starter::systems::authority_systems::authority_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -264,7 +220,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::body_creation::body_creation::Event",
+    "name": "dojo_starter::systems::authority_systems::authority_systems::Event",
     "kind": "enum",
     "variants": [
       {

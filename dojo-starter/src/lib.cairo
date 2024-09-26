@@ -3,6 +3,8 @@ mod systems {
     mod body_movement;
     mod dust_system;
     mod loosh_system;
+    mod authority_systems;
+    mod mass_systems;
 }
 
 mod models;
