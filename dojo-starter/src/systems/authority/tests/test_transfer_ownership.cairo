@@ -49,3 +49,17 @@ fn test_transfer_ownership_success() {
     let new_owner_data = get!(world, body_id, Owner);
     assert(new_owner_data.address == new_owner, 'not owner');
 }
+
+#[test]
+#[available_gas(3000000000000)]
+#[should_panic(expected: ('not owner', 'ENTRYPOINT_FAILED'))]
+fn test_transfer_ownership_unsuccess() {
+    let (world, body_id, old_owner, new_owner, authority_dispatcher) = setup();
+
+    // Set the contract address for the caller as the old owner
+    set_contract_address(new_owner);
+    set_account_contract_address(new_owner);
+
+    // Call the transfer_ownership function from the old owner
+    authority_dispatcher.transfer_ownership(body_id, new_owner);
+}
