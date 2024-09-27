@@ -22,4 +22,6 @@ pub mod loosh {
 
 pub mod mass {
     pub mod contracts;
+    #[cfg(test)]
+    mod tests;
 }

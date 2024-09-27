@@ -63,7 +63,7 @@ mod mass_systems {
         fn decrease_mass(world: IWorldDispatcher, body_id: u32, mass: u64) {
             let body_mass = get!(world, body_id, (Mass));
 
-            assert(mass > body_mass.mass, 'not enough mass');
+            assert(body_mass.mass > mass, 'not enough mass');
 
             let new_mass = body_mass.mass - mass;
 

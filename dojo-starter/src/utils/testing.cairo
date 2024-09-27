@@ -6,7 +6,7 @@ use dojo_starter::models::{
 use dojo::utils::test::{spawn_test_world};
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
-use starknet::contract_address_const;
+use starknet::{ContractAddress, contract_address_const};
 
 fn spawn_world() -> IWorldDispatcher {
     let mut models = array![
@@ -29,4 +29,56 @@ fn spawn_world() -> IWorldDispatcher {
     world.uuid();
 
     return world;
+}
+
+fn spawn_star(
+    world: IWorldDispatcher, owner: ContractAddress, coords: vec2::Vec2, star_mass: u64
+) -> u32 {
+    let body_id = world.uuid();
+
+    set!(
+        world,
+        (
+            owner::Owner { entity: body_id, address: owner },
+            cosmic_body::CosmicBody {
+                entity: body_id, body_type: cosmic_body::CosmicBodyType::Star
+            },
+            position::Position { entity: body_id, vec: coords },
+            mass::Mass { entity: body_id, mass: star_mass, orbit_mass: 0 }
+        )
+    );
+
+    return body_id;
+}
+
+use dojo_starter::models::mass::Mass;
+use dojo_starter::models::position::Position;
+
+fn spawn_asteroid_cluster(
+    world: IWorldDispatcher, owner: ContractAddress, star_id: u32, cluster_mass: u64
+) -> u32 {
+    let body_id = world.uuid();
+
+    let star_mass = get!(world, star_id, (Mass));
+    let star_position = get!(world, star_id, (Position));
+
+    set!(
+        world,
+        (
+            owner::Owner { entity: body_id, address: owner },
+            cosmic_body::CosmicBody {
+                entity: body_id, body_type: cosmic_body::CosmicBodyType::AsteroidCluster
+            },
+            position::Position { entity: body_id, vec: star_position.vec },
+            orbit::Orbit { entity: body_id, orbit_center: star_id },
+            mass::Mass { entity: body_id, mass: cluster_mass, orbit_mass: 0 },
+            mass::Mass {
+                entity: star_id,
+                mass: star_mass.mass,
+                orbit_mass: star_mass.orbit_mass + cluster_mass
+            }
+        )
+    );
+
+    return body_id;
 }
