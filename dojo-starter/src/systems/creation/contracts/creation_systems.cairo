@@ -183,8 +183,6 @@ mod creation_systems {
             let star_body = get!(world, star_id, (CosmicBody));
             assert(star_body.body_type == CosmicBodyType::Star, 'not a star');
 
-            let cluster_mass = get!(world, cluster_id, (Mass));
-            let dust_cost = mass * 1;
             InternalDustSystemsImpl::consume_dust(world, star_id, mass.try_into().unwrap());
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
             // Emit an event for asteroid formation
