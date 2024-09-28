@@ -46,15 +46,7 @@ fn setup() -> (
 #[test]
 #[available_gas(3000000000000)]
 fn test_transfer_mass() {
-    let (
-        world,
-        sender_star_id,
-        sender_asteroid_id,
-        receiver_asteroid_id,
-        sender_owner,
-        receiver_owner,
-        mass_dispatcher
-    ) =
+    let (world, _, sender_asteroid_id, receiver_asteroid_id, sender_owner, _, mass_dispatcher) =
         setup();
 
     set_contract_address(sender_owner);

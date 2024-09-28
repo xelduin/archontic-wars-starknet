@@ -54,7 +54,7 @@ fn test_transfer_ownership_success() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('not owner', 'ENTRYPOINT_FAILED'))]
 fn test_transfer_ownership_unsuccess() {
-    let (world, body_id, old_owner, new_owner, authority_dispatcher) = setup();
+    let (_, body_id, _, new_owner, authority_dispatcher) = setup();
 
     // Set the contract address for the caller as the old owner
     set_contract_address(new_owner);
