@@ -39,8 +39,7 @@ mod mass_systems {
         ) {
             let sender_type = get!(world, sender_body_id, (CosmicBody));
             assert(
-                sender_type.body_type == CosmicBodyType::AsteroidCluster,
-                'only asteroids can send mass'
+                sender_type.body_type == CosmicBodyType::AsteroidCluster, 'not asteroid cluster'
             );
 
             let sender_position = get!(world, sender_body_id, (Position));

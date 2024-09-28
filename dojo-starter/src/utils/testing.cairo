@@ -55,12 +55,9 @@ use dojo_starter::models::mass::Mass;
 use dojo_starter::models::position::Position;
 
 fn spawn_asteroid_cluster(
-    world: IWorldDispatcher, owner: ContractAddress, star_id: u32, cluster_mass: u64
+    world: IWorldDispatcher, owner: ContractAddress, coords: vec2::Vec2, cluster_mass: u64
 ) -> u32 {
     let body_id = world.uuid();
-
-    let star_mass = get!(world, star_id, (Mass));
-    let star_position = get!(world, star_id, (Position));
 
     set!(
         world,
@@ -69,14 +66,8 @@ fn spawn_asteroid_cluster(
             cosmic_body::CosmicBody {
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::AsteroidCluster
             },
-            position::Position { entity: body_id, vec: star_position.vec },
-            orbit::Orbit { entity: body_id, orbit_center: star_id },
+            position::Position { entity: body_id, vec: coords },
             mass::Mass { entity: body_id, mass: cluster_mass, orbit_mass: 0 },
-            mass::Mass {
-                entity: star_id,
-                mass: star_mass.mass,
-                orbit_mass: star_mass.orbit_mass + cluster_mass
-            }
         )
     );
 
