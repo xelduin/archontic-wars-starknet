@@ -121,10 +121,11 @@ mod dust_systems {
         }
 
         fn exit_dust_pool(world: IWorldDispatcher, body_id: u32) {
-            Self::claim_dust(world, body_id);
-
             let body_orbit = get!(world, body_id, (Orbit));
             let pool_id = body_orbit.orbit_center;
+
+            Self::update_emission(world, body_id);
+            Self::claim_dust(world, body_id);
 
             emit!(world, (DustPoolExited { body_id, pool_id }));
         }
@@ -151,7 +152,6 @@ mod dust_systems {
         fn claim_dust(world: IWorldDispatcher, body_id: u32) {
             let orbit = get!(world, body_id, (Orbit));
             let pool_id = orbit.orbit_center;
-            Self::update_emission(world, pool_id);
 
             let pool_emission = get!(world, pool_id, (DustEmission));
             let body_accretion = get!(world, body_id, (DustAccretion));
