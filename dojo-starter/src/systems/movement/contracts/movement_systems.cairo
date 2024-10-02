@@ -83,21 +83,20 @@ mod movement_systems {
     impl InternalMovementSystemsImpl of InternalMovementSystemsTrait {
         fn begin_travel(world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
             let body_position = get!(world, body_id, (Position));
+            assert(body_position.vec.is_equal(target_position) == false, 'body already at target');
 
-            assert(body_position.vec.is_equal(target_position), 'body already here');
-
-            Self::exit_orbit(world, body_id);
-
-            let distance = target_position.chebyshev_distance(body_position.vec);
+            let body_orbit = get!(world, body_id, (Orbit));
+            assert(body_orbit.orbit_center == 0, 'body in an orbit');
 
             let player = get_caller_address();
+            let distance = target_position.chebyshev_distance(body_position.vec);
             InternalLooshSystemsImpl::spend_loosh_for_travel(world, player, distance);
 
-            let time_per_coordinate = 60 * 15;
-            let total_travel_time = time_per_coordinate * distance;
             let depart_ts = get_block_timestamp();
+            let seconds_per_coordinate = 60 * 15;
+            let total_travel_time = seconds_per_coordinate * distance;
             let arrival_ts = depart_ts + total_travel_time;
-            set!(world, (TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }))
+            set!(world, (TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }));
         }
 
         fn end_travel(world: IWorldDispatcher, body_id: u32) {
@@ -105,7 +104,7 @@ mod movement_systems {
             let current_ts = get_block_timestamp();
 
             assert(travel_action.arrival_ts != 0, 'invalid travel action');
-            assert(current_ts > travel_action.arrival_ts, 'not arrived');
+            assert(current_ts >= travel_action.arrival_ts, 'not arrived');
 
             set!(world, (Position { entity: body_id, vec: travel_action.target_position }));
 
@@ -113,17 +112,14 @@ mod movement_systems {
         }
 
         fn enter_orbit(world: IWorldDispatcher, body_id: u32, orbit_center: u32) {
-            let body_position = get!(world, body_id, (Position));
-            let orbit_center_position = get!(world, body_id, (Position));
-
             let body_orbit = get!(world, body_id, (Orbit));
             assert(body_orbit.orbit_center != orbit_center, 'already in orbit');
 
-            if !body_position.vec.is_equal(orbit_center_position.vec) {
-                Self::end_travel(world, body_id);
-            }
+            let body_position = get!(world, body_id, (Position));
+            let orbit_center_position = get!(world, body_id, (Position));
+            assert(body_position.vec.is_equal(orbit_center_position.vec), 'not in proximity');
 
-            set!(world, (Orbit { entity: body_id, orbit_center }))
+            set!(world, (Orbit { entity: body_id, orbit_center }));
         }
 
         fn exit_orbit(world: IWorldDispatcher, body_id: u32) {
