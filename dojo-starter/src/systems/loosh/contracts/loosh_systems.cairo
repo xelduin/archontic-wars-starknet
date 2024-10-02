@@ -6,7 +6,7 @@ use dojo_starter::models::loosh_sink::LooshSink;
 #[dojo::interface]
 trait ILooshSystems {
     fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
-    fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
+    fn transfer_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn burn_loosh(ref world: IWorldDispatcher, amount: u128);
 }
 
@@ -45,7 +45,7 @@ mod loosh_systems {
             InternalLooshSystemsImpl::mint_loosh(world, receiver, amount);
         }
 
-        fn send_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
+        fn transfer_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
             let sender = get_caller_address();
 
             InternalLooshSystemsImpl::transfer_loosh(world, sender, receiver, amount);
@@ -68,7 +68,7 @@ mod loosh_systems {
         ) {
             let current_sender_balance = get!(world, sender, (LooshBalance));
 
-            assert(current_sender_balance.balance >= amount, 'not enough Loosh');
+            assert(current_sender_balance.balance >= amount, 'insufficient balance');
             let new_sender_balance = current_sender_balance.balance - amount;
 
             let current_receiver_balance = get!(world, sender, (LooshBalance));
