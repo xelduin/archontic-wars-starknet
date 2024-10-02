@@ -31,6 +31,29 @@ fn spawn_world() -> IWorldDispatcher {
     return world;
 }
 
+fn spawn_galaxy(world: IWorldDispatcher, owner: ContractAddress, emission_rate: u128) -> u32 {
+    let body_id = world.uuid();
+
+    set!(
+        world,
+        (
+            owner::Owner { entity: body_id, address: owner },
+            cosmic_body::CosmicBody {
+                entity: body_id, body_type: cosmic_body::CosmicBodyType::Galaxy
+            }
+        )
+    );
+
+    set!(
+        world,
+        (dust_emission::DustEmission {
+            entity: body_id, emission_rate: 1000, ARPS: 0, last_update_ts: 0
+        })
+    );
+
+    return body_id;
+}
+
 fn spawn_star(
     world: IWorldDispatcher, owner: ContractAddress, coords: vec2::Vec2, star_mass: u64
 ) -> u32 {
