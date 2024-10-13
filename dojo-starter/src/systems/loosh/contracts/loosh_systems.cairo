@@ -69,9 +69,10 @@ mod loosh_systems {
             let current_sender_balance = get!(world, sender, (LooshBalance));
 
             assert(current_sender_balance.balance >= amount, 'insufficient balance');
+
             let new_sender_balance = current_sender_balance.balance - amount;
 
-            let current_receiver_balance = get!(world, sender, (LooshBalance));
+            let current_receiver_balance = get!(world, receiver, (LooshBalance));
             let new_receiver_balance = current_receiver_balance.balance + amount;
 
             set!(

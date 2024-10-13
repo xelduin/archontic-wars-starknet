@@ -14,10 +14,14 @@ pub mod movement {
 
 pub mod dust {
     pub mod contracts;
+    #[cfg(test)]
+    mod tests;
 }
 
 pub mod loosh {
     pub mod contracts;
+    #[cfg(test)]
+    mod tests;
 }
 
 pub mod mass {

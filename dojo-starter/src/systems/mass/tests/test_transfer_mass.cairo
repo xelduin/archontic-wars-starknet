@@ -88,7 +88,6 @@ fn test_transfer_mass_not_owner() {
     set_account_contract_address(receiver_owner);
 
     let old_sender_mass = get!(world, sender_asteroid_id, Mass);
-    let old_receiver_mass = get!(world, receiver_asteroid_id, Mass);
 
     let mass_transfer = old_sender_mass.mass / 2;
 

@@ -1,6 +1,7 @@
 use dojo_starter::models::owner::Owner;
 use dojo_starter::models::mass::Mass;
 use dojo_starter::models::vec2::Vec2;
+use dojo_starter::models::loosh_balance::LooshBalance;
 
 use starknet::{ContractAddress, testing::{set_contract_address, set_account_contract_address}};
 use starknet::contract_address_const;
@@ -42,12 +43,12 @@ fn test_transfer_loosh() {
     let old_sender_balance = get!(world, sender_owner, LooshBalance);
     let old_receiver_balance = get!(world, receiver_owner, LooshBalance);
 
-    let loosh_amount = old_sender_balance / 2;
+    let loosh_amount = old_sender_balance.balance / 2;
     loosh_dispatcher.transfer_loosh(receiver_owner, loosh_amount);
 
     let new_sender_balance = get!(world, sender_owner, LooshBalance);
     assert(
-        old_sender_balance.balance == old_sender_balance.balance - loosh_amount,
+        new_sender_balance.balance == old_sender_balance.balance - loosh_amount,
         'sender loosh not decreased'
     );
 
@@ -69,6 +70,6 @@ fn test_transfer_loosh_above_balance() {
 
     let old_sender_balance = get!(world, sender_owner, LooshBalance);
 
-    let loosh_amount = old_sender_balance + 1;
+    let loosh_amount = old_sender_balance.balance + 1;
     loosh_dispatcher.transfer_loosh(receiver_owner, loosh_amount);
 }

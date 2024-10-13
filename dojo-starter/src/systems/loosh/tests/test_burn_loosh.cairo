@@ -1,6 +1,7 @@
 use dojo_starter::models::owner::Owner;
 use dojo_starter::models::mass::Mass;
 use dojo_starter::models::vec2::Vec2;
+use dojo_starter::models::loosh_balance::LooshBalance;
 
 use starknet::{ContractAddress, testing::{set_contract_address, set_account_contract_address}};
 use starknet::contract_address_const;
@@ -33,19 +34,19 @@ fn setup() -> (IWorldDispatcher, ContractAddress, ILooshSystemsDispatcher) {
 #[test]
 #[available_gas(3000000000000)]
 fn test_burn_loosh() {
-    let (world, sender_owner, receiver_owner, loosh_dispatcher) = setup();
+    let (world, sender_owner, loosh_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
     let old_sender_balance = get!(world, sender_owner, LooshBalance);
+    let loosh_amount = old_sender_balance.balance / 2;
 
-    let loosh_amount = old_sender_balance / 2;
     loosh_dispatcher.burn_loosh(loosh_amount);
 
     let new_sender_balance = get!(world, sender_owner, LooshBalance);
     assert(
-        old_sender_balance.balance == old_sender_balance.balance - loosh_amount,
+        new_sender_balance.balance == old_sender_balance.balance - loosh_amount,
         'sender loosh not decreased'
     );
 }
@@ -53,14 +54,14 @@ fn test_burn_loosh() {
 #[test]
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient balance', 'ENTRYPOINT_FAILED'))]
-fn test_transfer_loosh_above_balance() {
-    let (world, sender_owner, receiver_owner, loosh_dispatcher) = setup();
+fn test_burn_loosh_above_balance() {
+    let (world, sender_owner, loosh_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
     let old_sender_balance = get!(world, sender_owner, LooshBalance);
 
-    let loosh_amount = old_sender_balance + 1;
-    loosh_dispatcher.burn_loosh(receiver_owner, loosh_amount);
+    let loosh_amount = old_sender_balance.balance + 1;
+    loosh_dispatcher.burn_loosh(loosh_amount);
 }
