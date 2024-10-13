@@ -8,6 +8,7 @@ use dojo_starter::models::{
 trait IDustSystem {
     fn claim_dust(ref world: IWorldDispatcher, body_id: u32);
     fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32);
+    fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32);
 }
 
 // Dojo decorator
@@ -77,6 +78,10 @@ mod dust_systems {
 
         fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
             InternalDustSystemsImpl::update_emission(world, body_id);
+        }
+
+        fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32) {
+            InternalDustSystemsImpl::enter_dust_pool(world, body_id, pool_id);
         }
     }
 
