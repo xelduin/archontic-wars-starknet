@@ -31,7 +31,9 @@ fn spawn_world() -> IWorldDispatcher {
     return world;
 }
 
-fn spawn_galaxy(world: IWorldDispatcher, owner: ContractAddress, emission_rate: u128) -> u32 {
+fn spawn_galaxy(
+    world: IWorldDispatcher, owner: ContractAddress, coords: vec2::Vec2, emission_rate: u128
+) -> u32 {
     let body_id = world.uuid();
 
     set!(
@@ -40,7 +42,8 @@ fn spawn_galaxy(world: IWorldDispatcher, owner: ContractAddress, emission_rate: 
             owner::Owner { entity: body_id, address: owner },
             cosmic_body::CosmicBody {
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::Galaxy
-            }
+            },
+            position::Position { entity: body_id, vec: coords }
         )
     );
 
