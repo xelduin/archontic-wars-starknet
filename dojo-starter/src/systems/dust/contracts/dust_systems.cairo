@@ -105,6 +105,9 @@ mod dust_systems {
         }
 
         fn enter_dust_pool(world: IWorldDispatcher, body_id: u32, pool_id: u32) {
+            let child_orbit = get!(world, body_id, (Orbit));
+            assert(child_orbit.orbit_center == pool_id, 'not in orbit');
+
             Self::update_emission(world, pool_id);
 
             let child_mass = get!(world, body_id, (Mass));
