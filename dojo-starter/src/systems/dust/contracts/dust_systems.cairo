@@ -161,7 +161,13 @@ mod dust_systems {
             let current_dust = get!(world, body_id, (DustBalance));
             let new_dust_balance = current_dust.balance + unclaimed_dust;
 
-            set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
+            set!(
+                world,
+                (
+                    DustBalance { entity: body_id, balance: new_dust_balance },
+                    DustAccretion { entity: body_id, debt: pool_emission.ARPS }
+                )
+            );
 
             emit!(world, (DustClaimed { body_id, amount: unclaimed_dust }));
         }
