@@ -5,16 +5,16 @@ use dojo_starter::models::{
 
 // Define the interface for the Dust system
 #[dojo::interface]
-trait IDustSystem {
+trait IDustSystems {
     fn claim_dust(ref world: IWorldDispatcher, body_id: u32);
-    fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32);
+    fn update_emission(ref world: IWorldDispatcher, body_id: u32);
     fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32);
 }
 
 // Dojo decorator
 #[dojo::contract]
 mod dust_systems {
-    use super::{IDustSystem, calculate_ARPS, calculate_unclaimed_dust};
+    use super::{IDustSystems, calculate_ARPS, calculate_unclaimed_dust};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
         dust_balance::DustBalance, dust_accretion::DustAccretion, dust_emission::DustEmission,
@@ -71,12 +71,12 @@ mod dust_systems {
     }
 
     #[abi(embed_v0)]
-    impl DustSystemImpl of IDustSystem<ContractState> {
+    impl DustSystemsImpl of IDustSystems<ContractState> {
         fn claim_dust(ref world: IWorldDispatcher, body_id: u32) {
             InternalDustSystemsImpl::claim_dust(world, body_id);
         }
 
-        fn update_dust_pool(ref world: IWorldDispatcher, body_id: u32) {
+        fn update_emission(ref world: IWorldDispatcher, body_id: u32) {
             InternalDustSystemsImpl::update_emission(world, body_id);
         }
 
@@ -131,6 +131,7 @@ mod dust_systems {
         fn exit_dust_pool(world: IWorldDispatcher, body_id: u32) {
             let body_orbit = get!(world, body_id, (Orbit));
             let pool_id = body_orbit.orbit_center;
+            //assert(body_orbit.orbit_center == pool_id, 'not in orbit');
 
             Self::update_emission(world, body_id);
             Self::claim_dust(world, body_id);
@@ -158,8 +159,9 @@ mod dust_systems {
         }
 
         fn claim_dust(world: IWorldDispatcher, body_id: u32) {
-            let orbit = get!(world, body_id, (Orbit));
-            let pool_id = orbit.orbit_center;
+            let body_orbit = get!(world, body_id, (Orbit));
+            let pool_id = body_orbit.orbit_center;
+            assert(pool_id != 0, 'not in a pool');
 
             let pool_emission = get!(world, pool_id, (DustEmission));
             let body_accretion = get!(world, body_id, (DustAccretion));
@@ -204,6 +206,7 @@ fn calculate_unclaimed_dust(
 
 
 fn calculate_ARPS(current_ts: u64, pool_emission: DustEmission, pool_mass: Mass) -> u128 {
+    assert(pool_mass.orbit_mass > 0, 'orbit mass is zero');
     let reward_per_share = pool_emission.emission_rate / pool_mass.orbit_mass.try_into().unwrap();
     let elapsed_ts = current_ts - pool_emission.last_update_ts;
     let ARPS_change = reward_per_share * elapsed_ts.try_into().unwrap();
