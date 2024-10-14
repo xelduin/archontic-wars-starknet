@@ -9,7 +9,9 @@ use dojo_starter::systems::mass::contracts::mass_systems::{
     mass_systems, IMassSystemsDispatcher, IMassSystemsDispatcherTrait
 };
 
-use dojo_starter::utils::testing::{spawn_world, spawn_star, spawn_asteroid_cluster};
+use dojo_starter::utils::testing::{
+    world::spawn_world, spawners::spawn_star, spawners::spawn_asteroid_cluster
+};
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 

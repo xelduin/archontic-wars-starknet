@@ -6,7 +6,7 @@ use dojo_starter::systems::authority::contracts::authority_systems::{
     authority_systems, IAuthoritySystemsDispatcher, IAuthoritySystemsDispatcherTrait
 };
 
-use dojo_starter::utils::testing::{spawn_world};
+use dojo_starter::utils::testing::{world::spawn_world};
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
@@ -14,7 +14,7 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 fn setup() -> (
     IWorldDispatcher, u32, ContractAddress, ContractAddress, IAuthoritySystemsDispatcher
 ) {
-    let world = spawn_world(); // Assume spawn_world sets up the initial world state
+    let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 
     let authority_address = world
         .deploy_contract('salt', authority_systems::TEST_CLASS_HASH.try_into().unwrap());

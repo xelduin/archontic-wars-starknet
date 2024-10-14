@@ -128,12 +128,12 @@
   },
   {
     "type": "impl",
-    "name": "DustSystemImpl",
-    "interface_name": "dojo_starter::systems::dust::contracts::dust_systems::IDustSystem"
+    "name": "DustSystemsImpl",
+    "interface_name": "dojo_starter::systems::dust::contracts::dust_systems::IDustSystems"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::dust::contracts::dust_systems::IDustSystem",
+    "name": "dojo_starter::systems::dust::contracts::dust_systems::IDustSystems",
     "items": [
       {
         "type": "function",
