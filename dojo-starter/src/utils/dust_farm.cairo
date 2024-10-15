@@ -1,4 +1,5 @@
 use dojo_starter::models::dust_emission::DustEmission;
+use dojo_starter::models::dust_accretion::DustAccretion;
 use dojo_starter::models::mass::Mass;
 
 fn calculate_ARPS(at_ts: u64, pool_emission: DustEmission, pool_mass: Mass) -> u128 {
@@ -11,3 +12,13 @@ fn calculate_ARPS(at_ts: u64, pool_emission: DustEmission, pool_mass: Mass) -> u
 
     return updated_ARPS;
 }
+
+fn calculate_unclaimed_dust(
+    dust_emission: DustEmission, dust_accretion: DustAccretion, body_mass: Mass
+) -> u128 {
+    let updated_body_accretion = dust_emission.ARPS * body_mass.mass.try_into().unwrap();
+    let unclaimed_dust = updated_body_accretion - dust_accretion.debt;
+
+    return unclaimed_dust;
+}
+

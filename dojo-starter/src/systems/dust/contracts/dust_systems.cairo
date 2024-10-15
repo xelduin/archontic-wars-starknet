@@ -14,12 +14,13 @@ trait IDustSystems {
 // Dojo decorator
 #[dojo::contract]
 mod dust_systems {
-    use super::{IDustSystems, calculate_ARPS, calculate_unclaimed_dust};
+    use super::{IDustSystems};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
         dust_balance::DustBalance, dust_accretion::DustAccretion, dust_emission::DustEmission,
         orbit::Orbit, mass::Mass, cosmic_body::{CosmicBody, CosmicBodyType}
     };
+    use dojo_starter::utils::dust_farm::{calculate_ARPS, calculate_unclaimed_dust};
 
     // Structure to represent a DustPoolFormed event
     #[derive(Copy, Drop, Serde)]
@@ -195,23 +196,3 @@ mod dust_systems {
     }
 }
 
-fn calculate_unclaimed_dust(
-    dust_emission: DustEmission, dust_accretion: DustAccretion, body_mass: Mass
-) -> u128 {
-    let updated_body_accretion = dust_emission.ARPS * body_mass.mass.try_into().unwrap();
-    let unclaimed_dust = updated_body_accretion - dust_accretion.debt;
-
-    return unclaimed_dust;
-}
-
-
-fn calculate_ARPS(current_ts: u64, pool_emission: DustEmission, pool_mass: Mass) -> u128 {
-    assert(pool_mass.orbit_mass > 0, 'orbit mass is zero');
-    let reward_per_share = pool_emission.emission_rate / pool_mass.orbit_mass.try_into().unwrap();
-    let elapsed_ts = current_ts - pool_emission.last_update_ts;
-    let ARPS_change = reward_per_share * elapsed_ts.try_into().unwrap();
-
-    let updated_ARPS = pool_emission.ARPS + ARPS_change;
-
-    return updated_ARPS;
-}

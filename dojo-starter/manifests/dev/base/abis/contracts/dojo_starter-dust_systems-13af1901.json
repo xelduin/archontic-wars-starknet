@@ -149,7 +149,7 @@
       },
       {
         "type": "function",
-        "name": "update_dust_pool",
+        "name": "update_emission",
         "inputs": [
           {
             "name": "body_id",

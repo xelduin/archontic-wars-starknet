@@ -99,7 +99,7 @@ fn test_claim_dust_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('not in a pool', 'ENTRYPOINT_FAILED'))]
 fn test_claim_from_non_member() {
-    let (world, _, non_member_star_id, galaxy_id, sender_owner, dust_dispatcher) = setup();
+    let (_, _, non_member_star_id, galaxy_id, sender_owner, dust_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
