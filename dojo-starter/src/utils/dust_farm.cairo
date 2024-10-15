@@ -22,3 +22,26 @@ fn calculate_unclaimed_dust(
     return unclaimed_dust;
 }
 
+
+fn get_expected_dust_increase(
+    at_ts: u64,
+    star_mass: Mass,
+    pool_mass: Mass,
+    star_accretion: DustAccretion,
+    pool_emission: DustEmission
+) -> u128 {
+    let new_ARPS = calculate_ARPS(at_ts, pool_emission, pool_mass);
+    
+    let updated_pool_emission = DustEmission {
+        entity: pool_emission.entity,
+        emission_rate: pool_emission.emission_rate,
+        ARPS: new_ARPS,
+        last_update_ts: at_ts
+    };
+
+    let expected_dust_increase = calculate_unclaimed_dust(
+        updated_pool_emission, star_accretion, star_mass
+    );
+
+    return expected_dust_increase;
+}

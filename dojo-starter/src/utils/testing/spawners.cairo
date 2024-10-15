@@ -10,7 +10,11 @@ use starknet::{ContractAddress, contract_address_const};
 
 
 fn spawn_galaxy(
-    world: IWorldDispatcher, owner: ContractAddress, coords: vec2::Vec2, emission_rate: u128
+    world: IWorldDispatcher,
+    owner: ContractAddress,
+    coords: vec2::Vec2,
+    emission_rate: u128,
+    mass: u64
 ) -> u32 {
     let body_id = world.uuid();
 
@@ -21,6 +25,7 @@ fn spawn_galaxy(
             cosmic_body::CosmicBody {
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::Galaxy
             },
+            mass::Mass { entity: body_id, mass, orbit_mass: 0 },
             position::Position { entity: body_id, vec: coords }
         )
     );
