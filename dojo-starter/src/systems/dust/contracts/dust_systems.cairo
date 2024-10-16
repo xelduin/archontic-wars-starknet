@@ -144,6 +144,7 @@ mod dust_systems {
             let current_ts = get_block_timestamp();
 
             let dust_emission = get!(world, body_id, (DustEmission));
+            assert(dust_emission.emission_rate > 0, 'no emission');
             let body_mass = get!(world, body_id, (Mass));
 
             let updated_ARPS = calculate_ARPS(current_ts, dust_emission, body_mass);

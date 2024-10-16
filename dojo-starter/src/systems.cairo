@@ -10,6 +10,8 @@ pub mod authority {
 
 pub mod movement {
     pub mod contracts;
+    #[cfg(test)]
+    mod tests;
 }
 
 pub mod dust {

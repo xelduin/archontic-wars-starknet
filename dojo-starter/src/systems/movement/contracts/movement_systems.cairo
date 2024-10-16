@@ -4,6 +4,7 @@ use dojo_starter::models::vec2::Vec2;
 #[dojo::interface]
 trait IMovementSystems {
     fn begin_travel(ref world: IWorldDispatcher, body_id: u32, target_position: Vec2);
+    fn end_travel(ref world: IWorldDispatcher, body_id: u32);
     fn enter_orbit(ref world: IWorldDispatcher, body_id: u32, orbit_center: u32);
     fn exit_orbit(ref world: IWorldDispatcher, body_id: u32);
 }
@@ -14,7 +15,8 @@ mod movement_systems {
     use super::IMovementSystems;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
-        position::Position, vec2::{Vec2, Vec2Impl}, travel_action::TravelAction, orbit::Orbit
+        position::Position, vec2::{Vec2, Vec2Impl}, travel_action::TravelAction, orbit::Orbit,
+        cosmic_body::{CosmicBody, CosmicBodyType}
     };
     use dojo_starter::systems::{
         loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl}
@@ -70,6 +72,10 @@ mod movement_systems {
             InternalMovementSystemsImpl::begin_travel(world, body_id, target_position);
         }
 
+        fn end_travel(ref world: IWorldDispatcher, body_id: u32) {
+            InternalMovementSystemsImpl::end_travel(world, body_id);
+        }
+
         fn enter_orbit(ref world: IWorldDispatcher, body_id: u32, orbit_center: u32) {
             InternalMovementSystemsImpl::enter_orbit(world, body_id, orbit_center);
         }
@@ -83,10 +89,13 @@ mod movement_systems {
     impl InternalMovementSystemsImpl of InternalMovementSystemsTrait {
         fn begin_travel(world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
             let body_position = get!(world, body_id, (Position));
-            assert(body_position.vec.is_equal(target_position) == false, 'body already at target');
+            assert(body_position.vec.is_equal(target_position) == false, 'already at target pos');
 
             let body_orbit = get!(world, body_id, (Orbit));
             assert(body_orbit.orbit_center == 0, 'body in an orbit');
+
+            let body_type = get!(world, body_id, (CosmicBody));
+            assert(body_type.body_type == CosmicBodyType::AsteroidCluster, 'body type cant travel');
 
             let player = get_caller_address();
             let distance = target_position.chebyshev_distance(body_position.vec);

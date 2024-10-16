@@ -100,7 +100,10 @@ mod loosh_systems {
         }
 
         fn burn_loosh(world: IWorldDispatcher, address: ContractAddress, amount: u128,) {
-            Self::transfer_loosh(world, address, get_contract_address(), amount);
+            let loosh_balance = get!(world, address, LooshBalance);
+            assert(loosh_balance.balance >= amount, 'insufficient loosh');
+            let new_balance = loosh_balance.balance - amount;
+            set!(world, (LooshBalance { address, balance: new_balance }));
         }
 
 
