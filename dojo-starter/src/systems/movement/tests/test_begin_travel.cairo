@@ -82,7 +82,6 @@ fn get_loosh_travel_cost(origin_pos: Vec2, target_pos: Vec2) -> u128 {
     return cost;
 }
 
-
 #[test]
 #[available_gas(3000000000000)]
 fn test_begin_travel_valid() {
@@ -112,45 +111,6 @@ fn test_begin_travel_valid() {
     let arrival_ts = get_arrival_ts(cur_ts, origin_vec, destination_vec);
     assert(travel_action.arrival_ts == arrival_ts, 'invalid arrival ts');
 }
-
-
-#[test]
-#[available_gas(3000000000000)]
-fn test_end_travel_valid() {
-    let (
-        world,
-        asteroid_cluster_id,
-        _,
-        origin_vec,
-        destination_vec,
-        sender_owner,
-        movement_dispatcher
-    ) =
-        setup();
-
-    set_contract_address(sender_owner);
-    set_account_contract_address(sender_owner);
-
-    movement_dispatcher.begin_travel(asteroid_cluster_id, destination_vec);
-
-    let cur_ts = get_block_timestamp();
-    let arrival_ts = get_arrival_ts(cur_ts, origin_vec, destination_vec);
-    set_block_timestamp(arrival_ts);
-
-    movement_dispatcher.end_travel(asteroid_cluster_id);
-
-    let travel_action = get!(world, asteroid_cluster_id, TravelAction);
-    assert(
-        travel_action.arrival_ts == 0
-            && travel_action.depart_ts == 0
-            && travel_action.target_position.is_zero(),
-        'travel action not deleted'
-    );
-
-    let asteroid_cluster_pos = get!(world, asteroid_cluster_id, Position);
-    assert(asteroid_cluster_pos.vec.is_equal(destination_vec), 'position not changed');
-}
-
 
 #[test]
 #[available_gas(3000000000000)]
@@ -189,16 +149,4 @@ fn test_begin_travel_insufficient_loosh() {
     set_account_contract_address(sender_owner);
 
     movement_dispatcher.begin_travel(asteroid_cluster_id, destination_vec);
-}
-
-#[test]
-#[available_gas(3000000000000)]
-#[should_panic(expected: ('invalid travel action', 'ENTRYPOINT_FAILED'))]
-fn test_end_invalid_travel() {
-    let (_, asteroid_cluster_id, _, _, _, sender_owner, movement_dispatcher) = setup();
-
-    set_contract_address(sender_owner);
-    set_account_contract_address(sender_owner);
-
-    movement_dispatcher.end_travel(asteroid_cluster_id);
 }

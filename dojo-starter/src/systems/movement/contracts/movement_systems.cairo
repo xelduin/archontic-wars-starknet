@@ -22,7 +22,6 @@ mod movement_systems {
         loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl}
     };
 
-
     // Structure to represent a BodyMoved event
     #[derive(Copy, Drop, Serde)]
     #[dojo::model]
