@@ -55,7 +55,7 @@ fn test_burn_loosh() {
 
 #[test]
 #[available_gas(3000000000000)]
-#[should_panic(expected: ('insufficient balance', 'ENTRYPOINT_FAILED'))]
+#[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
 fn test_burn_loosh_above_balance() {
     let (world, sender_owner, loosh_dispatcher) = setup();
 
