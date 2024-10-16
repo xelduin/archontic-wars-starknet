@@ -4,6 +4,7 @@ use dojo_starter::models::vec2::{Vec2, Vec2Impl};
 use dojo_starter::models::travel_action::TravelAction;
 use dojo_starter::models::loosh_balance::LooshBalance;
 use dojo_starter::models::position::Position;
+use dojo_starter::models::orbit::Orbit;
 
 use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
@@ -27,9 +28,7 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 
 // Mock setup for the test
-fn setup() -> (
-    IWorldDispatcher, u32, u32, Vec2, Vec2, ContractAddress, IMovementSystemsDispatcher
-) {
+fn setup() -> (IWorldDispatcher, u32, u32, u32, u32, ContractAddress, IMovementSystemsDispatcher) {
     let world = spawn_world();
 
     let movement_address = world
@@ -43,39 +42,70 @@ fn setup() -> (
     let sender_owner = contract_address_const::<'sender_owner'>();
 
     let origin_vec = Vec2 { x: 20, y: 20 };
-    let destination_vec = Vec2 { x: 42, y: 99 };
+    let non_proximal_vec = Vec2 { x: 42, y: 99 };
 
     let asteroid_cluster_mass = 100;
-
-    let loosh_cost = get_loosh_travel_cost(origin_vec, destination_vec);
-    set!(world, (LooshBalance { address: sender_owner, balance: loosh_cost }));
 
     let asteroid_cluster_id = spawn_asteroid_cluster(
         world, sender_owner, origin_vec, asteroid_cluster_mass
     );
+    let proximal_asteroid_cluster_id = spawn_asteroid_cluster(
+        world, sender_owner, origin_vec, asteroid_cluster_mass
+    );
 
-    let star_id = spawn_star(world, sender_owner, origin_vec, 1000);
+    let proximal_star_id = spawn_star(world, sender_owner, origin_vec, 1000);
+    let non_proximal_star_id = spawn_star(world, sender_owner, non_proximal_vec, 1000);
 
     (
         world,
         asteroid_cluster_id,
-        star_id,
-        origin_vec,
-        destination_vec,
+        proximal_asteroid_cluster_id,
+        proximal_star_id,
+        non_proximal_star_id,
         sender_owner,
         movement_dispatcher
     )
 }
 
+
 #[test]
 #[available_gas(3000000000000)]
-fn test_begin_travel_valid() {
+fn test_enter_orbit_valid() {
+    let (world, asteroid_cluster_id, _, proximal_star_id, _, sender_owner, movement_dispatcher) =
+        setup();
+
+    set_contract_address(sender_owner);
+    set_account_contract_address(sender_owner);
+
+    movement_dispatcher.enter_orbit(asteroid_cluster_id, proximal_star_id);
+
+    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
+    assert(asteroid_cluster_orbit.orbit_center == proximal_star_id, 'failed to set orbit');
+}
+
+#[test]
+#[available_gas(3000000000000)]
+#[should_panic(expected: ('not in proximity', 'ENTRYPOINT_FAILED'))]
+fn test_enter_orbit_not_proximal() {
+    let (_, asteroid_cluster_id, _, _, non_proximal_star_id, sender_owner, movement_dispatcher) =
+        setup();
+
+    set_contract_address(sender_owner);
+    set_account_contract_address(sender_owner);
+
+    movement_dispatcher.enter_orbit(asteroid_cluster_id, non_proximal_star_id);
+}
+
+#[test]
+#[available_gas(3000000000000)]
+#[should_panic(expected: ('cannot orbit body type', 'ENTRYPOINT_FAILED'))]
+fn test_enter_orbit_non_star() {
     let (
-        world,
-        asteroid_cluster_id,
         _,
-        origin_vec,
-        destination_vec,
+        asteroid_cluster_id,
+        proximal_asteroid_cluster_id,
+        _,
+        _,
         sender_owner,
         movement_dispatcher
     ) =
@@ -84,54 +114,21 @@ fn test_begin_travel_valid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    movement_dispatcher.begin_travel(asteroid_cluster_id, destination_vec);
-
-    let travel_action = get!(world, asteroid_cluster_id, TravelAction);
-
-    assert(travel_action.target_position.is_equal(destination_vec), 'invalid target position');
-
-    let cur_ts = get_block_timestamp();
-    assert(travel_action.depart_ts == cur_ts, 'invalid departure ts');
-
-    let arrival_ts = get_arrival_ts(cur_ts, origin_vec, destination_vec);
-    assert(travel_action.arrival_ts == arrival_ts, 'invalid arrival ts');
+    movement_dispatcher.enter_orbit(asteroid_cluster_id, proximal_asteroid_cluster_id);
 }
+
 
 #[test]
 #[available_gas(3000000000000)]
-#[should_panic(expected: ('already at target pos', 'ENTRYPOINT_FAILED'))]
-fn test_begin_travel_same_pos() {
-    let (_, asteroid_cluster_id, _, origin_vec, _, sender_owner, movement_dispatcher) = setup();
-
-    set_contract_address(sender_owner);
-    set_account_contract_address(sender_owner);
-
-    movement_dispatcher.begin_travel(asteroid_cluster_id, origin_vec);
-}
-
-#[test]
-#[available_gas(3000000000000)]
-#[should_panic(expected: ('body type cant travel', 'ENTRYPOINT_FAILED'))]
-fn test_begin_travel_non_cluster() {
-    let (_, _, star_id, _, destination_vec, sender_owner, movement_dispatcher) = setup();
-
-    set_contract_address(sender_owner);
-    set_account_contract_address(sender_owner);
-
-    movement_dispatcher.begin_travel(star_id, destination_vec);
-}
-
-#[test]
-#[available_gas(3000000000000)]
-#[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
-fn test_begin_travel_insufficient_loosh() {
-    let (world, asteroid_cluster_id, _, _, destination_vec, sender_owner, movement_dispatcher) =
+#[should_panic(expected: ('already in an orbit', 'ENTRYPOINT_FAILED'))]
+fn test_enter_orbit_already_in_orbit() {
+    let (world, asteroid_cluster_id, _, proximal_star_id, _, sender_owner, movement_dispatcher) =
         setup();
 
-    set!(world, (LooshBalance { address: sender_owner, balance: 0 }));
+    set!(world, ((Orbit { entity: asteroid_cluster_id, orbit_center: proximal_star_id })));
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    movement_dispatcher.begin_travel(asteroid_cluster_id, destination_vec);
+    movement_dispatcher.enter_orbit(asteroid_cluster_id, proximal_star_id);
 }

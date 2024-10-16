@@ -124,7 +124,7 @@ mod movement_systems {
             assert(body_orbit.orbit_center == 0, 'already in an orbit');
 
             let orbit_center_body = get!(world, orbit_center, CosmicBody);
-            assert(orbit_center_body.body_type == CosmicBodyType::Star, 'orbit center not star');
+            assert(orbit_center_body.body_type == CosmicBodyType::Star, 'cannot orbit body type');
 
             let body_position = get!(world, body_id, (Position));
             let orbit_center_position = get!(world, orbit_center, (Position));
@@ -136,6 +136,7 @@ mod movement_systems {
         fn exit_orbit(world: IWorldDispatcher, body_id: u32) {
             let body_orbit = get!(world, body_id, (Orbit));
             assert(body_orbit.orbit_center != 0, 'not in an orbit');
+
             delete!(world, (body_orbit));
         }
     }

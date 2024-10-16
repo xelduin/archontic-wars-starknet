@@ -4,6 +4,7 @@ use dojo_starter::models::vec2::{Vec2, Vec2Impl};
 use dojo_starter::models::travel_action::TravelAction;
 use dojo_starter::models::loosh_balance::LooshBalance;
 use dojo_starter::models::position::Position;
+use dojo_starter::models::orbit::Orbit;
 
 use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
@@ -27,9 +28,7 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 
 // Mock setup for the test
-fn setup() -> (
-    IWorldDispatcher, u32, u32, Vec2, Vec2, ContractAddress, IMovementSystemsDispatcher
-) {
+fn setup() -> (IWorldDispatcher, u32, ContractAddress, IMovementSystemsDispatcher) {
     let world = spawn_world();
 
     let movement_address = world
@@ -43,75 +42,44 @@ fn setup() -> (
     let sender_owner = contract_address_const::<'sender_owner'>();
 
     let origin_vec = Vec2 { x: 20, y: 20 };
-    let destination_vec = Vec2 { x: 42, y: 99 };
 
     let asteroid_cluster_mass = 100;
-
-    let loosh_cost = get_loosh_travel_cost(origin_vec, destination_vec);
-    set!(world, (LooshBalance { address: sender_owner, balance: loosh_cost }));
 
     let asteroid_cluster_id = spawn_asteroid_cluster(
         world, sender_owner, origin_vec, asteroid_cluster_mass
     );
-
     let star_id = spawn_star(world, sender_owner, origin_vec, 1000);
 
-    (
-        world,
-        asteroid_cluster_id,
-        star_id,
-        origin_vec,
-        destination_vec,
-        sender_owner,
-        movement_dispatcher
-    )
+    set!(world, (Orbit { entity: asteroid_cluster_id, orbit_center: star_id }));
+
+    (world, asteroid_cluster_id, sender_owner, movement_dispatcher)
 }
+
 
 #[test]
 #[available_gas(3000000000000)]
-fn test_end_travel_valid() {
-    let (
-        world,
-        asteroid_cluster_id,
-        _,
-        origin_vec,
-        destination_vec,
-        sender_owner,
-        movement_dispatcher
-    ) =
-        setup();
+fn test_exit_orbit_valid() {
+    let (world, asteroid_cluster_id, sender_owner, movement_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    movement_dispatcher.begin_travel(asteroid_cluster_id, destination_vec);
+    movement_dispatcher.exit_orbit(asteroid_cluster_id);
 
-    let cur_ts = get_block_timestamp();
-    let arrival_ts = get_arrival_ts(cur_ts, origin_vec, destination_vec);
-    set_block_timestamp(arrival_ts);
-
-    movement_dispatcher.end_travel(asteroid_cluster_id);
-
-    let travel_action = get!(world, asteroid_cluster_id, TravelAction);
-    assert(
-        travel_action.arrival_ts == 0
-            && travel_action.depart_ts == 0
-            && travel_action.target_position.is_zero(),
-        'travel action not deleted'
-    );
-
-    let asteroid_cluster_pos = get!(world, asteroid_cluster_id, Position);
-    assert(asteroid_cluster_pos.vec.is_equal(destination_vec), 'position not changed');
+    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
+    assert(asteroid_cluster_orbit.orbit_center == 0, 'failed to delete orbit');
 }
 
 #[test]
 #[available_gas(3000000000000)]
-#[should_panic(expected: ('invalid travel action', 'ENTRYPOINT_FAILED'))]
-fn test_end_invalid_travel() {
-    let (_, asteroid_cluster_id, _, _, _, sender_owner, movement_dispatcher) = setup();
+#[should_panic(expected: ('not in an orbit', 'ENTRYPOINT_FAILED'))]
+fn test_exit_orbit_not_in_orbit() {
+    let (world, asteroid_cluster_id, sender_owner, movement_dispatcher) = setup();
+
+    set!(world, (Orbit { entity: asteroid_cluster_id, orbit_center: 0 }));
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    movement_dispatcher.end_travel(asteroid_cluster_id);
+    movement_dispatcher.exit_orbit(asteroid_cluster_id);
 }
