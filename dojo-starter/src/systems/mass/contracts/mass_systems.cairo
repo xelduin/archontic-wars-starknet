@@ -16,8 +16,8 @@ mod mass_systems {
     use dojo_starter::models::mass::Mass;
     use dojo_starter::models::owner::Owner;
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
-    use dojo_starter::models::vec2::{Vec2, Vec2Impl};
-    use dojo_starter::models::position::Position;
+    use dojo_starter::models::vec2::Vec2;
+    use dojo_starter::models::position::{Position, PositionCustomImpl};
 
     #[abi(embed_v0)]
     impl MassSystemsImpl of IMassSystems<ContractState> {
@@ -44,7 +44,7 @@ mod mass_systems {
 
             let sender_position = get!(world, sender_body_id, (Position));
             let receiver_position = get!(world, receiver_body_id, (Position));
-            assert(sender_position.vec.is_equal(receiver_position.vec), 'not in proximity');
+            assert(sender_position.is_equal(world, receiver_position), 'not in proximity');
 
             Self::decrease_mass(world, sender_body_id, mass);
             Self::increase_mass(world, receiver_body_id, mass);
