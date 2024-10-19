@@ -5,6 +5,7 @@ use dojo_starter::models::travel_action::TravelAction;
 use dojo_starter::models::loosh_balance::LooshBalance;
 use dojo_starter::models::position::Position;
 use dojo_starter::models::orbit::Orbit;
+use dojo_starter::models::dust_accretion::DustAccretion;
 
 use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
@@ -93,4 +94,18 @@ fn test_exit_orbit_as_non_asteroid_cluster() {
     set_account_contract_address(sender_owner);
 
     movement_dispatcher.exit_orbit(star_id);
+}
+
+#[test]
+#[available_gas(3000000000000)]
+#[should_panic(expected: ('must exit dust pool', 'ENTRYPOINT_FAILED'))]
+fn test_exit_orbit_with_dust_accretion_debt() {
+    let (world, asteroid_cluster_id, _, sender_owner, movement_dispatcher) = setup();
+
+    set!(world, (DustAccretion { entity: asteroid_cluster_id, debt: 0, in_dust_pool: true }));
+
+    set_contract_address(sender_owner);
+    set_account_contract_address(sender_owner);
+
+    movement_dispatcher.exit_orbit(asteroid_cluster_id);
 }

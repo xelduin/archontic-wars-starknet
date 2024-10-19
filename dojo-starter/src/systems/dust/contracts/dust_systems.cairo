@@ -109,6 +109,9 @@ mod dust_systems {
             let child_orbit = get!(world, body_id, (Orbit));
             assert(child_orbit.orbit_center == pool_id, 'not in orbit');
 
+            let child_dust_accretion = get!(world, body_id, (DustAccretion));
+            assert(child_dust_accretion.in_dust_pool == false, 'already in dust pool');
+
             Self::update_emission(world, pool_id);
 
             let child_mass = get!(world, body_id, (Mass));
@@ -122,7 +125,8 @@ mod dust_systems {
                 world,
                 (DustAccretion {
                     entity: body_id,
-                    debt: parent_emission.ARPS * child_mass.mass.try_into().unwrap()
+                    debt: parent_emission.ARPS * child_mass.mass.try_into().unwrap(),
+                    in_dust_pool: true
                 })
             );
 
@@ -132,10 +136,14 @@ mod dust_systems {
         fn exit_dust_pool(world: IWorldDispatcher, body_id: u32) {
             let body_orbit = get!(world, body_id, (Orbit));
             let pool_id = body_orbit.orbit_center;
-            //assert(body_orbit.orbit_center == pool_id, 'not in orbit');
 
             Self::update_emission(world, body_id);
             Self::claim_dust(world, body_id);
+
+            let body_dust_accretion = get!(world, body_id, DustAccretion);
+            assert(body_dust_accretion.debt > 0, 'not in dust pool');
+
+            delete!(world, (body_dust_accretion));
 
             emit!(world, (DustPoolExited { body_id, pool_id }));
         }
@@ -165,12 +173,12 @@ mod dust_systems {
         }
 
         fn claim_dust(world: IWorldDispatcher, body_id: u32) {
+            let body_accretion = get!(world, body_id, (DustAccretion));
+            assert(body_accretion.debt > 0, 'not in dust pool');
+
             let body_orbit = get!(world, body_id, (Orbit));
             let pool_id = body_orbit.orbit_center;
-            assert(pool_id != 0, 'not in a pool');
-
             let pool_emission = get!(world, pool_id, (DustEmission));
-            let body_accretion = get!(world, body_id, (DustAccretion));
             let body_mass = get!(world, body_id, (Mass));
             let unclaimed_dust = calculate_unclaimed_dust(pool_emission, body_accretion, body_mass);
 
@@ -181,7 +189,7 @@ mod dust_systems {
                 world,
                 (
                     DustBalance { entity: body_id, balance: new_dust_balance },
-                    DustAccretion { entity: body_id, debt: pool_emission.ARPS }
+                    DustAccretion { entity: body_id, debt: new_dust_balance, in_dust_pool: true}
                 )
             );
 

@@ -18,9 +18,11 @@ mod movement_systems {
         position::{Position, PositionCustomImpl}, vec2::{Vec2, Vec2Impl},
         travel_action::TravelAction, orbit::Orbit, cosmic_body::{CosmicBody, CosmicBodyType}
     };
+    use dojo_starter::models::dust_accretion::DustAccretion;
     use dojo_starter::systems::{
         loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl}
     };
+
 
     use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
@@ -165,6 +167,9 @@ mod movement_systems {
                 body_body.body_type == CosmicBodyType::AsteroidCluster,
                 'body type cannot exit orbit'
             );
+
+            let body_accretion = get!(world, body_id, DustAccretion);
+            assert(body_accretion.in_dust_pool == false, 'must exit dust pool');
 
             let orbit_center_orbit = get!(world, body_orbit.orbit_center, Orbit);
             let orbit_center_position = get!(world, body_orbit.orbit_center, Position);
