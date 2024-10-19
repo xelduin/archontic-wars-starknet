@@ -20,6 +20,7 @@ mod creation_systems {
     use dojo_starter::models::position::{Position, OrbitCenterAtPosition};
     use dojo_starter::models::owner::Owner;
     use dojo_starter::models::mass::Mass;
+    use dojo_starter::models::orbital_mass::OrbitalMass;
     use dojo_starter::models::orbit::Orbit;
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use dojo_starter::systems::{
@@ -107,21 +108,19 @@ mod creation_systems {
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.uuid();
+            let universe_id = 0;
             let mass = 10000;
-            set!(
-                world,
-                (
-                    CosmicBody { entity: body_id, body_type: CosmicBodyType::Galaxy },
-                    Position { entity: body_id, vec: coords },
-                    Mass { entity: body_id, mass },
-                    Owner { entity: body_id, address: player },
-                    OrbitCenterAtPosition {
-                        x: coords.x, y: coords.y, orbit_center: 0, entity: body_id
-                    }
-                )
+            Self::create_cosmic_body(
+                world, player, body_id, universe_id, CosmicBodyType::Galaxy, mass, coords,
             );
 
-            //InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
+            set!(
+                world,
+                (OrbitCenterAtPosition {
+                    x: coords.x, y: coords.y, orbit_center: 0, entity: body_id
+                })
+            );
+
             InternalDustSystemsImpl::form_dust_pool(world, body_id);
 
             return body_id;
@@ -141,29 +140,26 @@ mod creation_systems {
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.uuid();
+            let mass = 1000;
+            Self::create_cosmic_body(
+                world, player, body_id, galaxy_id, CosmicBodyType::Protostar, mass, coords,
+            );
+
             let creation_ts = get_block_timestamp();
             let incubation_period = 60 * 1000;
-
-            let mass = 1000;
             set!(
                 world,
                 (
-                    CosmicBody { entity: body_id, body_type: CosmicBodyType::Protostar },
                     Incubation {
                         entity: body_id, creation_ts, end_ts: creation_ts + incubation_period
                     },
-                    Position { entity: body_id, vec: coords },
-                    Orbit { entity: body_id, orbit_center: galaxy_id },
-                    Mass { entity: body_id, mass},
                     OrbitCenterAtPosition {
                         x: coords.x, y: coords.y, orbit_center: galaxy_id, entity: body_id
                     }
                 )
             );
 
-            InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
             InternalDustSystemsImpl::enter_dust_pool(world, body_id, galaxy_id);
-            emit!(world, (ProtostarSpawned { body_id, x: coords.x, y: coords.y }));
 
             return body_id;
         }
@@ -182,24 +178,44 @@ mod creation_systems {
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.uuid();
-            let player = get_caller_address();
+            Self::create_cosmic_body(
+                world,
+                player,
+                body_id,
+                star_id,
+                CosmicBodyType::AsteroidCluster,
+                initial_mass,
+                coords,
+            );
+
+            return body_id;
+        }
+
+        fn create_cosmic_body(
+            world: IWorldDispatcher,
+            owner: ContractAddress,
+            body_id: u32,
+            orbit_center: u32,
+            body_type: CosmicBodyType,
+            mass: u64,
+            coords: Vec2,
+        ) {
+            let orbit_center_orbital_mass = get!(world, orbit_center, OrbitalMass);
+
             set!(
                 world,
                 (
-                    CosmicBody { entity: body_id, body_type: CosmicBodyType::AsteroidCluster },
+                    CosmicBody { entity: body_id, body_type },
                     Position { entity: body_id, vec: coords },
-                    Orbit { entity: body_id, orbit_center: star_id },
-                    Mass { entity: body_id, mass: initial_mass}
+                    Orbit { entity: body_id, orbit_center },
+                    Mass { entity: body_id, mass },
+                    OrbitalMass {
+                        entity: orbit_center,
+                        orbital_mass: orbit_center_orbital_mass.orbital_mass + mass
+                    },
+                    Owner { entity: body_id, address: owner }
                 )
             );
-            InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
-
-            // Will add when multilayered farming implemented
-            //InternalDustSystemsImpl::enter_dust_pool(world, body_id, star_id);
-
-            emit!(world, (AsteroidClusterDefined { star_id, cluster_id: body_id }));
-
-            return body_id;
         }
 
         fn form_star(world: IWorldDispatcher, protostar_id: u32) {
