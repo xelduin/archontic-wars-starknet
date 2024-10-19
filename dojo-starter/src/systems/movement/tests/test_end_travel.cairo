@@ -4,6 +4,8 @@ use dojo_starter::models::vec2::{Vec2, Vec2Impl};
 use dojo_starter::models::travel_action::TravelAction;
 use dojo_starter::models::loosh_balance::LooshBalance;
 use dojo_starter::models::position::Position;
+use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
+use dojo_starter::models::orbit::Orbit;
 
 use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
@@ -47,7 +49,8 @@ fn setup() -> (
 
     let asteroid_cluster_mass = 100;
 
-    let loosh_cost = get_loosh_travel_cost(origin_vec, destination_vec);
+    let orbit_center_body_type = CosmicBodyType::None;
+    let loosh_cost = get_loosh_travel_cost(origin_vec, destination_vec, orbit_center_body_type);
     set!(world, (LooshBalance { address: sender_owner, balance: loosh_cost }));
 
     let asteroid_cluster_id = spawn_asteroid_cluster(
@@ -87,7 +90,13 @@ fn test_end_travel_valid() {
     movement_dispatcher.begin_travel(asteroid_cluster_id, destination_vec);
 
     let cur_ts = get_block_timestamp();
-    let arrival_ts = get_arrival_ts(cur_ts, origin_vec, destination_vec);
+
+    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
+    let orbit_center_body = get!(world, asteroid_cluster_orbit.orbit_center, CosmicBody);
+    let arrival_ts = get_arrival_ts(
+        cur_ts, origin_vec, destination_vec, orbit_center_body.body_type
+    );
+
     set_block_timestamp(arrival_ts);
 
     movement_dispatcher.end_travel(asteroid_cluster_id);

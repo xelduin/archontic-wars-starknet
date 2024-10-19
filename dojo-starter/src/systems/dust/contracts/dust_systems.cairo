@@ -141,11 +141,15 @@ mod dust_systems {
         }
 
         fn update_emission(world: IWorldDispatcher, body_id: u32) {
+            let body_mass = get!(world, body_id, (Mass));
+            if body_mass.orbit_mass == 0 {
+                return;
+            };
+
             let current_ts = get_block_timestamp();
 
             let dust_emission = get!(world, body_id, (DustEmission));
             assert(dust_emission.emission_rate > 0, 'no emission');
-            let body_mass = get!(world, body_id, (Mass));
 
             let updated_ARPS = calculate_ARPS(current_ts, dust_emission, body_mass);
 
@@ -186,7 +190,7 @@ mod dust_systems {
 
         fn consume_dust(world: IWorldDispatcher, body_id: u32, amount: u128) {
             let dust_balance = get!(world, body_id, (DustBalance));
-            assert(dust_balance.balance >= amount, 'not enough dust');
+            assert(dust_balance.balance >= amount, 'insufficient dust');
 
             let new_dust_balance = dust_balance.balance - amount;
 

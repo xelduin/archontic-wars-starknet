@@ -15,12 +15,14 @@ mod movement_systems {
     use super::IMovementSystems;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo_starter::models::{
-        position::Position, vec2::{Vec2, Vec2Impl}, travel_action::TravelAction, orbit::Orbit,
-        cosmic_body::{CosmicBody, CosmicBodyType}
+        position::{Position, PositionCustomImpl}, vec2::{Vec2, Vec2Impl},
+        travel_action::TravelAction, orbit::Orbit, cosmic_body::{CosmicBody, CosmicBodyType}
     };
     use dojo_starter::systems::{
         loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl}
     };
+
+    use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
     // Structure to represent a BodyMoved event
     #[derive(Copy, Drop, Serde)]
@@ -87,23 +89,29 @@ mod movement_systems {
     #[generate_trait]
     impl InternalMovementSystemsImpl of InternalMovementSystemsTrait {
         fn begin_travel(world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
+            let body_travel = get!(world, body_id, TravelAction);
+            assert(body_travel.arrival_ts == 0, 'body already travelling');
+
             let body_position = get!(world, body_id, (Position));
             assert(body_position.vec.is_equal(target_position) == false, 'already at target pos');
-
-            let body_orbit = get!(world, body_id, (Orbit));
-            assert(body_orbit.orbit_center == 0, 'body in an orbit');
 
             let body_type = get!(world, body_id, (CosmicBody));
             assert(body_type.body_type == CosmicBodyType::AsteroidCluster, 'body type cant travel');
 
+            let body_orbit = get!(world, body_id, Orbit);
+            let orbit_center_body = get!(world, body_orbit.orbit_center, CosmicBody);
+
             let player = get_caller_address();
-            let distance = target_position.chebyshev_distance(body_position.vec);
-            InternalLooshSystemsImpl::spend_loosh_for_travel(world, player, distance);
+            let travel_cost = get_loosh_travel_cost(
+                body_position.vec, target_position, orbit_center_body.body_type
+            );
+            InternalLooshSystemsImpl::spend_loosh(world, player, travel_cost);
 
             let depart_ts = get_block_timestamp();
-            let seconds_per_coordinate = 60 * 15;
-            let total_travel_time = seconds_per_coordinate * distance;
-            let arrival_ts = depart_ts + total_travel_time;
+            let arrival_ts = get_arrival_ts(
+                depart_ts, body_position.vec, target_position, orbit_center_body.body_type
+            );
+
             set!(world, (TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }));
         }
 
@@ -120,24 +128,53 @@ mod movement_systems {
         }
 
         fn enter_orbit(world: IWorldDispatcher, body_id: u32, orbit_center: u32) {
-            let body_orbit = get!(world, body_id, (Orbit));
-            assert(body_orbit.orbit_center == 0, 'already in an orbit');
+            let body_travel = get!(world, body_id, TravelAction);
+            assert(body_travel.arrival_ts == 0, 'body is travelling');
+
+            let body_body = get!(world, body_id, CosmicBody);
+            assert(
+                body_body.body_type == CosmicBodyType::AsteroidCluster,
+                'body type cannot enter orbit'
+            );
 
             let orbit_center_body = get!(world, orbit_center, CosmicBody);
-            assert(orbit_center_body.body_type == CosmicBodyType::Star, 'cannot orbit body type');
+            assert(
+                orbit_center_body.body_type != CosmicBodyType::AsteroidCluster,
+                'cannot orbit body type'
+            );
 
             let body_position = get!(world, body_id, (Position));
             let orbit_center_position = get!(world, orbit_center, (Position));
-            assert(body_position.vec.is_equal(orbit_center_position.vec), 'not in proximity');
+            assert(body_position.is_equal(world, orbit_center_position), 'not in proximity');
 
-            set!(world, (Orbit { entity: body_id, orbit_center }));
+            set!(
+                world,
+                (
+                    Orbit { entity: body_id, orbit_center },
+                    Position { entity: body_id, vec: Vec2 { x: 1, y: 1 } }
+                )
+            );
         }
 
         fn exit_orbit(world: IWorldDispatcher, body_id: u32) {
             let body_orbit = get!(world, body_id, (Orbit));
             assert(body_orbit.orbit_center != 0, 'not in an orbit');
 
-            delete!(world, (body_orbit));
+            let body_body = get!(world, body_id, CosmicBody);
+            assert(
+                body_body.body_type == CosmicBodyType::AsteroidCluster,
+                'body type cannot exit orbit'
+            );
+
+            let orbit_center_orbit = get!(world, body_orbit.orbit_center, Orbit);
+            let orbit_center_position = get!(world, body_orbit.orbit_center, Position);
+            set!(
+                world,
+                (
+                    Orbit { entity: body_id, orbit_center: orbit_center_orbit.orbit_center },
+                    Position { entity: body_id, vec: orbit_center_position.vec }
+                )
+            )
         }
     }
 }

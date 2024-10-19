@@ -112,7 +112,12 @@ fn test_update_emission_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('no emission', 'ENTRYPOINT_FAILED'))]
 fn test_update_emission_non_pool() {
-    let (_, star_id, _, sender_owner, dust_dispatcher) = setup();
+    let (world, star_id, _, sender_owner, dust_dispatcher) = setup();
+
+    let star_mass = get!(world, star_id, Mass);
+    // We increase the orbit mass because update_emission immediately returns if the orbit mass is 0
+    // wiithout throwing an error
+    set!(world, (Mass { entity: star_id, mass: star_mass.mass, orbit_mass: 1000 }));
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);

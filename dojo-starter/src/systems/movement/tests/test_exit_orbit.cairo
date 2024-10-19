@@ -28,7 +28,7 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 
 // Mock setup for the test
-fn setup() -> (IWorldDispatcher, u32, ContractAddress, IMovementSystemsDispatcher) {
+fn setup() -> (IWorldDispatcher, u32, u32, ContractAddress, IMovementSystemsDispatcher) {
     let world = spawn_world();
 
     let movement_address = world
@@ -52,14 +52,13 @@ fn setup() -> (IWorldDispatcher, u32, ContractAddress, IMovementSystemsDispatche
 
     set!(world, (Orbit { entity: asteroid_cluster_id, orbit_center: star_id }));
 
-    (world, asteroid_cluster_id, sender_owner, movement_dispatcher)
+    (world, asteroid_cluster_id, star_id, sender_owner, movement_dispatcher)
 }
-
 
 #[test]
 #[available_gas(3000000000000)]
 fn test_exit_orbit_valid() {
-    let (world, asteroid_cluster_id, sender_owner, movement_dispatcher) = setup();
+    let (world, asteroid_cluster_id, _, sender_owner, movement_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
@@ -74,7 +73,7 @@ fn test_exit_orbit_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('not in an orbit', 'ENTRYPOINT_FAILED'))]
 fn test_exit_orbit_not_in_orbit() {
-    let (world, asteroid_cluster_id, sender_owner, movement_dispatcher) = setup();
+    let (world, asteroid_cluster_id, _, sender_owner, movement_dispatcher) = setup();
 
     set!(world, (Orbit { entity: asteroid_cluster_id, orbit_center: 0 }));
 
@@ -82,4 +81,16 @@ fn test_exit_orbit_not_in_orbit() {
     set_account_contract_address(sender_owner);
 
     movement_dispatcher.exit_orbit(asteroid_cluster_id);
+}
+
+#[test]
+#[available_gas(3000000000000)]
+#[should_panic(expected: ('not in an orbit', 'ENTRYPOINT_FAILED'))]
+fn test_exit_orbit_as_non_asteroid_cluster() {
+    let (_, _, star_id, sender_owner, movement_dispatcher) = setup();
+
+    set_contract_address(sender_owner);
+    set_account_contract_address(sender_owner);
+
+    movement_dispatcher.exit_orbit(star_id);
 }

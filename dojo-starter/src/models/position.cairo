@@ -2,8 +2,20 @@ use dojo_starter::models::vec2::{Vec2, Vec2Impl};
 use dojo_starter::models::orbit::Orbit;
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
+#[derive(Copy, Drop, Serde)]
+#[dojo::model]
+pub struct OrbitCenterAtPosition {
+    #[key]
+    pub x: u64,
+    #[key]
+    pub y: u64,
+    #[key]
+    pub orbit_center: u32,
+    pub entity: u32,
+}
 
-#[derive(Copy, Drop, Serde, Introspect)]
+
+#[derive(Copy, Drop, Serde,)]
 #[dojo::model]
 pub struct Position {
     #[key]

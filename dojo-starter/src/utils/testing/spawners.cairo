@@ -38,6 +38,32 @@ fn spawn_galaxy(
     return body_id;
 }
 
+fn spawn_protostar(
+    world: IWorldDispatcher,
+    owner: ContractAddress,
+    coords: vec2::Vec2,
+    star_mass: u64,
+    creation_ts: u64,
+    end_ts: u64
+) -> u32 {
+    let body_id = world.uuid();
+
+    set!(
+        world,
+        (
+            owner::Owner { entity: body_id, address: owner },
+            cosmic_body::CosmicBody {
+                entity: body_id, body_type: cosmic_body::CosmicBodyType::Protostar
+            },
+            position::Position { entity: body_id, vec: coords },
+            mass::Mass { entity: body_id, mass: star_mass, orbit_mass: 0 },
+            incubation::Incubation { entity: body_id, creation_ts, end_ts }
+        )
+    );
+
+    return body_id;
+}
+
 fn spawn_star(
     world: IWorldDispatcher, owner: ContractAddress, coords: vec2::Vec2, star_mass: u64
 ) -> u32 {
@@ -51,7 +77,7 @@ fn spawn_star(
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::Star
             },
             position::Position { entity: body_id, vec: coords },
-            mass::Mass { entity: body_id, mass: star_mass, orbit_mass: 0 }
+            mass::Mass { entity: body_id, mass: star_mass, orbit_mass: 0 },
         )
     );
 

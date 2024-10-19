@@ -13,7 +13,7 @@ trait ILooshSystems {
 // Dojo decorator
 #[dojo::contract]
 mod loosh_systems {
-    use super::{ILooshSystems, get_loosh_cost};
+    use super::{ILooshSystems};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use dojo_starter::models::loosh_balance::LooshBalance;
     use dojo_starter::models::owner::Owner;
@@ -106,26 +106,8 @@ mod loosh_systems {
             set!(world, (LooshBalance { address, balance: new_balance }));
         }
 
-
-        fn spend_loosh(world: IWorldDispatcher, spender: ContractAddress, sink: LooshSink) {
-            let cost = get_loosh_cost(sink);
+        fn spend_loosh(world: IWorldDispatcher, spender: ContractAddress, cost: u128) {
             Self::burn_loosh(world, spender, cost);
         }
-
-        fn spend_loosh_for_travel(
-            world: IWorldDispatcher, spender: ContractAddress, distance: u64
-        ) {
-            let cost = distance.try_into().unwrap() * 5_u128;
-            Self::burn_loosh(world, spender, cost);
-        }
-    }
-}
-
-fn get_loosh_cost(sink: LooshSink) -> u128 {
-    match sink {
-        LooshSink::CreateGalaxy => 1000,
-        LooshSink::CreateProtostar => 100,
-        LooshSink::FormStar => 20,
-        LooshSink::CreateAsteroidCluster => 10,
     }
 }

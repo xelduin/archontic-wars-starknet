@@ -15,6 +15,7 @@ fn spawn_world() -> IWorldDispatcher {
         incubation::incubation::TEST_CLASS_HASH,
         owner::owner::TEST_CLASS_HASH,
         position::position::TEST_CLASS_HASH,
+        position::orbit_center_at_position::TEST_CLASS_HASH,
         mass::mass::TEST_CLASS_HASH,
         travel_action::travel_action::TEST_CLASS_HASH,
         dust_balance::dust_balance::TEST_CLASS_HASH,

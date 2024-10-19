@@ -1,5 +1,7 @@
 pub mod creation {
     pub mod contracts;
+    #[cfg(test)]
+    mod tests;
 }
 
 pub mod authority {

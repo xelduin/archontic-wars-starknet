@@ -117,10 +117,46 @@ fn test_enter_orbit_non_star() {
     movement_dispatcher.enter_orbit(asteroid_cluster_id, proximal_asteroid_cluster_id);
 }
 
+#[test]
+#[available_gas(3000000000000)]
+#[should_panic(expected: ('body type cannot enter orbit', 'ENTRYPOINT_FAILED'))]
+fn test_enter_orbit_as_non_asteroid() {
+    let (_, asteroid_cluster_id, _, proximal_star_id, _, sender_owner, movement_dispatcher) =
+        setup();
+
+    set_contract_address(sender_owner);
+    set_account_contract_address(sender_owner);
+
+    movement_dispatcher.enter_orbit(proximal_star_id, asteroid_cluster_id);
+}
 
 #[test]
 #[available_gas(3000000000000)]
-#[should_panic(expected: ('already in an orbit', 'ENTRYPOINT_FAILED'))]
+#[should_panic(expected: ('body is travelling', 'ENTRYPOINT_FAILED'))]
+fn test_enter_orbit_while_travelling() {
+    let (world, asteroid_cluster_id, _, proximal_star_id, _, sender_owner, movement_dispatcher) =
+        setup();
+
+    let cur_ts = get_block_timestamp();
+    set!(
+        world,
+        (TravelAction {
+            entity: asteroid_cluster_id,
+            depart_ts: cur_ts,
+            arrival_ts: cur_ts + 1000,
+            target_position: Vec2 { x: 22, y: 22 }
+        })
+    );
+
+    set_contract_address(sender_owner);
+    set_account_contract_address(sender_owner);
+
+    movement_dispatcher.enter_orbit(asteroid_cluster_id, proximal_star_id);
+}
+
+#[test]
+#[available_gas(3000000000000)]
+#[should_panic(expected: ('not in proximity', 'ENTRYPOINT_FAILED'))]
 fn test_enter_orbit_already_in_orbit() {
     let (world, asteroid_cluster_id, _, proximal_star_id, _, sender_owner, movement_dispatcher) =
         setup();
