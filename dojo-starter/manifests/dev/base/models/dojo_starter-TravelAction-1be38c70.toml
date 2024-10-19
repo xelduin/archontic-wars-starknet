@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x77baf409e36ef28267df73d8a09915324b0f7c89637c2b8f2bb02ce04ba0c5"
+original_class_hash = "0x77baf409e36ef28267df73d8a09915324b0f7c89637c2b8f2bb02ce04ba0c5"
+abi = "manifests/dev/base/abis/models/dojo_starter-TravelAction-1be38c70.json"
+tag = "dojo_starter-TravelAction"
+qualified_path = "dojo_starter::models::travel_action::travel_action"
+manifest_name = "dojo_starter-TravelAction-1be38c70"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "depart_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "arrival_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "target_position"
+type = "Vec2"
+key = false

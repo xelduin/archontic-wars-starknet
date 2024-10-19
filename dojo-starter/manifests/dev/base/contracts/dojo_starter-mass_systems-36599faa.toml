@@ -1,0 +1,11 @@
+kind = "DojoContract"
+class_hash = "0x4010d11befec7dc8edf1bd980f8ce23320954638b80bf4cc7ce6576cb5b726"
+original_class_hash = "0x4010d11befec7dc8edf1bd980f8ce23320954638b80bf4cc7ce6576cb5b726"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-mass_systems-36599faa.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-mass_systems"
+systems = ["transfer_mass"]
+manifest_name = "dojo_starter-mass_systems-36599faa"

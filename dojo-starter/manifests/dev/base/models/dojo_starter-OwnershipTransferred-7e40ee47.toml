@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x7fb558c520781213d31d3db963fa1f5cc677f3ca916297185d7b03d1f83ed4f"
+original_class_hash = "0x7fb558c520781213d31d3db963fa1f5cc677f3ca916297185d7b03d1f83ed4f"
+abi = "manifests/dev/base/abis/models/dojo_starter-OwnershipTransferred-7e40ee47.json"
+tag = "dojo_starter-OwnershipTransferred"
+qualified_path = "dojo_starter::systems::authority::contracts::authority_systems::authority_systems::ownership_transferred"
+manifest_name = "dojo_starter-OwnershipTransferred-7e40ee47"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "new_owner"
+type = "ContractAddress"
+key = false

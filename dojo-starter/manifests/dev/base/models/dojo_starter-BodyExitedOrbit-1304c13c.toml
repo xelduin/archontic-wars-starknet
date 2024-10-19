@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x6b176459bfe5f86830ba08509b0ca01cbe4b8df355e016858638a8a76845fb6"
+original_class_hash = "0x6b176459bfe5f86830ba08509b0ca01cbe4b8df355e016858638a8a76845fb6"
+abi = "manifests/dev/base/abis/models/dojo_starter-BodyExitedOrbit-1304c13c.json"
+tag = "dojo_starter-BodyExitedOrbit"
+qualified_path = "dojo_starter::systems::movement::contracts::movement_systems::movement_systems::body_exited_orbit"
+manifest_name = "dojo_starter-BodyExitedOrbit-1304c13c"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "orbit_center"
+type = "u32"
+key = false

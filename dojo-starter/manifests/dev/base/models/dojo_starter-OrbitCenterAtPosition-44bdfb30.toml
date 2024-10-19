@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x22932b711d0db3072d6a689592077cbe635097142062adb956e0df9fbe24d26"
+original_class_hash = "0x22932b711d0db3072d6a689592077cbe635097142062adb956e0df9fbe24d26"
+abi = "manifests/dev/base/abis/models/dojo_starter-OrbitCenterAtPosition-44bdfb30.json"
+tag = "dojo_starter-OrbitCenterAtPosition"
+qualified_path = "dojo_starter::models::position::orbit_center_at_position"
+manifest_name = "dojo_starter-OrbitCenterAtPosition-44bdfb30"
+
+[[members]]
+name = "x"
+type = "u64"
+key = true
+
+[[members]]
+name = "y"
+type = "u64"
+key = true
+
+[[members]]
+name = "orbit_center"
+type = "u32"
+key = true
+
+[[members]]
+name = "entity"
+type = "u32"
+key = false

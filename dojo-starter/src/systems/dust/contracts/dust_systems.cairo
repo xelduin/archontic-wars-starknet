@@ -115,14 +115,15 @@ mod dust_systems {
             let child_dust_accretion = get!(world, body_id, (DustAccretion));
             assert(child_dust_accretion.in_dust_pool == false, 'already in dust pool');
 
-            Self::update_emission(world, pool_id);
-
             let child_mass = get!(world, body_id, (Mass));
             let parent_mass = get!(world, pool_id, (Mass));
             let parent_emission = get!(world, pool_id, (DustEmission));
 
             let min_allowed_mass = child_mass.mass * 10;
             assert(parent_mass.mass >= min_allowed_mass, 'pool mass too low');
+
+            Self::update_emission(world, pool_id);
+            Self::increase_total_pool_mass(world, pool_id, child_mass.mass);
 
             set!(
                 world,
@@ -133,8 +134,6 @@ mod dust_systems {
                 })
             );
 
-            Self::increase_total_pool_mass(world, pool_id, child_mass.mass);
-
             emit!(world, (DustPoolEntered { body_id, pool_id }));
         }
 
@@ -142,16 +141,16 @@ mod dust_systems {
             let body_orbit = get!(world, body_id, (Orbit));
             let pool_id = body_orbit.orbit_center;
 
-            Self::update_emission(world, body_id);
-            Self::claim_dust(world, body_id);
-
             let body_dust_accretion = get!(world, body_id, DustAccretion);
-            assert(body_dust_accretion.debt > 0, 'not in dust pool');
-
-            delete!(world, (body_dust_accretion));
+            assert(body_dust_accretion.in_dust_pool, 'not in dust pool');
 
             let body_mass = get!(world, body_id, Mass);
+
+            Self::update_emission(world, body_id);
+            Self::claim_dust(world, body_id);
             Self::decrease_total_pool_mass(world, pool_id, body_mass.mass);
+
+            delete!(world, (body_dust_accretion));
 
             emit!(world, (DustPoolExited { body_id, pool_id }));
         }
@@ -191,6 +190,9 @@ mod dust_systems {
             let pool_emission = get!(world, pool_id, DustEmission);
             assert(pool_emission.emission_rate > 0, 'invalid pool id');
 
+            Self::update_emission(world, pool_id);
+            Self::claim_dust(world, body_id);
+
             if old_mass > new_mass {
                 Self::decrease_total_pool_mass(world, pool_id, old_mass - new_mass);
             } else {
@@ -204,7 +206,6 @@ mod dust_systems {
                 world, (DustPool { entity: pool_id, total_mass: pool_mass_data.total_mass + mass })
             );
         }
-
 
         fn decrease_total_pool_mass(world: IWorldDispatcher, pool_id: u32, mass: u64) {
             let pool_mass_data = get!(world, pool_id, DustPool);

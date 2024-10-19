@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x5d699ecd812a72e64584f288da79436c524f1ce39ca45a42360bf8e3f9f5d49"
+original_class_hash = "0x5d699ecd812a72e64584f288da79436c524f1ce39ca45a42360bf8e3f9f5d49"
+abi = "manifests/dev/base/abis/models/dojo_starter-LooshMinted-4210b5ee.json"
+tag = "dojo_starter-LooshMinted"
+qualified_path = "dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::loosh_minted"
+manifest_name = "dojo_starter-LooshMinted-4210b5ee"
+
+[[members]]
+name = "receiver"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "amount"
+type = "u128"
+key = false

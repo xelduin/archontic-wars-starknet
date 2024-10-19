@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x28316812fb7ecab473c66222df96bb879fa3ed63ac67051effb5e76781d1dc7"
+original_class_hash = "0x28316812fb7ecab473c66222df96bb879fa3ed63ac67051effb5e76781d1dc7"
+abi = "manifests/dev/base/abis/models/dojo_starter-Mass-71704ed8.json"
+tag = "dojo_starter-Mass"
+qualified_path = "dojo_starter::models::mass::mass"
+manifest_name = "dojo_starter-Mass-71704ed8"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "mass"
+type = "u64"
+key = false

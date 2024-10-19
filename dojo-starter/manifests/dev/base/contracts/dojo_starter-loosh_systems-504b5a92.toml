@@ -1,0 +1,15 @@
+kind = "DojoContract"
+class_hash = "0x792a9604025595e23a53b941b392e4186a6a4a95e8094e19db98565b4a24edf"
+original_class_hash = "0x792a9604025595e23a53b941b392e4186a6a4a95e8094e19db98565b4a24edf"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-loosh_systems-504b5a92.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-loosh_systems"
+systems = [
+    "l1_receive_loosh",
+    "transfer_loosh",
+    "burn_loosh",
+]
+manifest_name = "dojo_starter-loosh_systems-504b5a92"

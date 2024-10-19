@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x790a0ecbaa785457ec72322e1ee159c555b57e73ed02a70caa5d45e03ec6a37"
+original_class_hash = "0x790a0ecbaa785457ec72322e1ee159c555b57e73ed02a70caa5d45e03ec6a37"
+abi = "manifests/dev/base/abis/models/dojo_starter-DustEmission-725ba000.json"
+tag = "dojo_starter-DustEmission"
+qualified_path = "dojo_starter::models::dust_emission::dust_emission"
+manifest_name = "dojo_starter-DustEmission-725ba000"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "emission_rate"
+type = "u128"
+key = false
+
+[[members]]
+name = "ARPS"
+type = "u128"
+key = false
+
+[[members]]
+name = "last_update_ts"
+type = "u64"
+key = false

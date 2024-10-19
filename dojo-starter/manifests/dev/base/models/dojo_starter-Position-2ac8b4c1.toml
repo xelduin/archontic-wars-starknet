@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x2f878de59c38726b3206aeea6b65cc0e0737050d71409ad6652c3239c738185"
+original_class_hash = "0x2f878de59c38726b3206aeea6b65cc0e0737050d71409ad6652c3239c738185"
+abi = "manifests/dev/base/abis/models/dojo_starter-Position-2ac8b4c1.json"
+tag = "dojo_starter-Position"
+qualified_path = "dojo_starter::models::position::position"
+manifest_name = "dojo_starter-Position-2ac8b4c1"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "vec"
+type = "Vec2"
+key = false

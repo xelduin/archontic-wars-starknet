@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x711e986b00177c92154022877ce5551536b001821341b18ac235067f377daa0"
+original_class_hash = "0x711e986b00177c92154022877ce5551536b001821341b18ac235067f377daa0"
+abi = "manifests/dev/base/abis/models/dojo_starter-DustPoolFormed-69d11bac.json"
+tag = "dojo_starter-DustPoolFormed"
+qualified_path = "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::dust_pool_formed"
+manifest_name = "dojo_starter-DustPoolFormed-69d11bac"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "timestamp"
+type = "u64"
+key = false

@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x2d0fe5b5c6df307563873cb141b00a6808ae98d15e830757b77ae563617662"
+original_class_hash = "0x2d0fe5b5c6df307563873cb141b00a6808ae98d15e830757b77ae563617662"
+abi = "manifests/dev/base/abis/models/dojo_starter-DustAccretion-d3f13dcd.json"
+tag = "dojo_starter-DustAccretion"
+qualified_path = "dojo_starter::models::dust_accretion::dust_accretion"
+manifest_name = "dojo_starter-DustAccretion-d3f13dcd"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "debt"
+type = "u128"
+key = false
+
+[[members]]
+name = "in_dust_pool"
+type = "bool"
+key = false

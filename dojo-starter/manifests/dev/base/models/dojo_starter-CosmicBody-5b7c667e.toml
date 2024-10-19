@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x4e68d6be900b0e290fb7151593dcf0344216c1e06983b9bb685acfa0c58d8ef"
+original_class_hash = "0x4e68d6be900b0e290fb7151593dcf0344216c1e06983b9bb685acfa0c58d8ef"
+abi = "manifests/dev/base/abis/models/dojo_starter-CosmicBody-5b7c667e.json"
+tag = "dojo_starter-CosmicBody"
+qualified_path = "dojo_starter::models::cosmic_body::cosmic_body"
+manifest_name = "dojo_starter-CosmicBody-5b7c667e"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "body_type"
+type = "CosmicBodyType"
+key = false

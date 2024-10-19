@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x5dc75fd3d68c5cea889a26c2385b16769081cee94faf2e046ac629a93126e5a"
+original_class_hash = "0x5dc75fd3d68c5cea889a26c2385b16769081cee94faf2e046ac629a93126e5a"
+abi = "manifests/dev/base/abis/models/dojo_starter-DustPool-6eb6523c.json"
+tag = "dojo_starter-DustPool"
+qualified_path = "dojo_starter::models::dust_pool::dust_pool"
+manifest_name = "dojo_starter-DustPool-6eb6523c"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "total_mass"
+type = "u64"
+key = false

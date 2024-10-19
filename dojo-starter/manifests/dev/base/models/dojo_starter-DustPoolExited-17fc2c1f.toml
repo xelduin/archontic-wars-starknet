@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x1c2e86f587594884fcf8a3e11e5d5b036e363c9aaf814f581f9d7a416ae3c4c"
+original_class_hash = "0x1c2e86f587594884fcf8a3e11e5d5b036e363c9aaf814f581f9d7a416ae3c4c"
+abi = "manifests/dev/base/abis/models/dojo_starter-DustPoolExited-17fc2c1f.json"
+tag = "dojo_starter-DustPoolExited"
+qualified_path = "dojo_starter::systems::dust::contracts::dust_systems::dust_systems::dust_pool_exited"
+manifest_name = "dojo_starter-DustPoolExited-17fc2c1f"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "pool_id"
+type = "u32"
+key = false
