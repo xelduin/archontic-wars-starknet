@@ -20,6 +20,7 @@ mod dust_systems {
         dust_balance::DustBalance, dust_accretion::DustAccretion, dust_emission::DustEmission,
         orbit::Orbit, mass::Mass, cosmic_body::{CosmicBody, CosmicBodyType}
     };
+    use dojo_starter::models::dust_pool::DustPool;
     use dojo_starter::utils::dust_farm::{calculate_ARPS, calculate_unclaimed_dust};
 
     // Structure to represent a DustPoolFormed event
@@ -97,9 +98,11 @@ mod dust_systems {
 
             set!(
                 world,
-                (DustEmission {
-                    entity: body_id, emission_rate, ARPS: 0, last_update_ts: current_ts
-                })
+                (
+                    DustEmission {
+                        entity: body_id, emission_rate, ARPS: 0, last_update_ts: current_ts
+                    },
+                )
             );
 
             emit!(world, (DustPoolFormed { body_id, timestamp: current_ts }));
@@ -130,6 +133,8 @@ mod dust_systems {
                 })
             );
 
+            Self::increase_total_pool_mass(world, pool_id, child_mass.mass);
+
             emit!(world, (DustPoolEntered { body_id, pool_id }));
         }
 
@@ -145,36 +150,73 @@ mod dust_systems {
 
             delete!(world, (body_dust_accretion));
 
+            let body_mass = get!(world, body_id, Mass);
+            Self::decrease_total_pool_mass(world, pool_id, body_mass.mass);
+
             emit!(world, (DustPoolExited { body_id, pool_id }));
         }
 
-        fn update_emission(world: IWorldDispatcher, body_id: u32) {
-            let body_mass = get!(world, body_id, (Mass));
-            if body_mass.orbit_mass == 0 {
+        fn update_emission(world: IWorldDispatcher, pool_id: u32) {
+            let dust_emission = get!(world, pool_id, (DustEmission));
+            assert(dust_emission.emission_rate > 0, 'no emission');
+
+            let pool_mass = get!(world, pool_id, (DustPool));
+            if pool_mass.total_mass == 0 {
                 return;
             };
 
             let current_ts = get_block_timestamp();
 
-            let dust_emission = get!(world, body_id, (DustEmission));
-            assert(dust_emission.emission_rate > 0, 'no emission');
-
-            let updated_ARPS = calculate_ARPS(current_ts, dust_emission, body_mass);
+            let updated_ARPS = calculate_ARPS(current_ts, dust_emission, pool_mass.total_mass);
 
             set!(
                 world,
                 (DustEmission {
-                    entity: body_id,
+                    entity: pool_id,
                     emission_rate: dust_emission.emission_rate,
                     ARPS: updated_ARPS,
-                    last_update_ts: current_ts
+                    last_update_ts: current_ts,
                 })
             );
         }
 
+        fn update_pool_member(world: IWorldDispatcher, body_id: u32, old_mass: u64, new_mass: u64) {
+            assert(old_mass != new_mass, 'no mass change');
+
+            let body_accretion = get!(world, body_id, DustAccretion);
+            assert(body_accretion.in_dust_pool, 'not in dust pool');
+
+            let body_orbit = get!(world, body_id, Orbit);
+            let pool_id = body_orbit.orbit_center;
+            let pool_emission = get!(world, pool_id, DustEmission);
+            assert(pool_emission.emission_rate > 0, 'invalid pool id');
+
+            if old_mass > new_mass {
+                Self::decrease_total_pool_mass(world, pool_id, old_mass - new_mass);
+            } else {
+                Self::increase_total_pool_mass(world, pool_id, new_mass - old_mass);
+            }
+        }
+
+        fn increase_total_pool_mass(world: IWorldDispatcher, pool_id: u32, mass: u64) {
+            let pool_mass_data = get!(world, pool_id, DustPool);
+            set!(
+                world, (DustPool { entity: pool_id, total_mass: pool_mass_data.total_mass + mass })
+            );
+        }
+
+
+        fn decrease_total_pool_mass(world: IWorldDispatcher, pool_id: u32, mass: u64) {
+            let pool_mass_data = get!(world, pool_id, DustPool);
+            set!(
+                world, (DustPool { entity: pool_id, total_mass: pool_mass_data.total_mass - mass })
+            );
+        }
+
+
         fn claim_dust(world: IWorldDispatcher, body_id: u32) {
             let body_accretion = get!(world, body_id, (DustAccretion));
-            assert(body_accretion.debt > 0, 'not in dust pool');
+            assert(body_accretion.in_dust_pool, 'not in dust pool');
 
             let body_orbit = get!(world, body_id, (Orbit));
             let pool_id = body_orbit.orbit_center;
@@ -189,7 +231,7 @@ mod dust_systems {
                 world,
                 (
                     DustBalance { entity: body_id, balance: new_dust_balance },
-                    DustAccretion { entity: body_id, debt: new_dust_balance, in_dust_pool: true}
+                    DustAccretion { entity: body_id, debt: new_dust_balance, in_dust_pool: true }
                 )
             );
 

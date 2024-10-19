@@ -2,9 +2,9 @@ use dojo_starter::models::dust_emission::DustEmission;
 use dojo_starter::models::dust_accretion::DustAccretion;
 use dojo_starter::models::mass::Mass;
 
-fn calculate_ARPS(at_ts: u64, pool_emission: DustEmission, pool_mass: Mass) -> u128 {
-    assert(pool_mass.orbit_mass > 0, 'orbit mass is zero');
-    let reward_per_share = pool_emission.emission_rate / pool_mass.orbit_mass.try_into().unwrap();
+fn calculate_ARPS(at_ts: u64, pool_emission: DustEmission, total_pool_mass: u64) -> u128 {
+    assert(total_pool_mass > 0, 'orbit mass is zero');
+    let reward_per_share = pool_emission.emission_rate / total_pool_mass.try_into().unwrap();
     let elapsed_ts = at_ts - pool_emission.last_update_ts;
     let ARPS_change = reward_per_share * elapsed_ts.try_into().unwrap();
 
@@ -26,17 +26,17 @@ fn calculate_unclaimed_dust(
 fn get_expected_dust_increase(
     at_ts: u64,
     star_mass: Mass,
-    pool_mass: Mass,
+    total_pool_mass: u64,
     star_accretion: DustAccretion,
     pool_emission: DustEmission
 ) -> u128 {
-    let new_ARPS = calculate_ARPS(at_ts, pool_emission, pool_mass);
-    
+    let new_ARPS = calculate_ARPS(at_ts, pool_emission, total_pool_mass);
+
     let updated_pool_emission = DustEmission {
         entity: pool_emission.entity,
         emission_rate: pool_emission.emission_rate,
         ARPS: new_ARPS,
-        last_update_ts: at_ts
+        last_update_ts: at_ts,
     };
 
     let expected_dust_increase = calculate_unclaimed_dust(

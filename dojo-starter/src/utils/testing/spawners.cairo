@@ -32,7 +32,9 @@ fn spawn_galaxy(
 
     set!(
         world,
-        (dust_emission::DustEmission { entity: body_id, emission_rate, ARPS: 0, last_update_ts: 0 })
+        (dust_emission::DustEmission {
+            entity: body_id, emission_rate, ARPS: 0, last_update_ts: 0,
+        })
     );
 
     return body_id;

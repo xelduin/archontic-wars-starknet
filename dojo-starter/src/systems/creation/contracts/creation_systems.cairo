@@ -194,7 +194,8 @@ mod creation_systems {
             );
             InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);
 
-            InternalDustSystemsImpl::enter_dust_pool(world, body_id, star_id);
+            // Will add when multilayered farming implemented
+            //InternalDustSystemsImpl::enter_dust_pool(world, body_id, star_id);
 
             emit!(world, (AsteroidClusterDefined { star_id, cluster_id: body_id }));
 
