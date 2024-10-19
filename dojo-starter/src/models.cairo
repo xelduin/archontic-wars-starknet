@@ -4,6 +4,7 @@ mod incubation;
 mod owner;
 mod position;
 mod mass;
+mod orbital_mass;
 mod travel_action;
 mod vec2;
 mod dust_balance;

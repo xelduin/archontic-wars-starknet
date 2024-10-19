@@ -6,6 +6,7 @@ use dojo_starter::models::loosh_balance::LooshBalance;
 use dojo_starter::models::position::Position;
 use dojo_starter::models::orbit::Orbit;
 use dojo_starter::models::dust_accretion::DustAccretion;
+use dojo_starter::models::orbital_mass::OrbitalMass;
 
 use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
@@ -51,7 +52,13 @@ fn setup() -> (IWorldDispatcher, u32, u32, ContractAddress, IMovementSystemsDisp
     );
     let star_id = spawn_star(world, sender_owner, origin_vec, 1000);
 
-    set!(world, (Orbit { entity: asteroid_cluster_id, orbit_center: star_id }));
+    set!(
+        world,
+        (
+            Orbit { entity: asteroid_cluster_id, orbit_center: star_id },
+            OrbitalMass { entity: star_id, orbital_mass: asteroid_cluster_mass }
+        )
+    );
 
     (world, asteroid_cluster_id, star_id, sender_owner, movement_dispatcher)
 }

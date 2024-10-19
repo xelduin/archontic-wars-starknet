@@ -25,7 +25,7 @@ fn spawn_galaxy(
             cosmic_body::CosmicBody {
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::Galaxy
             },
-            mass::Mass { entity: body_id, mass, orbit_mass: 0 },
+            mass::Mass { entity: body_id, mass },
             position::Position { entity: body_id, vec: coords }
         )
     );
@@ -58,7 +58,7 @@ fn spawn_protostar(
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::Protostar
             },
             position::Position { entity: body_id, vec: coords },
-            mass::Mass { entity: body_id, mass: star_mass, orbit_mass: 0 },
+            mass::Mass { entity: body_id, mass: star_mass },
             incubation::Incubation { entity: body_id, creation_ts, end_ts }
         )
     );
@@ -79,7 +79,7 @@ fn spawn_star(
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::Star
             },
             position::Position { entity: body_id, vec: coords },
-            mass::Mass { entity: body_id, mass: star_mass, orbit_mass: 0 },
+            mass::Mass { entity: body_id, mass: star_mass },
         )
     );
 
@@ -102,7 +102,7 @@ fn spawn_asteroid_cluster(
                 entity: body_id, body_type: cosmic_body::CosmicBodyType::AsteroidCluster
             },
             position::Position { entity: body_id, vec: coords },
-            mass::Mass { entity: body_id, mass: cluster_mass, orbit_mass: 0 },
+            mass::Mass { entity: body_id, mass: cluster_mass },
         )
     );
 

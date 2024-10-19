@@ -22,7 +22,8 @@ mod movement_systems {
     use dojo_starter::systems::{
         loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl}
     };
-
+    use dojo_starter::models::orbital_mass::OrbitalMass;
+    use dojo_starter::models::mass::Mass;
 
     use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
@@ -149,9 +150,15 @@ mod movement_systems {
             let orbit_center_position = get!(world, orbit_center, (Position));
             assert(body_position.is_equal(world, orbit_center_position), 'not in proximity');
 
+            let orbit_center_orbital_mass = get!(world, orbit_center, OrbitalMass);
+            let body_mass = get!(world, body_id, Mass);
             set!(
                 world,
                 (
+                    OrbitalMass {
+                        entity: orbit_center,
+                        orbital_mass: orbit_center_orbital_mass.orbital_mass + body_mass.mass
+                    },
                     Orbit { entity: body_id, orbit_center },
                     Position { entity: body_id, vec: Vec2 { x: 1, y: 1 } }
                 )
@@ -173,9 +180,15 @@ mod movement_systems {
 
             let orbit_center_orbit = get!(world, body_orbit.orbit_center, Orbit);
             let orbit_center_position = get!(world, body_orbit.orbit_center, Position);
+            let orbit_center_orbital_mass = get!(world, body_orbit.orbit_center, OrbitalMass);
+            let body_mass = get!(world, body_id, Mass);
             set!(
                 world,
                 (
+                    OrbitalMass {
+                        entity: body_id,
+                        orbital_mass: orbit_center_orbital_mass.orbital_mass - body_mass.mass
+                    },
                     Orbit { entity: body_id, orbit_center: orbit_center_orbit.orbit_center },
                     Position { entity: body_id, vec: orbit_center_position.vec }
                 )

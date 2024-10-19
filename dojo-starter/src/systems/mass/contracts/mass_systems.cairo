@@ -18,6 +18,10 @@ mod mass_systems {
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use dojo_starter::models::vec2::Vec2;
     use dojo_starter::models::position::{Position, PositionCustomImpl};
+    use dojo_starter::models::dust_accretion::DustAccretion;
+    use dojo_starter::systems::dust::contracts::dust_systems::dust_systems::{
+        InternalDustSystemsImpl
+    };
 
     #[abi(embed_v0)]
     impl MassSystemsImpl of IMassSystems<ContractState> {
@@ -54,21 +58,26 @@ mod mass_systems {
             let body_mass = get!(world, body_id, (Mass));
             let new_mass = mass + body_mass.mass;
 
-            set!(
-                world, (Mass { entity: body_id, mass: new_mass, orbit_mass: body_mass.orbit_mass })
-            );
+            Self::on_body_mass_change(world, body_id, body_mass.mass, new_mass);
         }
 
         fn decrease_mass(world: IWorldDispatcher, body_id: u32, mass: u64) {
             let body_mass = get!(world, body_id, (Mass));
-
             assert(body_mass.mass > mass, 'not enough mass');
-
             let new_mass = body_mass.mass - mass;
 
-            set!(
-                world, (Mass { entity: body_id, mass: new_mass, orbit_mass: body_mass.orbit_mass })
-            );
+            Self::on_body_mass_change(world, body_id, body_mass.mass, new_mass);
+        }
+
+        fn on_body_mass_change(
+            world: IWorldDispatcher, body_id: u32, old_mass: u64, new_mass: u64
+        ) {
+            set!(world, (Mass { entity: body_id, mass: new_mass }));
+
+            let body_accretion = get!(world, body_id, DustAccretion);
+            if body_accretion.in_dust_pool {
+                InternalDustSystemsImpl::update_pool_member(world, body_id, old_mass, new_mass);
+            }
         }
     }
 }

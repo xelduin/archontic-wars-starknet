@@ -113,7 +113,7 @@ mod creation_systems {
                 (
                     CosmicBody { entity: body_id, body_type: CosmicBodyType::Galaxy },
                     Position { entity: body_id, vec: coords },
-                    Mass { entity: body_id, mass, orbit_mass: 0 },
+                    Mass { entity: body_id, mass },
                     Owner { entity: body_id, address: player },
                     OrbitCenterAtPosition {
                         x: coords.x, y: coords.y, orbit_center: 0, entity: body_id
@@ -154,7 +154,7 @@ mod creation_systems {
                     },
                     Position { entity: body_id, vec: coords },
                     Orbit { entity: body_id, orbit_center: galaxy_id },
-                    Mass { entity: body_id, mass, orbit_mass: 0 },
+                    Mass { entity: body_id, mass},
                     OrbitCenterAtPosition {
                         x: coords.x, y: coords.y, orbit_center: galaxy_id, entity: body_id
                     }
@@ -189,7 +189,7 @@ mod creation_systems {
                     CosmicBody { entity: body_id, body_type: CosmicBodyType::AsteroidCluster },
                     Position { entity: body_id, vec: coords },
                     Orbit { entity: body_id, orbit_center: star_id },
-                    Mass { entity: body_id, mass: initial_mass, orbit_mass: 0 }
+                    Mass { entity: body_id, mass: initial_mass}
                 )
             );
             InternalAuthoritySystemsImpl::transfer_ownership(world, body_id, player);

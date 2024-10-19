@@ -1,7 +1,7 @@
 #[derive(Copy, Drop, Serde)]
 #[dojo::model]
-pub struct Mass {
+pub struct OrbitalMass {
     #[key]
     pub entity: u32,
-    pub mass: u64,
+    pub orbital_mass: u64,
 }
