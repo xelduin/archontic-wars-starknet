@@ -16,61 +16,21 @@ trait ICreationSystems {
 mod creation_systems {
     use super::{ICreationSystems, get_loosh_cost};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
-    use dojo_starter::models::{incubation::Incubation, loosh_sink::LooshSink, vec2::Vec2,};
-    use dojo_starter::models::position::{Position, OrbitCenterAtPosition};
+
+    use dojo_starter::systems::dust::contracts::dust_systems::dust_systems::InternalDustSystemsImpl;
+    use dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::InternalLooshSystemsImpl;
+    use dojo_starter::systems::mass::contracts::mass_systems::mass_systems::InternalMassSystemsImpl;
+
     use dojo_starter::models::owner::Owner;
-    use dojo_starter::models::mass::Mass;
-    use dojo_starter::models::orbital_mass::OrbitalMass;
+    use dojo_starter::models::vec2::Vec2;
+    use dojo_starter::models::position::{Position, OrbitCenterAtPosition};
     use dojo_starter::models::orbit::Orbit;
+    use dojo_starter::models::orbital_mass::OrbitalMass;
+    use dojo_starter::models::mass::Mass;
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
-    use dojo_starter::systems::{
-        dust::contracts::dust_systems::dust_systems::{InternalDustSystemsImpl},
-        loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl},
-        authority::contracts::authority_systems::authority_systems::{InternalAuthoritySystemsImpl},
-        mass::contracts::mass_systems::mass_systems::{InternalMassSystemsImpl},
-        movement::contracts::movement_systems::movement_systems::{InternalMovementSystemsImpl}
-    };
+    use dojo_starter::models::incubation::Incubation;
+    use dojo_starter::models::loosh_sink::LooshSink;
 
-    // Structure to represent a ProtostarSpawned event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct ProtostarSpawned {
-        #[key]
-        body_id: u32,
-        x: u64,
-        y: u64,
-    }
-
-    // Structure to represent a StarFormed event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct StarFormed {
-        #[key]
-        protostar_id: u32,
-        timestamp: u64,
-    }
-
-    // Structure to represent AsteroidsFormed event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct AsteroidsFormed {
-        #[key]
-        star_id: u32,
-        cluster_id: u32,
-    }
-
-    // Structure to represent AsteroidClusterDefined event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct AsteroidClusterDefined {
-        #[key]
-        star_id: u32,
-        cluster_id: u32,
-    }
 
     #[abi(embed_v0)]
     impl CreationSystemsImpl of ICreationSystems<ContractState> {
@@ -259,7 +219,6 @@ mod creation_systems {
             InternalDustSystemsImpl::consume_dust(world, star_id, mass.try_into().unwrap());
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
             // Emit an event for asteroid formation
-            emit!(world, (AsteroidsFormed { star_id, cluster_id }));
         }
     }
 }

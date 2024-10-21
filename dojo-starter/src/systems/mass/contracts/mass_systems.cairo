@@ -13,15 +13,14 @@ trait IMassSystems {
 mod mass_systems {
     use super::{IMassSystems};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
+
+    use dojo_starter::systems::dust::contracts::dust_systems::dust_systems::InternalDustSystemsImpl;
+
     use dojo_starter::models::mass::Mass;
     use dojo_starter::models::owner::Owner;
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
-    use dojo_starter::models::vec2::Vec2;
     use dojo_starter::models::position::{Position, PositionCustomImpl};
     use dojo_starter::models::dust_accretion::DustAccretion;
-    use dojo_starter::systems::dust::contracts::dust_systems::dust_systems::{
-        InternalDustSystemsImpl
-    };
 
     #[abi(embed_v0)]
     impl MassSystemsImpl of IMassSystems<ContractState> {

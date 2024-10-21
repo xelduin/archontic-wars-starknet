@@ -11,9 +11,9 @@ trait IAuthoritySystems {
 mod authority_systems {
     use super::{IAuthoritySystems};
     use starknet::{ContractAddress, get_caller_address};
+
     use dojo_starter::models::owner::Owner;
 
-    // Structure to represent a DustPoolFormed event
     #[derive(Copy, Drop, Serde)]
     #[dojo::model]
     #[dojo::event]

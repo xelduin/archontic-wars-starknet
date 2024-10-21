@@ -15,33 +15,14 @@ trait ILooshSystems {
 mod loosh_systems {
     use super::{ILooshSystems};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
-    use dojo_starter::models::loosh_balance::LooshBalance;
+
     use dojo_starter::models::owner::Owner;
+    use dojo_starter::models::loosh_balance::LooshBalance;
     use dojo_starter::models::{loosh_sink::LooshSink};
-
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::event]
-    #[dojo::model]
-    struct LooshTransferred {
-        #[key]
-        sender: ContractAddress,
-        receiver: ContractAddress,
-        amount: u128,
-    }
-
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::event]
-    #[dojo::model]
-    struct LooshMinted {
-        #[key]
-        receiver: ContractAddress,
-        amount: u128,
-    }
 
     #[abi(embed_v0)]
     impl LooshSystemsImpl of ILooshSystems<ContractState> {
         fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
-            // Check that the incoming message comes from the authorized L1 contract
             InternalLooshSystemsImpl::mint_loosh(world, receiver, amount);
         }
 
@@ -82,12 +63,9 @@ mod loosh_systems {
                     LooshBalance { address: receiver, balance: new_receiver_balance }
                 )
             );
-
-            emit!(world, (LooshTransferred { sender, receiver, amount }));
         }
 
         fn mint_loosh(world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
-            // Check that the incoming message comes from the authorized L1 contract
             let current_loosh_balance = get!(world, receiver, (LooshBalance));
 
             set!(
@@ -96,7 +74,6 @@ mod loosh_systems {
                     address: receiver, balance: current_loosh_balance.balance + amount
                 })
             );
-            emit!(world, (LooshMinted { receiver, amount }));
         }
 
         fn burn_loosh(world: IWorldDispatcher, address: ContractAddress, amount: u128,) {

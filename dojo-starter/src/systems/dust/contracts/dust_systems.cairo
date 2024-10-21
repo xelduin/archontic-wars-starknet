@@ -16,61 +16,16 @@ trait IDustSystems {
 mod dust_systems {
     use super::{IDustSystems};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
-    use dojo_starter::models::{
-        dust_balance::DustBalance, dust_accretion::DustAccretion, dust_emission::DustEmission,
-        orbit::Orbit, mass::Mass, cosmic_body::{CosmicBody, CosmicBodyType}
-    };
-    use dojo_starter::models::dust_pool::DustPool;
     use dojo_starter::utils::dust_farm::{calculate_ARPS, calculate_unclaimed_dust};
 
-    // Structure to represent a DustPoolFormed event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct DustPoolFormed {
-        #[key]
-        body_id: u32,
-        timestamp: u64,
-    }
+    use dojo_starter::models::dust_pool::DustPool;
+    use dojo_starter::models::dust_balance::DustBalance;
+    use dojo_starter::models::dust_accretion::DustAccretion;
+    use dojo_starter::models::dust_emission::DustEmission;
+    use dojo_starter::models::orbit::Orbit;
+    use dojo_starter::models::mass::Mass;
+    use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
 
-    // Structure to represent a DustPoolEntered event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct DustPoolEntered {
-        #[key]
-        body_id: u32,
-        pool_id: u32,
-    }
-
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct DustPoolExited {
-        #[key]
-        body_id: u32,
-        pool_id: u32,
-    }
-
-    // Structure to represent DustClaimed event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct DustClaimed {
-        #[key]
-        body_id: u32,
-        amount: u128,
-    }
-
-    // Structure to represent DustConsumed event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct DustConsumed {
-        #[key]
-        body_id: u32,
-        amount: u128,
-    }
 
     #[abi(embed_v0)]
     impl DustSystemsImpl of IDustSystems<ContractState> {
@@ -104,8 +59,6 @@ mod dust_systems {
                     },
                 )
             );
-
-            emit!(world, (DustPoolFormed { body_id, timestamp: current_ts }));
         }
 
         fn enter_dust_pool(world: IWorldDispatcher, body_id: u32, pool_id: u32) {
@@ -133,8 +86,6 @@ mod dust_systems {
                     in_dust_pool: true
                 })
             );
-
-            emit!(world, (DustPoolEntered { body_id, pool_id }));
         }
 
         fn exit_dust_pool(world: IWorldDispatcher, body_id: u32) {
@@ -151,8 +102,6 @@ mod dust_systems {
             Self::decrease_total_pool_mass(world, pool_id, body_mass.mass);
 
             delete!(world, (body_dust_accretion));
-
-            emit!(world, (DustPoolExited { body_id, pool_id }));
         }
 
         fn update_emission(world: IWorldDispatcher, pool_id: u32) {
@@ -235,8 +184,6 @@ mod dust_systems {
                     DustAccretion { entity: body_id, debt: new_dust_balance, in_dust_pool: true }
                 )
             );
-
-            emit!(world, (DustClaimed { body_id, amount: unclaimed_dust }));
         }
 
         fn consume_dust(world: IWorldDispatcher, body_id: u32, amount: u128) {
@@ -246,8 +193,6 @@ mod dust_systems {
             let new_dust_balance = dust_balance.balance - amount;
 
             set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
-
-            emit!(world, (DustConsumed { body_id, amount }));
         }
     }
 }

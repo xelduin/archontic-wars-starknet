@@ -14,61 +14,18 @@ trait IMovementSystems {
 mod movement_systems {
     use super::IMovementSystems;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
-    use dojo_starter::models::{
-        position::{Position, PositionCustomImpl}, vec2::{Vec2, Vec2Impl},
-        travel_action::TravelAction, orbit::Orbit, cosmic_body::{CosmicBody, CosmicBodyType}
-    };
-    use dojo_starter::models::dust_accretion::DustAccretion;
-    use dojo_starter::systems::{
-        loosh::contracts::loosh_systems::loosh_systems::{InternalLooshSystemsImpl}
-    };
-    use dojo_starter::models::orbital_mass::OrbitalMass;
-    use dojo_starter::models::mass::Mass;
-
     use dojo_starter::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
 
-    // Structure to represent a BodyMoved event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct BodyMoved {
-        #[key]
-        body_id: u32,
-        new_x: u64,
-        new_y: u64,
-    }
+    use dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::InternalLooshSystemsImpl;
 
-    // Structure to represent a BodyEnteredOrbit event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct BodyEnteredOrbit {
-        #[key]
-        body_id: u32,
-        orbit_center: u32,
-    }
-
-    // Structure to represent a BodyExitedOrbit event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct BodyExitedOrbit {
-        #[key]
-        body_id: u32,
-        orbit_center: u32,
-    }
-
-    // Structure to represent a BodiesCollided event
-    #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
-    #[dojo::event]
-    struct BodiesCollided {
-        #[key]
-        body_id: u32,
-        target_id: u32,
-        mass_change_body: i64, // Change in mass after the collision
-        mass_change_target: i64,
-    }
+    use dojo_starter::models::position::{Position, PositionCustomImpl};
+    use dojo_starter::models::vec2::{Vec2, Vec2Impl};
+    use dojo_starter::models::travel_action::TravelAction;
+    use dojo_starter::models::orbit::Orbit;
+    use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
+    use dojo_starter::models::dust_accretion::DustAccretion;
+    use dojo_starter::models::orbital_mass::OrbitalMass;
+    use dojo_starter::models::mass::Mass;
 
     #[abi(embed_v0)]
     impl MovementSystemsImpl of IMovementSystems<ContractState> {

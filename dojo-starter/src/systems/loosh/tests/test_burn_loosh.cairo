@@ -16,7 +16,6 @@ use dojo_starter::utils::testing::{
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
-// Mock setup for the test
 fn setup() -> (IWorldDispatcher, ContractAddress, ILooshSystemsDispatcher) {
     let world = spawn_world();
 
