@@ -15,3 +15,4 @@ mod dust_cloud;
 mod orbit;
 mod loosh_sink;
 mod cosmic_body;
+mod harvest_action;

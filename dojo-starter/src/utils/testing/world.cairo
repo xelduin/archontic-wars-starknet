@@ -2,7 +2,7 @@ use core::array::{ArrayTrait, SpanTrait};
 use dojo_starter::models::{
     loosh_balance, basal_attributes, incubation, owner, position, mass, travel_action, vec2,
     dust_balance, dust_emission, dust_accretion, dust_cloud, orbit, loosh_sink, cosmic_body,
-    dust_pool, orbital_mass
+    dust_pool, orbital_mass, harvest_action
 };
 use dojo::utils::test::{spawn_test_world};
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
@@ -27,6 +27,7 @@ fn spawn_world() -> IWorldDispatcher {
         dust_cloud::dust_cloud::TEST_CLASS_HASH,
         orbit::orbit::TEST_CLASS_HASH,
         cosmic_body::cosmic_body::TEST_CLASS_HASH,
+        harvest_action::harvest_action::TEST_CLASS_HASH,
     ];
 
     let world = spawn_test_world(["dojo_starter"].span(), models.span());
