@@ -6,7 +6,14 @@ use dojo_starter::models::dust_accretion::DustAccretion;
 use dojo_starter::models::dust_emission::DustEmission;
 use dojo_starter::models::dust_pool::DustPool;
 use dojo_starter::models::orbit::Orbit;
-use dojo_starter::utils::dust_farm::{calculate_ARPS, get_expected_dust_increase};
+use dojo_starter::models::basal_attributes::{
+    BasalAttributes, BasalAttributesType, BasalAttributesImpl
+};
+use dojo_starter::models::dust_cloud::DustCloud;
+
+use dojo_starter::utils::dust_farm::{
+    calculate_ARPS, get_expected_dust_increase, get_expected_claimable_dust_for_star
+};
 
 use starknet::{
     ContractAddress, get_block_timestamp,
@@ -46,11 +53,13 @@ fn setup() -> (IWorldDispatcher, u32, u32, u32, ContractAddress, IDustSystemsDis
 
     let star_mass = 200;
     let star_id = spawn_star(world, sender_owner, coords, star_mass);
-    let star_id_two = spawn_star(world, sender_owner, coords, star_mass);
-    let star_id_three = spawn_star(world, sender_owner, coords, star_mass);
     add_to_dust_pool(world, dust_dispatcher, galaxy_id, star_id);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, star_id_two);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, star_id_three);
+    set!(world, (BasalAttributes { entity: star_id, attributes: 20 }));
+
+    let filler_star_one = spawn_star(world, sender_owner, coords, star_mass);
+    let filler_star_two = spawn_star(world, sender_owner, coords, star_mass);
+    add_to_dust_pool(world, dust_dispatcher, galaxy_id, filler_star_one);
+    add_to_dust_pool(world, dust_dispatcher, galaxy_id, filler_star_two);
 
     let non_member_star_id = spawn_star(world, sender_owner, coords, star_mass);
 
@@ -70,19 +79,27 @@ fn test_claim_dust_valid() {
     let cur_ts = get_block_timestamp();
     let new_ts = cur_ts + 10;
 
-    let expected_claimable_dust = get_expected_dust_increase(
+    let star_attributes = get!(world, star_id, BasalAttributes);
+    let star_sense = star_attributes.get_attribute_value(BasalAttributesType::Sense);
+    let expected_claimable_dust = get_expected_claimable_dust_for_star(
         new_ts,
         get!(world, star_id, Mass),
         get!(world, galaxy_id, DustPool).total_mass,
         get!(world, star_id, DustAccretion),
-        get!(world, galaxy_id, DustEmission)
+        get!(world, galaxy_id, DustEmission),
+        star_sense
     );
     let expected_balance = old_dust_balance.balance + expected_claimable_dust;
 
     set_block_timestamp(new_ts);
 
-    dust_dispatcher.update_emission(galaxy_id);
+    //dust_dispatcher.update_emission(galaxy_id);
     dust_dispatcher.claim_dust(star_id);
+
+    let dust_cloud = get!(world, (100, 100, galaxy_id), DustCloud);
+
+    println!("{}", expected_balance);
+    println!("{}", dust_cloud.dust_balance);
 
     let new_dust_balance = get!(world, star_id, DustBalance);
 
@@ -94,7 +111,7 @@ fn test_claim_dust_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('not in dust pool', 'ENTRYPOINT_FAILED'))]
 fn test_claim_from_non_member() {
-    let (_, _, non_member_star_id, galaxy_id, sender_owner, dust_dispatcher) = setup();
+    let (_, _, non_member_star_id, _, sender_owner, dust_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
@@ -103,6 +120,5 @@ fn test_claim_from_non_member() {
 
     set_block_timestamp(cur_ts + 10);
 
-    dust_dispatcher.update_emission(galaxy_id);
     dust_dispatcher.claim_dust(non_member_star_id);
 }

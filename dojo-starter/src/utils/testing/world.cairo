@@ -1,8 +1,8 @@
 use core::array::{ArrayTrait, SpanTrait};
 use dojo_starter::models::{
     loosh_balance, basal_attributes, incubation, owner, position, mass, travel_action, vec2,
-    dust_balance, dust_emission, dust_accretion, orbit, loosh_sink, cosmic_body, dust_pool,
-    orbital_mass
+    dust_balance, dust_emission, dust_accretion, dust_cloud, orbit, loosh_sink, cosmic_body,
+    dust_pool, orbital_mass
 };
 use dojo::utils::test::{spawn_test_world};
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
@@ -24,6 +24,7 @@ fn spawn_world() -> IWorldDispatcher {
         dust_emission::dust_emission::TEST_CLASS_HASH,
         dust_accretion::dust_accretion::TEST_CLASS_HASH,
         dust_pool::dust_pool::TEST_CLASS_HASH,
+        dust_cloud::dust_cloud::TEST_CLASS_HASH,
         orbit::orbit::TEST_CLASS_HASH,
         cosmic_body::cosmic_body::TEST_CLASS_HASH,
     ];

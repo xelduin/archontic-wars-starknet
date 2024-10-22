@@ -25,12 +25,17 @@ mod dust_systems {
     use dojo_starter::models::orbit::Orbit;
     use dojo_starter::models::mass::Mass;
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
-
+    use dojo_starter::models::basal_attributes::{
+        BasalAttributes, BasalAttributesType, BasalAttributesImpl
+    };
+    use dojo_starter::models::dust_cloud::DustCloud;
+    use dojo_starter::models::position::Position;
 
     #[abi(embed_v0)]
     impl DustSystemsImpl of IDustSystems<ContractState> {
         fn claim_dust(ref world: IWorldDispatcher, body_id: u32) {
-            InternalDustSystemsImpl::claim_dust(world, body_id);
+            //InternalDustSystemsImpl::claim_dust(world, body_id);
+            InternalDustSystemsImpl::update_local_pool(world, body_id);
         }
 
         fn update_emission(ref world: IWorldDispatcher, body_id: u32) {
@@ -125,6 +130,50 @@ mod dust_systems {
                     ARPS: updated_ARPS,
                     last_update_ts: current_ts,
                 })
+            );
+        }
+
+        fn update_local_pool(world: IWorldDispatcher, body_id: u32) {
+            let body_accretion = get!(world, body_id, (DustAccretion));
+            assert(body_accretion.in_dust_pool, 'not in dust pool');
+
+            let body_orbit = get!(world, body_id, (Orbit));
+            let pool_id = body_orbit.orbit_center;
+            Self::update_emission(world, pool_id);
+
+            let pool_emission = get!(world, pool_id, (DustEmission));
+            let body_mass = get!(world, body_id, (Mass));
+            let unclaimed_pool_dust = calculate_unclaimed_dust(
+                pool_emission, body_accretion, body_mass
+            );
+
+            let body_attributes = get!(world, body_id, BasalAttributes);
+            let body_sense = body_attributes.get_attribute_value(BasalAttributesType::Sense);
+            let body_unclaimed_dust = unclaimed_pool_dust * body_sense.try_into().unwrap() / 100;
+
+            let current_dust = get!(world, body_id, (DustBalance));
+            let new_dust_balance = current_dust.balance + body_unclaimed_dust;
+            let dust_remainder = unclaimed_pool_dust - body_unclaimed_dust;
+            let body_position = get!(world, body_id, Position);
+            let dust_cloud = get!(
+                world, (body_position.vec.x, body_position.vec.y, pool_id), DustCloud
+            );
+            set!(
+                world,
+                (
+                    DustBalance { entity: body_id, balance: new_dust_balance },
+                    DustAccretion {
+                        entity: body_id,
+                        debt: body_accretion.debt + unclaimed_pool_dust,
+                        in_dust_pool: true
+                    },
+                    DustCloud {
+                        x: body_position.vec.x,
+                        y: body_position.vec.y,
+                        orbit_center: pool_id,
+                        dust_balance: dust_cloud.dust_balance + dust_remainder
+                    }
+                )
             );
         }
 

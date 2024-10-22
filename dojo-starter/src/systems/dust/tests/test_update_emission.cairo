@@ -6,7 +6,7 @@ use dojo_starter::models::dust_accretion::DustAccretion;
 use dojo_starter::models::dust_emission::DustEmission;
 use dojo_starter::models::dust_pool::DustPool;
 use dojo_starter::models::orbit::Orbit;
-use dojo_starter::utils::dust_farm::{calculate_ARPS, get_expected_dust_increase};
+use dojo_starter::utils::dust_farm::{calculate_ARPS};
 
 use starknet::{
     ContractAddress, get_block_timestamp,
