@@ -71,7 +71,7 @@ mod creation_systems {
             let universe_id = 0;
             let mass = 10000;
             Self::create_cosmic_body(
-                world, player, body_id, universe_id, CosmicBodyType::Galaxy, mass, coords,
+                world, player, body_id, CosmicBodyType::Galaxy, mass, universe_id, coords,
             );
 
             set!(
@@ -102,7 +102,7 @@ mod creation_systems {
             let body_id = world.uuid();
             let mass = 1000;
             Self::create_cosmic_body(
-                world, player, body_id, galaxy_id, CosmicBodyType::Protostar, mass, coords,
+                world, player, body_id, CosmicBodyType::Protostar, mass, galaxy_id, coords,
             );
 
             let creation_ts = get_block_timestamp();
@@ -142,9 +142,9 @@ mod creation_systems {
                 world,
                 player,
                 body_id,
-                star_id,
                 CosmicBodyType::AsteroidCluster,
                 initial_mass,
+                star_id,
                 coords,
             );
 
@@ -155,9 +155,9 @@ mod creation_systems {
             world: IWorldDispatcher,
             owner: ContractAddress,
             body_id: u32,
-            orbit_center: u32,
             body_type: CosmicBodyType,
             mass: u64,
+            orbit_center: u32,
             coords: Vec2,
         ) {
             let orbit_center_orbital_mass = get!(world, orbit_center, OrbitalMass);

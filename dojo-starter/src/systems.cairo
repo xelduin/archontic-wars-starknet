@@ -1,3 +1,9 @@
+pub mod config {
+    pub mod contracts;
+    #[cfg(test)]
+    mod tests;
+}
+
 pub mod creation {
     pub mod contracts;
     #[cfg(test)]
