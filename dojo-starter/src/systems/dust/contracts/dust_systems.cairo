@@ -9,6 +9,9 @@ trait IDustSystems {
     fn claim_dust(ref world: IWorldDispatcher, body_id: u32);
     fn update_emission(ref world: IWorldDispatcher, body_id: u32);
     fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32);
+    fn begin_dust_harvest(ref world: IWorldDispatcher, body_id: u32, harvest_amount: u128);
+    fn end_dust_harvest(ref world: IWorldDispatcher, body_id: u32);
+    fn cancel_dust_harvest(ref world: IWorldDispatcher, body_id: u32);
 }
 
 // Dojo decorator
@@ -16,13 +19,18 @@ trait IDustSystems {
 mod dust_systems {
     use super::{IDustSystems};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
-    use dojo_starter::utils::dust_farm::{calculate_ARPS, calculate_unclaimed_dust};
+    use dojo_starter::utils::dust_farm::{
+        calculate_ARPS, calculate_unclaimed_dust, get_harvest_end_ts
+    };
 
     use dojo_starter::models::dust_pool::DustPool;
     use dojo_starter::models::dust_balance::DustBalance;
     use dojo_starter::models::dust_accretion::DustAccretion;
     use dojo_starter::models::dust_emission::DustEmission;
     use dojo_starter::models::orbit::Orbit;
+    use dojo_starter::models::owner::Owner;
+    use dojo_starter::models::travel_action::TravelAction;
+    use dojo_starter::models::harvest_action::HarvestAction;
     use dojo_starter::models::mass::Mass;
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use dojo_starter::models::basal_attributes::{
@@ -44,6 +52,16 @@ mod dust_systems {
 
         fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32) {
             InternalDustSystemsImpl::enter_dust_pool(world, body_id, pool_id);
+        }
+
+        fn begin_dust_harvest(ref world: IWorldDispatcher, body_id: u32, harvest_amount: u128) {
+            InternalDustSystemsImpl::begin_dust_harvest(world, body_id, harvest_amount);
+        }
+        fn end_dust_harvest(ref world: IWorldDispatcher, body_id: u32) {
+            InternalDustSystemsImpl::end_dust_harvest(world, body_id);
+        }
+        fn cancel_dust_harvest(ref world: IWorldDispatcher, body_id: u32) {
+            InternalDustSystemsImpl::cancel_dust_harvest(world, body_id);
         }
     }
 
@@ -212,7 +230,6 @@ mod dust_systems {
             );
         }
 
-
         fn claim_dust(world: IWorldDispatcher, body_id: u32) {
             let body_accretion = get!(world, body_id, (DustAccretion));
             assert(body_accretion.in_dust_pool, 'not in dust pool');
@@ -242,6 +259,94 @@ mod dust_systems {
             let new_dust_balance = dust_balance.balance - amount;
 
             set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
+        }
+
+        fn begin_dust_harvest(world: IWorldDispatcher, body_id: u32, harvest_amount: u128) {
+            let caller = get_caller_address();
+            let owner = get!(world, body_id, Owner);
+            assert(caller == owner.address, 'not owner');
+
+            let body_type = get!(world, body_id, CosmicBody);
+            assert(body_type.body_type == CosmicBodyType::AsteroidCluster, 'invalid body type');
+
+            let body_position = get!(world, body_id, Position);
+            let body_orbit = get!(world, body_id, Orbit);
+            let dust_cloud = get!(
+                world,
+                (body_position.vec.x, body_position.vec.y, body_orbit.orbit_center),
+                DustCloud
+            );
+            assert(dust_cloud.dust_balance >= harvest_amount, 'not enough dust');
+
+            let body_mass = get!(world, body_id, Mass);
+            assert(body_mass.mass.try_into().unwrap() >= harvest_amount, 'harvest amount too high');
+
+            // CHECK FOR ACTIONS
+            let harvest_action = get!(world, body_id, HarvestAction);
+            assert(harvest_action.end_ts == 0, 'entity already harvesting');
+            let travel_action = get!(world, body_id, TravelAction);
+            assert(travel_action.arrival_ts == 0, 'cannot harvest while travelling');
+
+            let cur_ts = get_block_timestamp();
+            let end_ts = get_harvest_end_ts(cur_ts, harvest_amount, body_mass.mass);
+
+            set!(
+                world, (HarvestAction { entity: body_id, start_ts: cur_ts, end_ts, harvest_amount })
+            );
+        }
+
+        fn end_dust_harvest(world: IWorldDispatcher, body_id: u32) {
+            let caller = get_caller_address();
+            let owner = get!(world, body_id, Owner);
+            assert(caller == owner.address, 'not owner');
+
+            let body_position = get!(world, body_id, Position);
+            let body_orbit = get!(world, body_id, Orbit);
+            let dust_cloud = get!(
+                world,
+                (body_position.vec.x, body_position.vec.y, body_orbit.orbit_center),
+                DustCloud
+            );
+
+            let cur_ts = get_block_timestamp();
+            let harvest_action = get!(world, body_id, HarvestAction);
+            assert(harvest_action.end_ts != 0, 'not harvesting');
+            assert(cur_ts >= harvest_action.end_ts, 'harvest still underway');
+
+            delete!(world, (harvest_action));
+
+            let body_dust_balance = get!(world, body_id, DustBalance);
+            let harvested_dust = if harvest_action.harvest_amount > dust_cloud.dust_balance {
+                dust_cloud.dust_balance
+            } else {
+                harvest_action.harvest_amount
+            };
+
+            set!(
+                world,
+                (
+                    DustBalance {
+                        entity: body_id, balance: body_dust_balance.balance + harvested_dust
+                    },
+                    DustCloud {
+                        x: body_position.vec.x,
+                        y: body_position.vec.y,
+                        orbit_center: body_orbit.orbit_center,
+                        dust_balance: dust_cloud.dust_balance - harvested_dust
+                    }
+                )
+            );
+        }
+
+        fn cancel_dust_harvest(world: IWorldDispatcher, body_id: u32) {
+            let caller = get_caller_address();
+            let owner = get!(world, body_id, Owner);
+            assert(caller == owner.address, 'not owner');
+
+            let harvest_action = get!(world, body_id, HarvestAction);
+            assert(harvest_action.end_ts != 0, 'not harvesting');
+
+            delete!(world, (harvest_action));
         }
     }
 }

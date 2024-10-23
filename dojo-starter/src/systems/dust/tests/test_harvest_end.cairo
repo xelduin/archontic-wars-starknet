@@ -15,7 +15,8 @@ use dojo_starter::models::travel_action::TravelAction;
 use dojo_starter::models::position::Position;
 
 use dojo_starter::utils::dust_farm::{
-    calculate_ARPS, get_expected_dust_increase, get_expected_claimable_dust_for_star
+    calculate_ARPS, get_expected_dust_increase, get_expected_claimable_dust_for_star,
+    get_harvest_end_ts
 };
 
 use starknet::{
@@ -36,7 +37,9 @@ use dojo_starter::utils::testing::{
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 // Mock setup for the test
-fn setup() -> (IWorldDispatcher, u32, u32, ContractAddress, ContractAddress, IDustSystemsDispatcher) {
+fn setup() -> (
+    IWorldDispatcher, u32, u32, ContractAddress, ContractAddress, IDustSystemsDispatcher
+) {
     let world = spawn_world();
 
     let dust_address = world
@@ -55,15 +58,22 @@ fn setup() -> (IWorldDispatcher, u32, u32, ContractAddress, ContractAddress, IDu
     let emission_rate = 1_000_000_000_000_000; // 0.001 dust per second
     let galaxy_mass = 5_000_000;
     let galaxy_id = spawn_galaxy(world, sender_owner, coords, emission_rate, galaxy_mass);
-    
+
     let star_id = spawn_star(world, sender_owner, coords, 1_000_000);
     let asteroid_cluster_id = spawn_asteroid_cluster(world, sender_owner, coords, 10_000);
 
-    set!(world, (
-        Orbit {entity: asteroid_cluster_id, orbit_center: galaxy_id},
-        Orbit {entity: star_id, orbit_center: galaxy_id},
-        DustCloud {x: coords.x, y: coords.y, orbit_center: galaxy_id, dust_balance: dust_decimals * 1_000_000};
-    ),
+    set!(
+        world,
+        (
+            Orbit { entity: asteroid_cluster_id, orbit_center: galaxy_id },
+            Orbit { entity: star_id, orbit_center: galaxy_id },
+            DustCloud {
+                x: coords.x,
+                y: coords.y,
+                orbit_center: galaxy_id,
+                dust_balance: dust_decimals * 1_000_000
+            }
+        ),
     );
 
     (world, asteroid_cluster_id, galaxy_id, sender_owner, non_owner, dust_dispatcher)
@@ -89,7 +99,10 @@ fn test_harvest_end_valid() {
 
     let new_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
 
-    assert(new_dust_balance.balance == old_dust_balance.balance + harvest_amount, 'dust balance incorrect');
+    assert(
+        new_dust_balance.balance == old_dust_balance.balance + harvest_amount,
+        'dust balance incorrect'
+    );
 }
 
 #[test]
@@ -105,26 +118,41 @@ fn test_harvest_end_less_dust_now() {
     let harvest_amount = 1_000;
     dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 
+    set_contract_address(dust_dispatcher.contract_address);
+    set_account_contract_address(dust_dispatcher.contract_address);
+
     let new_cloud_balance = 100;
     let asteroid_cluster_pos = get!(world, asteroid_cluster_id, Position);
-    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Position);
-    set!(world, (
-        DustCloud {x: asteroid_cluster_pos.x, y: asteroid_cluster_pos.y, orbit_center: asteroid_cluster_orbit.orbit_center, dust_balance: new_cloud_balance}
-    ));
+    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
+    set!(
+        world,
+        (DustCloud {
+            x: asteroid_cluster_pos.vec.x,
+            y: asteroid_cluster_pos.vec.y,
+            orbit_center: asteroid_cluster_orbit.orbit_center,
+            dust_balance: new_cloud_balance
+        })
+    );
 
     let harvest_action = get!(world, asteroid_cluster_id, HarvestAction);
     set_block_timestamp(harvest_action.end_ts);
+
+    set_contract_address(sender_owner);
+    set_account_contract_address(sender_owner);
 
     dust_dispatcher.end_dust_harvest(asteroid_cluster_id);
 
     let new_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
 
-    assert(new_dust_balance.balance == old_dust_balance.balance + new_cloud_balance, 'dust balance incorrect');
+    assert(
+        new_dust_balance.balance == old_dust_balance.balance + new_cloud_balance,
+        'dust balance incorrect'
+    );
 }
 
 #[test]
 #[available_gas(3000000000000)]
-#[should_panic(expected: ('harvesting still underway', 'ENTRYPOINT_FAILED'))]
+#[should_panic(expected: ('harvest still underway', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_end_not_done() {
     let (_, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
 
@@ -153,7 +181,7 @@ fn test_harvest_end_not_harvesting() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('not owner', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_end_not_owner() {
-    let (_, asteroid_cluster_id, _, sender_owner, non_owner, dust_dispatcher) = setup();
+    let (world, asteroid_cluster_id, _, sender_owner, non_owner, dust_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);

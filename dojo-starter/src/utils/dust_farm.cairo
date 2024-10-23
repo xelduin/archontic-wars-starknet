@@ -62,18 +62,18 @@ fn get_expected_claimable_dust_for_star(
     return claimable_dust_after_sense;
 }
 
-fn get_harvest_end_ts(start_ts: u64, harvest_amount: u64, mass: u64) -> u64 {
-    assert(mass >= harvest_amount, 'cant harvest more than the mass');
-    let min_time: u64 = 60 * 60;
-    let base_time: u64 = 60 * 60 * 24;
+fn get_harvest_end_ts(start_ts: u64, harvest_amount: u128, mass: u64) -> u64 {
+    assert(mass.try_into().unwrap() >= harvest_amount, 'cant harvest more than the mass');
+    let min_time = 60 * 60;
+    let base_time = 60 * 60 * 24;
 
-    let harvest_time = base_time * harvest_amount / mass;
+    let harvest_time = base_time * harvest_amount / mass.try_into().unwrap();
 
-    let result = if harvest_time < min_time {
-        start_ts + min_time
+    let result = if harvest_time < min_time.try_into().unwrap() {
+        (start_ts + min_time).try_into().unwrap()
     } else {
-        start_ts + harvest_time
+        start_ts.try_into().unwrap() + harvest_time
     };
 
-    return result;
+    return result.try_into().unwrap();
 }
