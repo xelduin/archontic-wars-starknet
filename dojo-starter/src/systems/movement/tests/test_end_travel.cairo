@@ -50,7 +50,9 @@ fn setup() -> (
     let asteroid_cluster_mass = 100;
 
     let orbit_center_body_type = CosmicBodyType::None;
-    let loosh_cost = get_loosh_travel_cost(origin_vec, destination_vec, orbit_center_body_type);
+    let loosh_cost = get_loosh_travel_cost(
+        world, origin_vec, destination_vec, orbit_center_body_type
+    );
     set!(world, (LooshBalance { address: sender_owner, balance: loosh_cost }));
 
     let asteroid_cluster_id = spawn_asteroid_cluster(
@@ -94,7 +96,7 @@ fn test_end_travel_valid() {
     let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
     let orbit_center_body = get!(world, asteroid_cluster_orbit.orbit_center, CosmicBody);
     let arrival_ts = get_arrival_ts(
-        cur_ts, origin_vec, destination_vec, orbit_center_body.body_type
+        world, cur_ts, origin_vec, destination_vec, orbit_center_body.body_type
     );
 
     set_block_timestamp(arrival_ts);

@@ -93,7 +93,7 @@ fn test_harvest_begin_valid() {
     dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 
     let asteroid_cluster_mass = get!(world, asteroid_cluster_id, Mass);
-    let end_ts = get_harvest_end_ts(cur_ts, harvest_amount, asteroid_cluster_mass.mass);
+    let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, asteroid_cluster_mass.mass);
 
     let harvest_action = get!(world, asteroid_cluster_id, HarvestAction);
 

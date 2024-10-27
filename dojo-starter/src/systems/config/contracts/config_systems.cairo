@@ -11,7 +11,7 @@ trait IConfigSystems {
         ref world: IWorldDispatcher, config_id: u32, base_dust_emission: u128
     );
     fn set_harvest_time(
-        ref world: IWorldDispatcher, config_id: u32, min_harvest_time: u64, max_harvest_time: u64
+        ref world: IWorldDispatcher, config_id: u32, min_harvest_time: u64, base_harvest_time: u64
     );
     fn set_base_cosmic_body_mass(
         ref world: IWorldDispatcher, config_id: u32, base_star_mass: u64, base_galaxy_mass: u64
@@ -37,6 +37,8 @@ mod config_systems {
     use super::{IConfigSystems};
     use starknet::{ContractAddress, get_caller_address};
 
+    use dojo_starter::constants::ADMIN_CONFIG_ID;
+
     use dojo_starter::models::config::AdminConfig;
     use dojo_starter::models::config::DustValueConfig;
     use dojo_starter::models::config::DustEmissionConfig;
@@ -47,7 +49,6 @@ mod config_systems {
     use dojo_starter::models::config::LooshCostConfig;
     use dojo_starter::models::config::TravelSpeedConfig;
 
-    use dojo_starter::constants::ADMIN_CONFIG_ID;
 
     fn assert_caller_is_admin(world: IWorldDispatcher) {
         let admin_address = get!(world, ADMIN_CONFIG_ID, AdminConfig).admin_address;
@@ -82,10 +83,10 @@ mod config_systems {
             ref world: IWorldDispatcher,
             config_id: u32,
             min_harvest_time: u64,
-            max_harvest_time: u64
+            base_harvest_time: u64
         ) {
             assert_caller_is_admin(world);
-            set!(world, (HarvestTimeConfig { config_id, min_harvest_time, max_harvest_time }));
+            set!(world, (HarvestTimeConfig { config_id, min_harvest_time, base_harvest_time }));
         }
 
         fn set_base_cosmic_body_mass(

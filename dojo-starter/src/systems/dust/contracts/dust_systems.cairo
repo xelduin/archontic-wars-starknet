@@ -71,7 +71,9 @@ mod dust_systems {
             let cosmic_body_type = get!(world, body_id, (CosmicBody));
             assert(cosmic_body_type.body_type == CosmicBodyType::Galaxy, 'must be galaxy');
 
-            let emission_rate = 1000;
+            let emission_rate = get!(world, DUST_EMISSION_CONFIG_ID, DustEmissionConfig)
+                .base_dust_emission;
+
             let current_ts = get_block_timestamp();
 
             set!(
@@ -288,7 +290,7 @@ mod dust_systems {
             assert(travel_action.arrival_ts == 0, 'cannot harvest while travelling');
 
             let cur_ts = get_block_timestamp();
-            let end_ts = get_harvest_end_ts(cur_ts, harvest_amount, body_mass.mass);
+            let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, body_mass.mass);
 
             set!(
                 world, (HarvestAction { entity: body_id, start_ts: cur_ts, end_ts, harvest_amount })

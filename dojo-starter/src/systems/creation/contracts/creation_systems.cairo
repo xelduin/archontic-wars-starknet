@@ -21,6 +21,9 @@ mod creation_systems {
     use dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::InternalLooshSystemsImpl;
     use dojo_starter::systems::mass::contracts::mass_systems::mass_systems::InternalMassSystemsImpl;
 
+    use dojo_starter::constants::DUST_VALUE_CONFIG_ID;
+
+    use dojo_starter::models::config::DustValueConfig;
     use dojo_starter::models::owner::Owner;
     use dojo_starter::models::vec2::Vec2;
     use dojo_starter::models::position::{Position, OrbitCenterAtPosition};
@@ -30,7 +33,6 @@ mod creation_systems {
     use dojo_starter::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use dojo_starter::models::incubation::Incubation;
     use dojo_starter::models::loosh_sink::LooshSink;
-
 
     #[abi(embed_v0)]
     impl CreationSystemsImpl of ICreationSystems<ContractState> {
@@ -101,6 +103,7 @@ mod creation_systems {
 
             let body_id = world.uuid();
             let mass = 1000;
+            // This will be lottery
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Protostar, mass, galaxy_id, coords,
             );
@@ -180,12 +183,11 @@ mod creation_systems {
 
         fn form_star(world: IWorldDispatcher, protostar_id: u32) {
             let player = get_caller_address();
+            let protostar_owner = get!(world, protostar_id, Owner);
+            assert(protostar_owner.address == player, 'caller must be owner');
 
             let protostar_body = get!(world, protostar_id, CosmicBody);
             assert(protostar_body.body_type == CosmicBodyType::Protostar, 'invalid protostar id');
-
-            let protostar_owner = get!(world, protostar_id, Owner);
-            assert(protostar_owner.address == player, 'caller must be owner');
 
             let protostar_incubation = get!(world, protostar_id, (Incubation));
             let current_ts = get_block_timestamp();
@@ -199,6 +201,10 @@ mod creation_systems {
         }
 
         fn form_asteroids(world: IWorldDispatcher, star_id: u32, cluster_id: u32, mass: u64) {
+            let player = get_caller_address();
+            let star_owner = get!(world, star_id, Owner);
+            assert(star_owner.address == player, 'caller must own star');
+
             let star_body = get!(world, star_id, CosmicBody);
             assert(star_body.body_type == CosmicBodyType::Star, 'invalid star id');
 
@@ -211,12 +217,10 @@ mod creation_systems {
             let asteroid_cluster_orbit = get!(world, cluster_id, Orbit);
             assert(asteroid_cluster_orbit.orbit_center == star_id, 'asteroid cluster not in orbit');
 
-            let player = get_caller_address();
+            let dust_to_mass = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).dust_to_mass;
+            let dust_to_consume = dust_to_mass * mass.try_into().unwrap();
 
-            let star_owner = get!(world, star_id, Owner);
-            assert(star_owner.address == player, 'caller must own star');
-
-            InternalDustSystemsImpl::consume_dust(world, star_id, mass.try_into().unwrap());
+            InternalDustSystemsImpl::consume_dust(world, star_id, dust_to_consume);
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
             // Emit an event for asteroid formation
         }

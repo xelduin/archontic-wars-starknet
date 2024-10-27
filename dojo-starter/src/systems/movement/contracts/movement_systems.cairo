@@ -63,13 +63,13 @@ mod movement_systems {
 
             let player = get_caller_address();
             let travel_cost = get_loosh_travel_cost(
-                body_position.vec, target_position, orbit_center_body.body_type
+                world, body_position.vec, target_position, orbit_center_body.body_type
             );
             InternalLooshSystemsImpl::spend_loosh(world, player, travel_cost);
 
             let depart_ts = get_block_timestamp();
             let arrival_ts = get_arrival_ts(
-                depart_ts, body_position.vec, target_position, orbit_center_body.body_type
+                world, depart_ts, body_position.vec, target_position, orbit_center_body.body_type
             );
 
             set!(world, (TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }));

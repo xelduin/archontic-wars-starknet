@@ -1,6 +1,10 @@
+use dojo_starter::constants::HARVEST_TIME_CONFIG_ID;
+
+use dojo_starter::models::config::HarvestTimeConfig;
 use dojo_starter::models::dust_emission::DustEmission;
 use dojo_starter::models::dust_accretion::DustAccretion;
 use dojo_starter::models::mass::Mass;
+
 
 fn calculate_ARPS(at_ts: u64, pool_emission: DustEmission, total_pool_mass: u64) -> u128 {
     assert(total_pool_mass > 0, 'orbit mass is zero');
@@ -62,10 +66,15 @@ fn get_expected_claimable_dust_for_star(
     return claimable_dust_after_sense;
 }
 
-fn get_harvest_end_ts(start_ts: u64, harvest_amount: u128, mass: u64) -> u64 {
+fn get_harvest_end_ts(
+    ref world: IWorldDispatcher, start_ts: u64, harvest_amount: u128, mass: u64
+) -> u64 {
     assert(mass.try_into().unwrap() >= harvest_amount, 'cant harvest more than the mass');
-    let min_time = 60 * 60;
-    let base_time = 60 * 60 * 24;
+
+    let harvest_time_config = get!(world, HARVEST_TIME_CONFIG_ID, HarvestTimeConfig);
+
+    let min_time = harvest_time_config.min_harvest_time;
+    let base_time = harvest_time_config.base_harvest_time;
 
     let harvest_time = base_time * harvest_amount / mass.try_into().unwrap();
 

@@ -20,7 +20,7 @@ pub struct HarvestTimeConfig {
     #[key]
     pub config_id: u32,
     pub min_harvest_time: u64,
-    pub max_harvest_time: u64,
+    pub base_harvest_time: u64,
 }
 
 #[derive(Copy, Drop, Serde)]
