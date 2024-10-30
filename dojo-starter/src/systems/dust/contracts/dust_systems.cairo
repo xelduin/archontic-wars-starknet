@@ -23,6 +23,10 @@ mod dust_systems {
         calculate_ARPS, calculate_unclaimed_dust, get_harvest_end_ts
     };
 
+    use dojo_starter::constants::DUST_EMISSION_CONFIG_ID;
+
+    use dojo_starter::models::config::DustEmissionConfig;
+
     use dojo_starter::models::dust_pool::DustPool;
     use dojo_starter::models::dust_balance::DustBalance;
     use dojo_starter::models::dust_accretion::DustAccretion;

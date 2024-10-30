@@ -1,3 +1,5 @@
+use dojo::world::IWorldDispatcher;
+
 use dojo_starter::constants::HARVEST_TIME_CONFIG_ID;
 
 use dojo_starter::models::config::HarvestTimeConfig;
@@ -67,7 +69,7 @@ fn get_expected_claimable_dust_for_star(
 }
 
 fn get_harvest_end_ts(
-    ref world: IWorldDispatcher, start_ts: u64, harvest_amount: u128, mass: u64
+    world: IWorldDispatcher, start_ts: u64, harvest_amount: u128, mass: u64
 ) -> u64 {
     assert(mass.try_into().unwrap() >= harvest_amount, 'cant harvest more than the mass');
 
@@ -76,13 +78,13 @@ fn get_harvest_end_ts(
     let min_time = harvest_time_config.min_harvest_time;
     let base_time = harvest_time_config.base_harvest_time;
 
-    let harvest_time = base_time * harvest_amount / mass.try_into().unwrap();
+    let harvest_time = base_time.try_into().unwrap() * harvest_amount / mass.try_into().unwrap();
 
-    let result = if harvest_time < min_time.try_into().unwrap() {
-        (start_ts + min_time).try_into().unwrap()
+    let result: u64 = if harvest_time.try_into().unwrap() < min_time {
+        start_ts + min_time
     } else {
-        start_ts.try_into().unwrap() + harvest_time
+        start_ts + harvest_time.try_into().unwrap()
     };
 
-    return result.try_into().unwrap();
+    return result;
 }

@@ -1,3 +1,5 @@
+use dojo::world::IWorldDispatcher;
+
 use dojo_starter::constants::{LOOSH_COST_CONFIG_ID, get_loosh_travel_cost_multiplier};
 use dojo_starter::constants::{TRAVEL_SPEED_CONFIG_ID, get_travel_speed_multiplier};
 
@@ -8,13 +10,13 @@ use dojo_starter::models::cosmic_body::{CosmicBodyType};
 
 
 fn get_arrival_ts(
-    ref world: IWorldDispatcher,
+    world: IWorldDispatcher,
     depart_ts: u64,
     origin_pos: Vec2,
     target_pos: Vec2,
     orbit_center_body_type: CosmicBodyType
 ) -> u64 {
-    let base_travel_speed = get!(world, TRAVEL_SPEED_CONFIG_ID, TravelSpeedConfig);
+    let base_travel_speed = get!(world, TRAVEL_SPEED_CONFIG_ID, TravelSpeedConfig).base_travel_speed;
 
     let distance = origin_pos.chebyshev_distance(target_pos);
     let seconds_per_coordinate = get_travel_speed_multiplier(orbit_center_body_type)
@@ -27,7 +29,7 @@ fn get_arrival_ts(
 }
 
 fn get_loosh_travel_cost(
-    ref world: IWorldDispatcher,
+    world: IWorldDispatcher,
     origin_pos: Vec2,
     target_pos: Vec2,
     orbit_center_body_type: CosmicBodyType

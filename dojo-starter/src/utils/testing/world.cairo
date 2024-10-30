@@ -44,6 +44,67 @@ fn spawn_world() -> IWorldDispatcher {
 
     world.uuid();
 
+    setup_config(world);
+
     return world;
 }
 
+use dojo_starter::constants::{
+    ADMIN_CONFIG_ID, DUST_VALUE_CONFIG_ID, DUST_EMISSION_CONFIG_ID, LOOSH_COST_CONFIG_ID,
+    HARVEST_TIME_CONFIG_ID, COSMIC_BODY_MASS_CONFIG_ID, TRAVEL_SPEED_CONFIG_ID
+};
+
+const DUST_TO_MASS_CONVERSION: u128 = 1;
+const BASE_DUST_EMISSION_RATE: u128 = 1 * 1_000_000_000_000_000_000;
+
+const BASE_STAR_MASS: u64 = 1_000_000;
+const BASE_GALAXY_MASS: u64 = 1_000_000_000;
+const MAX_ASTEROID_CLUSTER_MASS: u64 = 100_000;
+
+const BASE_LOOSH_TRAVEL_COST: u128 = 5;
+const BASE_LOOSH_CREATION_COST: u128 = 10;
+
+const BASE_TRAVEL_SECONDS_PER_TILE: u64 = 60;
+
+const MIN_HARVEST_SECONDS: u64 = 60 * 60;
+const BASE_HARVEST_SECONDS: u64 = 60 * 60 * 24;
+
+
+fn setup_config(world: IWorldDispatcher) {
+    set!(
+        world,
+        (
+            // DUST CONFIGS
+            config::DustValueConfig {
+                config_id: DUST_VALUE_CONFIG_ID, dust_to_mass: DUST_TO_MASS_CONVERSION
+            },
+            config::DustEmissionConfig {
+                config_id: DUST_EMISSION_CONFIG_ID, base_dust_emission: BASE_DUST_EMISSION_RATE
+            },
+            // MASS CONFIGS
+            config::BaseCosmicBodyMassConfig {
+                config_id: COSMIC_BODY_MASS_CONFIG_ID,
+                base_star_mass: BASE_STAR_MASS,
+                base_galaxy_mass: BASE_GALAXY_MASS
+            },
+            config::MaxCosmicBodyMassConfig {
+                config_id: COSMIC_BODY_MASS_CONFIG_ID,
+                max_asteroid_cluster_mass: MAX_ASTEROID_CLUSTER_MASS
+            }, //This needs to be joined with bsae_cosmic_body_config
+            config::LooshCostConfig {
+                config_id: LOOSH_COST_CONFIG_ID,
+                base_travel_cost: BASE_LOOSH_TRAVEL_COST,
+                base_creation_cost: BASE_LOOSH_CREATION_COST
+            },
+            config::TravelSpeedConfig {
+                config_id: TRAVEL_SPEED_CONFIG_ID, base_travel_speed: BASE_TRAVEL_SECONDS_PER_TILE
+            },
+            //config::AdminConfig { config_id: ADMIN_CONFIG_ID, admin_address:},
+            config::HarvestTimeConfig {
+                config_id: HARVEST_TIME_CONFIG_ID,
+                min_harvest_time: MIN_HARVEST_SECONDS,
+                base_harvest_time: BASE_HARVEST_SECONDS,
+            },
+        )
+    );
+}
