@@ -3,8 +3,8 @@ procs:
     cwd: client
     shell: pnpm run dev
   contracts:
-    cwd: dojo-starter
+    cwd: contracts
     shell: scarb run dev
   torii:
-    cwd: dojo-starter
+    cwd: contracts
     shell: scarb run torii
