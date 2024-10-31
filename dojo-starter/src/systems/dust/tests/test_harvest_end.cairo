@@ -30,7 +30,7 @@ use dojo_starter::systems::dust::contracts::dust_systems::{
 };
 
 use dojo_starter::utils::testing::{
-    world::spawn_world, spawners::spawn_galaxy, spawners::spawn_star,
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star,
     spawners::spawn_asteroid_cluster, dust_pool::add_to_dust_pool
 };
 
@@ -56,8 +56,8 @@ fn setup() -> (
     // SET UP DUST POOL
     let coords = Vec2 { x: 100, y: 100 };
     let emission_rate = 1_000_000_000_000_000; // 0.001 dust per second
-    let galaxy_mass = 5_000_000;
-    let galaxy_id = spawn_galaxy(world, sender_owner, coords, emission_rate, galaxy_mass);
+    let quasar_mass = 5_000_000;
+    let quasar_id = spawn_quasar(world, sender_owner, coords, emission_rate, quasar_mass);
 
     let star_id = spawn_star(world, sender_owner, coords, 1_000_000);
     let asteroid_cluster_id = spawn_asteroid_cluster(world, sender_owner, coords, 10_000);
@@ -65,18 +65,18 @@ fn setup() -> (
     set!(
         world,
         (
-            Orbit { entity: asteroid_cluster_id, orbit_center: galaxy_id },
-            Orbit { entity: star_id, orbit_center: galaxy_id },
+            Orbit { entity: asteroid_cluster_id, orbit_center: quasar_id },
+            Orbit { entity: star_id, orbit_center: quasar_id },
             DustCloud {
                 x: coords.x,
                 y: coords.y,
-                orbit_center: galaxy_id,
+                orbit_center: quasar_id,
                 dust_balance: dust_decimals * 1_000_000
             }
         ),
     );
 
-    (world, asteroid_cluster_id, galaxy_id, sender_owner, non_owner, dust_dispatcher)
+    (world, asteroid_cluster_id, quasar_id, sender_owner, non_owner, dust_dispatcher)
 }
 
 #[test]

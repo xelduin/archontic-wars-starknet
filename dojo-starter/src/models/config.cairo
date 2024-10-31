@@ -29,7 +29,7 @@ pub struct BaseCosmicBodyMassConfig {
     #[key]
     pub config_id: u32,
     pub base_star_mass: u64,
-    pub base_galaxy_mass: u64,
+    pub base_quasar_mass: u64,
 }
 
 #[derive(Copy, Drop, Serde)]

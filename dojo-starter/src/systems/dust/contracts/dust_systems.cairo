@@ -73,7 +73,7 @@ mod dust_systems {
     impl InternalDustSystemsImpl of InternalDustSystemsTrait {
         fn form_dust_pool(world: IWorldDispatcher, body_id: u32) {
             let cosmic_body_type = get!(world, body_id, (CosmicBody));
-            assert(cosmic_body_type.body_type == CosmicBodyType::Galaxy, 'must be galaxy');
+            assert(cosmic_body_type.body_type == CosmicBodyType::Quasar, 'must be quasar');
 
             let emission_rate = get!(world, DUST_EMISSION_CONFIG_ID, DustEmissionConfig)
                 .base_dust_emission;

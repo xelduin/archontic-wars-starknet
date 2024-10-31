@@ -9,7 +9,7 @@ pub struct CosmicBody {
 #[derive(Serde, Copy, Drop, PartialEq, Introspect)]
 pub enum CosmicBodyType {
     None,
-    Galaxy,
+    Quasar,
     Protostar,
     Star,
     AsteroidCluster,

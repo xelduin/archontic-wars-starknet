@@ -33,27 +33,27 @@ fn setup() -> (IWorldDispatcher, ContractAddress, ICreationSystemsDispatcher) {
 
 #[test]
 #[available_gas(3000000000000)]
-fn test_create_galaxy_valid() {
+fn test_create_quasar_valid() {
     let (world, player, creation_dispatcher) = setup();
 
     set_contract_address(player);
     set_account_contract_address(player);
 
     let coords = Vec2 { x: 20, y: 21 };
-    let galaxy_id = creation_dispatcher.create_galaxy(coords);
+    let quasar_id = creation_dispatcher.create_quasar(coords);
 
-    let galaxy_owner = get!(world, galaxy_id, Owner);
-    assert(galaxy_owner.address == player, 'invalid owner');
-    let galaxy_coords = get!(world, galaxy_id, (Position));
-    assert(galaxy_coords.vec.is_equal(coords), 'invalid coords');
-    let galaxy_body = get!(world, galaxy_id, (CosmicBody));
-    assert(galaxy_body.body_type == CosmicBodyType::Galaxy, 'invalid body type');
+    let quasar_owner = get!(world, quasar_id, Owner);
+    assert(quasar_owner.address == player, 'invalid owner');
+    let quasar_coords = get!(world, quasar_id, (Position));
+    assert(quasar_coords.vec.is_equal(coords), 'invalid coords');
+    let quasar_body = get!(world, quasar_id, (CosmicBody));
+    assert(quasar_body.body_type == CosmicBodyType::Quasar, 'invalid body type');
 }
 
 #[test]
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
-fn test_create_galaxy_no_loosh() {
+fn test_create_quasar_no_loosh() {
     let (world, player, creation_dispatcher) = setup();
 
     set!(world, LooshBalance { address: player, balance: 0 });
@@ -64,5 +64,5 @@ fn test_create_galaxy_no_loosh() {
 
     // Call the transfer_ownership function from the old owner
     let coords = Vec2 { x: 20, y: 21 };
-    creation_dispatcher.create_galaxy(coords);
+    creation_dispatcher.create_quasar(coords);
 }

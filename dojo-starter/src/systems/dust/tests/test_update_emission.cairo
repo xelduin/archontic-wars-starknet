@@ -19,7 +19,7 @@ use dojo_starter::systems::dust::contracts::dust_systems::{
 };
 
 use dojo_starter::utils::testing::{
-    world::spawn_world, spawners::spawn_galaxy, spawners::spawn_star,
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star,
     spawners::spawn_asteroid_cluster, dust_pool::add_to_dust_pool
 };
 
@@ -42,42 +42,42 @@ fn setup() -> (IWorldDispatcher, u32, u32, ContractAddress, IDustSystemsDispatch
     let coords = Vec2 { x: 100, y: 100 };
 
     let emission_rate = 1_000_000_000_000_000; // 0.001 dust per second
-    let galaxy_mass = 5_000_000;
-    let galaxy_id = spawn_galaxy(world, sender_owner, coords, emission_rate, galaxy_mass);
+    let quasar_mass = 5_000_000;
+    let quasar_id = spawn_quasar(world, sender_owner, coords, emission_rate, quasar_mass);
 
     let star_mass = 200;
     let star_id = spawn_star(world, sender_owner, coords, star_mass);
     let star_id_two = spawn_star(world, sender_owner, coords, star_mass);
     let star_id_three = spawn_star(world, sender_owner, coords, star_mass);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, star_id);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, star_id_two);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, star_id_three);
+    add_to_dust_pool(world, dust_dispatcher, quasar_id, star_id);
+    add_to_dust_pool(world, dust_dispatcher, quasar_id, star_id_two);
+    add_to_dust_pool(world, dust_dispatcher, quasar_id, star_id_three);
 
-    (world, star_id, galaxy_id, sender_owner, dust_dispatcher)
+    (world, star_id, quasar_id, sender_owner, dust_dispatcher)
 }
 
 
 #[test]
 #[available_gas(3000000000000)]
 fn test_update_emission_valid() {
-    let (world, _, galaxy_id, sender_owner, dust_dispatcher) = setup();
+    let (world, _, quasar_id, sender_owner, dust_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_pool_emission = get!(world, galaxy_id, DustEmission);
+    let old_pool_emission = get!(world, quasar_id, DustEmission);
 
     let cur_ts = get_block_timestamp();
     let new_ts = cur_ts + 10;
 
-    let galaxy_pool = get!(world, galaxy_id, DustPool);
-    let expected_ARPS = calculate_ARPS(new_ts, old_pool_emission, galaxy_pool.total_mass);
+    let quasar_pool = get!(world, quasar_id, DustPool);
+    let expected_ARPS = calculate_ARPS(new_ts, old_pool_emission, quasar_pool.total_mass);
 
     set_block_timestamp(new_ts);
 
-    dust_dispatcher.update_emission(galaxy_id);
+    dust_dispatcher.update_emission(quasar_id);
 
-    let new_pool_emission = get!(world, galaxy_id, DustEmission);
+    let new_pool_emission = get!(world, quasar_id, DustEmission);
 
     assert(new_pool_emission.ARPS == expected_ARPS, 'ARPS not updated');
     assert(new_pool_emission.last_update_ts == new_ts, 'last_update_ts not updated');

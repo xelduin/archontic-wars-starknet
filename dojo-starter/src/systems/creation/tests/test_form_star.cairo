@@ -15,7 +15,7 @@ use dojo_starter::systems::creation::contracts::creation_systems::{
 };
 
 use dojo_starter::utils::testing::{
-    world::spawn_world, spawners::spawn_galaxy, spawners::spawn_star, spawners::spawn_protostar
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star, spawners::spawn_protostar
 };
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
@@ -37,10 +37,10 @@ fn setup() -> (
     let protostar_owner = contract_address_const::<'protostar_owner'>();
     let not_protostar_owner = contract_address_const::<'not_protostar_owner'>();
 
-    let galaxy_coords = Vec2 { x: 23, y: 32 };
+    let quasar_coords = Vec2 { x: 23, y: 32 };
     let emission_rate = 1_000_000;
-    let galaxy_mass = 1_000_000;
-    let galaxy_id = spawn_galaxy(world, protostar_owner, galaxy_coords, emission_rate, galaxy_mass);
+    let quasar_mass = 1_000_000;
+    let quasar_id = spawn_quasar(world, protostar_owner, quasar_coords, emission_rate, quasar_mass);
 
     let protostar_coords = Vec2 { x: 42, y: 23 };
     let protostar_mass = 1_000;
@@ -57,7 +57,7 @@ fn setup() -> (
         world,
         protostar_owner,
         not_protostar_owner,
-        galaxy_id,
+        quasar_id,
         protostar_id,
         end_ts,
         creation_dispatcher
@@ -101,14 +101,14 @@ fn test_form_star_no_loosh() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('invalid protostar id', 'ENTRYPOINT_FAILED'))]
 fn test_form_star_not_protostar() {
-    let (_, protostar_owner, _, galaxy_id, _, end_ts, creation_dispatcher) = setup();
+    let (_, protostar_owner, _, quasar_id, _, end_ts, creation_dispatcher) = setup();
 
     set_contract_address(protostar_owner);
     set_account_contract_address(protostar_owner);
 
     set_block_timestamp(end_ts);
 
-    creation_dispatcher.form_star(galaxy_id);
+    creation_dispatcher.form_star(quasar_id);
 }
 
 #[test]

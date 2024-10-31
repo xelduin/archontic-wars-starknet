@@ -1,0 +1,21 @@
+kind = "DojoContract"
+class_hash = "0x6c6941082cc1e10e18f5b8c67780935d813a54d282acba52b6c732f932f3e19"
+original_class_hash = "0x6c6941082cc1e10e18f5b8c67780935d813a54d282acba52b6c732f932f3e19"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/dojo_starter-config_systems-4bd08e41.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "dojo_starter-config_systems"
+systems = [
+    "set_admin_config",
+    "set_dust_value_config",
+    "set_dust_emission_config",
+    "set_harvest_time",
+    "set_base_cosmic_body_mass",
+    "set_min_orbit_center_mass",
+    "set_max_cosmic_body_mass",
+    "set_loosh_cost",
+    "set_travel_speed",
+]
+manifest_name = "dojo_starter-config_systems-4bd08e41"

@@ -14,7 +14,7 @@ trait IConfigSystems {
         ref world: IWorldDispatcher, config_id: u32, min_harvest_time: u64, base_harvest_time: u64
     );
     fn set_base_cosmic_body_mass(
-        ref world: IWorldDispatcher, config_id: u32, base_star_mass: u64, base_galaxy_mass: u64
+        ref world: IWorldDispatcher, config_id: u32, base_star_mass: u64, base_quasar_mass: u64
     );
     fn set_min_orbit_center_mass(
         ref world: IWorldDispatcher, config_id: u32, min_mass_multiplier: u64
@@ -90,10 +90,10 @@ mod config_systems {
         }
 
         fn set_base_cosmic_body_mass(
-            ref world: IWorldDispatcher, config_id: u32, base_star_mass: u64, base_galaxy_mass: u64
+            ref world: IWorldDispatcher, config_id: u32, base_star_mass: u64, base_quasar_mass: u64
         ) {
             assert_caller_is_admin(world);
-            set!(world, (BaseCosmicBodyMassConfig { config_id, base_star_mass, base_galaxy_mass }));
+            set!(world, (BaseCosmicBodyMassConfig { config_id, base_star_mass, base_quasar_mass }));
         }
 
         fn set_min_orbit_center_mass(

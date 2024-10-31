@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x235e5ab9249328e85d9c8d51881f4fc20e1ceee4eb356a4e4b2cef835931e4a"
+original_class_hash = "0x235e5ab9249328e85d9c8d51881f4fc20e1ceee4eb356a4e4b2cef835931e4a"
+abi = "manifests/dev/base/abis/models/dojo_starter-MinOrbitCenterMassConfig-59528cba.json"
+tag = "dojo_starter-MinOrbitCenterMassConfig"
+qualified_path = "dojo_starter::models::config::min_orbit_center_mass_config"
+manifest_name = "dojo_starter-MinOrbitCenterMassConfig-59528cba"
+
+[[members]]
+name = "config_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "min_mass_multiplier"
+type = "u64"
+key = false

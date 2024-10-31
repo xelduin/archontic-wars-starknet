@@ -363,52 +363,26 @@
   },
   {
     "type": "impl",
-    "name": "cosmic_bodyImpl",
-    "interface_name": "dojo_starter::models::cosmic_body::Icosmic_body"
-  },
-  {
-    "type": "enum",
-    "name": "dojo_starter::models::cosmic_body::CosmicBodyType",
-    "variants": [
-      {
-        "name": "None",
-        "type": "()"
-      },
-      {
-        "name": "Quasar",
-        "type": "()"
-      },
-      {
-        "name": "Protostar",
-        "type": "()"
-      },
-      {
-        "name": "Star",
-        "type": "()"
-      },
-      {
-        "name": "AsteroidCluster",
-        "type": "()"
-      }
-    ]
+    "name": "min_orbit_center_mass_configImpl",
+    "interface_name": "dojo_starter::models::config::Imin_orbit_center_mass_config"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::cosmic_body::CosmicBody",
+    "name": "dojo_starter::models::config::MinOrbitCenterMassConfig",
     "members": [
       {
-        "name": "entity",
+        "name": "config_id",
         "type": "core::integer::u32"
       },
       {
-        "name": "body_type",
-        "type": "dojo_starter::models::cosmic_body::CosmicBodyType"
+        "name": "min_mass_multiplier",
+        "type": "core::integer::u64"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::cosmic_body::Icosmic_body",
+    "name": "dojo_starter::models::config::Imin_orbit_center_mass_config",
     "items": [
       {
         "type": "function",
@@ -416,7 +390,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::cosmic_body::CosmicBody"
+            "type": "dojo_starter::models::config::MinOrbitCenterMassConfig"
           }
         ],
         "outputs": [],
@@ -426,7 +400,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::cosmic_body::cosmic_body::Event",
+    "name": "dojo_starter::models::config::min_orbit_center_mass_config::Event",
     "kind": "enum",
     "variants": []
   }

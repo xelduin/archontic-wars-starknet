@@ -58,7 +58,7 @@ const DUST_TO_MASS_CONVERSION: u128 = 1;
 const BASE_DUST_EMISSION_RATE: u128 = 1 * 1_000_000_000_000_000_000;
 
 const BASE_STAR_MASS: u64 = 1_000_000;
-const BASE_GALAXY_MASS: u64 = 1_000_000_000;
+const BASE_QUASAR_MASS: u64 = 1_000_000_000;
 const MAX_ASTEROID_CLUSTER_MASS: u64 = 100_000;
 
 const BASE_LOOSH_TRAVEL_COST: u128 = 5;
@@ -85,7 +85,7 @@ fn setup_config(world: IWorldDispatcher) {
             config::BaseCosmicBodyMassConfig {
                 config_id: COSMIC_BODY_MASS_CONFIG_ID,
                 base_star_mass: BASE_STAR_MASS,
-                base_galaxy_mass: BASE_GALAXY_MASS
+                base_quasar_mass: BASE_QUASAR_MASS
             },
             config::MaxCosmicBodyMassConfig {
                 config_id: COSMIC_BODY_MASS_CONFIG_ID,

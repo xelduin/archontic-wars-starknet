@@ -4,8 +4,8 @@ use dojo_starter::models::vec2::Vec2;
 // Define the interface for the Body creation system
 #[dojo::interface]
 trait ICreationSystems {
-    fn create_galaxy(ref world: IWorldDispatcher, coords: Vec2) -> u32;
-    fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, galaxy_id: u32) -> u32;
+    fn create_quasar(ref world: IWorldDispatcher, coords: Vec2) -> u32;
+    fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32;
     fn create_asteroid_cluster(ref world: IWorldDispatcher, coords: Vec2, star_id: u32) -> u32;
     fn form_star(ref world: IWorldDispatcher, protostar_id: u32);
     fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32, amount: u64);
@@ -36,12 +36,12 @@ mod creation_systems {
 
     #[abi(embed_v0)]
     impl CreationSystemsImpl of ICreationSystems<ContractState> {
-        fn create_galaxy(ref world: IWorldDispatcher, coords: Vec2) -> u32 {
-            return InternalCreationSystemsImpl::create_galaxy(world, coords);
+        fn create_quasar(ref world: IWorldDispatcher, coords: Vec2) -> u32 {
+            return InternalCreationSystemsImpl::create_quasar(world, coords);
         }
 
-        fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, galaxy_id: u32) -> u32 {
-            return InternalCreationSystemsImpl::create_protostar(world, coords, galaxy_id);
+        fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32 {
+            return InternalCreationSystemsImpl::create_protostar(world, coords, quasar_id);
         }
 
         fn create_asteroid_cluster(ref world: IWorldDispatcher, coords: Vec2, star_id: u32) -> u32 {
@@ -61,19 +61,19 @@ mod creation_systems {
 
     #[generate_trait]
     impl InternalCreationSystemsImpl of InternalCreationSystemsTrait {
-        fn create_galaxy(world: IWorldDispatcher, coords: Vec2) -> u32 {
+        fn create_quasar(world: IWorldDispatcher, coords: Vec2) -> u32 {
             let central_entity_at_pos = get!(world, (coords.x, coords.y, 0), OrbitCenterAtPosition);
             assert(central_entity_at_pos.entity == 0, 'coords are occupied');
 
             let player = get_caller_address();
-            let loosh_cost = get_loosh_cost(LooshSink::CreateGalaxy);
+            let loosh_cost = get_loosh_cost(LooshSink::CreateQuasar);
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.uuid();
             let universe_id = 0;
             let mass = 10000;
             Self::create_cosmic_body(
-                world, player, body_id, CosmicBodyType::Galaxy, mass, universe_id, coords,
+                world, player, body_id, CosmicBodyType::Quasar, mass, universe_id, coords,
             );
 
             set!(
@@ -88,12 +88,12 @@ mod creation_systems {
             return body_id;
         }
 
-        fn create_protostar(world: IWorldDispatcher, coords: Vec2, galaxy_id: u32) -> u32 {
-            let galaxy_body = get!(world, galaxy_id, CosmicBody);
-            assert(galaxy_body.body_type == CosmicBodyType::Galaxy, 'invalid galaxy id');
+        fn create_protostar(world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32 {
+            let quasar_body = get!(world, quasar_id, CosmicBody);
+            assert(quasar_body.body_type == CosmicBodyType::Quasar, 'invalid quasar id');
 
             let central_entity_at_pos = get!(
-                world, (coords.x, coords.y, galaxy_id), OrbitCenterAtPosition
+                world, (coords.x, coords.y, quasar_id), OrbitCenterAtPosition
             );
             assert(central_entity_at_pos.entity == 0, 'coords are occupied');
 
@@ -105,7 +105,7 @@ mod creation_systems {
             let mass = 1000;
             // This will be lottery
             Self::create_cosmic_body(
-                world, player, body_id, CosmicBodyType::Protostar, mass, galaxy_id, coords,
+                world, player, body_id, CosmicBodyType::Protostar, mass, quasar_id, coords,
             );
 
             let creation_ts = get_block_timestamp();
@@ -117,12 +117,12 @@ mod creation_systems {
                         entity: body_id, creation_ts, end_ts: creation_ts + incubation_period
                     },
                     OrbitCenterAtPosition {
-                        x: coords.x, y: coords.y, orbit_center: galaxy_id, entity: body_id
+                        x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
                     }
                 )
             );
 
-            InternalDustSystemsImpl::enter_dust_pool(world, body_id, galaxy_id);
+            InternalDustSystemsImpl::enter_dust_pool(world, body_id, quasar_id);
 
             return body_id;
         }
@@ -231,7 +231,7 @@ use dojo_starter::models::loosh_sink::LooshSink;
 
 fn get_loosh_cost(sink: LooshSink) -> u128 {
     match sink {
-        LooshSink::CreateGalaxy => 1000,
+        LooshSink::CreateQuasar => 1000,
         LooshSink::CreateProtostar => 100,
         LooshSink::FormStar => 20,
         LooshSink::CreateAsteroidCluster => 10,

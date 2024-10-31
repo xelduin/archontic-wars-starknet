@@ -1,6 +1,6 @@
 kind = "DojoContract"
-class_hash = "0x1c6cbc80e2dd650b8042b20996020d497a014057c573655e977fb2ea97fd446"
-original_class_hash = "0x1c6cbc80e2dd650b8042b20996020d497a014057c573655e977fb2ea97fd446"
+class_hash = "0x4006c41efafdb31ca0bcd4a4ae5132cc61cdeb951b413306c6d8c27a6c73b1f"
+original_class_hash = "0x4006c41efafdb31ca0bcd4a4ae5132cc61cdeb951b413306c6d8c27a6c73b1f"
 base_class_hash = "0x0"
 abi = "manifests/dev/base/abis/contracts/dojo_starter-dust_systems-13af1901.json"
 reads = []
@@ -11,5 +11,8 @@ systems = [
     "claim_dust",
     "update_emission",
     "enter_dust_pool",
+    "begin_dust_harvest",
+    "end_dust_harvest",
+    "cancel_dust_harvest",
 ]
 manifest_name = "dojo_starter-dust_systems-13af1901"

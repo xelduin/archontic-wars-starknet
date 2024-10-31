@@ -9,7 +9,7 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 use starknet::{ContractAddress, contract_address_const};
 
 
-fn spawn_galaxy(
+fn spawn_quasar(
     world: IWorldDispatcher,
     owner: ContractAddress,
     coords: vec2::Vec2,
@@ -23,7 +23,7 @@ fn spawn_galaxy(
         (
             owner::Owner { entity: body_id, address: owner },
             cosmic_body::CosmicBody {
-                entity: body_id, body_type: cosmic_body::CosmicBodyType::Galaxy
+                entity: body_id, body_type: cosmic_body::CosmicBodyType::Quasar
             },
             mass::Mass { entity: body_id, mass },
             position::Position { entity: body_id, vec: coords }

@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x4e68d6be900b0e290fb7151593dcf0344216c1e06983b9bb685acfa0c58d8ef"
-original_class_hash = "0x4e68d6be900b0e290fb7151593dcf0344216c1e06983b9bb685acfa0c58d8ef"
+class_hash = "0x1933d8a4255d8dd505311bbe44f4de562e7c51c12868bcb9762ed9ba94ec093"
+original_class_hash = "0x1933d8a4255d8dd505311bbe44f4de562e7c51c12868bcb9762ed9ba94ec093"
 abi = "manifests/dev/base/abis/models/dojo_starter-CosmicBody-5b7c667e.json"
 tag = "dojo_starter-CosmicBody"
 qualified_path = "dojo_starter::models::cosmic_body::cosmic_body"

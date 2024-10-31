@@ -11,7 +11,7 @@ use dojo_starter::systems::creation::contracts::creation_systems::{
 };
 
 use dojo_starter::utils::testing::{
-    world::spawn_world, spawners::spawn_galaxy, spawners::spawn_star
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star
 };
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
@@ -31,10 +31,10 @@ fn setup() -> (
     let star_owner = contract_address_const::<'star_owner'>();
     let not_star_owner = contract_address_const::<'not_star_owner'>();
 
-    let galaxy_coords = Vec2 { x: 23, y: 32 };
+    let quasar_coords = Vec2 { x: 23, y: 32 };
     let emission_rate = 1_000_000;
-    let galaxy_mass = 1_000_000;
-    let galaxy_id = spawn_galaxy(world, star_owner, galaxy_coords, emission_rate, galaxy_mass);
+    let quasar_mass = 1_000_000;
+    let quasar_id = spawn_quasar(world, star_owner, quasar_coords, emission_rate, quasar_mass);
 
     let star_coords = Vec2 { x: 42, y: 23 };
     let star_mass = 1_000;
@@ -42,7 +42,7 @@ fn setup() -> (
 
     set!(world, (LooshBalance { address: star_owner, balance: 1_000_000_000_000_000 }));
 
-    (world, star_owner, not_star_owner, galaxy_id, star_id, creation_dispatcher)
+    (world, star_owner, not_star_owner, quasar_id, star_id, creation_dispatcher)
 }
 
 #[test]
@@ -96,11 +96,11 @@ fn test_create_asteroid_cluster_not_star_owner() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('invalid star id', 'ENTRYPOINT_FAILED'))]
 fn test_create_asteroid_cluster_not_in_star() {
-    let (_, star_owner, _, galaxy_id, _, creation_dispatcher) = setup();
+    let (_, star_owner, _, quasar_id, _, creation_dispatcher) = setup();
 
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);
 
     let coords = Vec2 { x: 20, y: 21 };
-    creation_dispatcher.create_asteroid_cluster(coords, galaxy_id);
+    creation_dispatcher.create_asteroid_cluster(coords, quasar_id);
 }

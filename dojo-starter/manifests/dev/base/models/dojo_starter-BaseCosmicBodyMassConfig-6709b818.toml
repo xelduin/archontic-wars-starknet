@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x28679d9a146b92e9fc6b3e59df77e1825950b9a8c0c0cf59c41727654f5ead5"
+original_class_hash = "0x28679d9a146b92e9fc6b3e59df77e1825950b9a8c0c0cf59c41727654f5ead5"
+abi = "manifests/dev/base/abis/models/dojo_starter-BaseCosmicBodyMassConfig-6709b818.json"
+tag = "dojo_starter-BaseCosmicBodyMassConfig"
+qualified_path = "dojo_starter::models::config::base_cosmic_body_mass_config"
+manifest_name = "dojo_starter-BaseCosmicBodyMassConfig-6709b818"
+
+[[members]]
+name = "config_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "base_star_mass"
+type = "u64"
+key = false
+
+[[members]]
+name = "base_quasar_mass"
+type = "u64"
+key = false

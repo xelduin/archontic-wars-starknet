@@ -19,7 +19,7 @@ use dojo_starter::systems::creation::contracts::creation_systems::{
 };
 
 use dojo_starter::utils::testing::{
-    world::spawn_world, spawners::spawn_galaxy, spawners::spawn_star,
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star,
     spawners::spawn_asteroid_cluster
 };
 
@@ -49,10 +49,10 @@ fn setup() -> (
     let star_owner = contract_address_const::<'star_owner'>();
     let not_star_owner = contract_address_const::<'not_star_owner'>();
 
-    let galaxy_coords = Vec2 { x: 23, y: 32 };
+    let quasar_coords = Vec2 { x: 23, y: 32 };
     let emission_rate = 1_000_000;
-    let galaxy_mass = 1_000_000;
-    let galaxy_id = spawn_galaxy(world, star_owner, galaxy_coords, emission_rate, galaxy_mass);
+    let quasar_mass = 1_000_000;
+    let quasar_id = spawn_quasar(world, star_owner, quasar_coords, emission_rate, quasar_mass);
 
     let star_coords = Vec2 { x: 42, y: 23 };
     let star_mass = 1_000;
@@ -73,7 +73,7 @@ fn setup() -> (
             Orbit { entity: asteroid_cluster_id, orbit_center: star_id },
             DustBalance { entity: star_id, balance: 1_000_000_000_000_000 },
             DustBalance { entity: far_star_id, balance: 1_000_000_000_000_000 },
-            DustBalance { entity: galaxy_id, balance: 1_000_000_000_000_000 }
+            DustBalance { entity: quasar_id, balance: 1_000_000_000_000_000 }
         )
     );
 
@@ -81,7 +81,7 @@ fn setup() -> (
         world,
         star_owner,
         not_star_owner,
-        galaxy_id,
+        quasar_id,
         star_id,
         far_star_id,
         asteroid_cluster_id,
@@ -126,14 +126,14 @@ fn test_form_asteroids_no_dust() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('invalid star id', 'ENTRYPOINT_FAILED'))]
 fn test_form_asteroids_not_star() {
-    let (_, star_owner, _, galaxy_id, _, _, asteroid_cluster_id, creation_dispatcher) = setup();
+    let (_, star_owner, _, quasar_id, _, _, asteroid_cluster_id, creation_dispatcher) = setup();
 
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);
 
     let mass_increase = 10;
 
-    creation_dispatcher.form_asteroids(galaxy_id, asteroid_cluster_id, mass_increase);
+    creation_dispatcher.form_asteroids(quasar_id, asteroid_cluster_id, mass_increase);
 }
 
 #[test]

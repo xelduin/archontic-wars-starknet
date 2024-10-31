@@ -26,7 +26,7 @@ use dojo_starter::systems::dust::contracts::dust_systems::{
 };
 
 use dojo_starter::utils::testing::{
-    world::spawn_world, spawners::spawn_galaxy, spawners::spawn_star,
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star,
     spawners::spawn_asteroid_cluster, dust_pool::add_to_dust_pool
 };
 
@@ -48,28 +48,28 @@ fn setup() -> (IWorldDispatcher, u32, u32, u32, ContractAddress, IDustSystemsDis
     // SET UP DUST POOL
     let coords = Vec2 { x: 100, y: 100 };
     let emission_rate = 1_000_000_000_000_000; // 0.001 dust per second
-    let galaxy_mass = 5_000_000;
-    let galaxy_id = spawn_galaxy(world, sender_owner, coords, emission_rate, galaxy_mass);
+    let quasar_mass = 5_000_000;
+    let quasar_id = spawn_quasar(world, sender_owner, coords, emission_rate, quasar_mass);
 
     let star_mass = 200;
     let star_id = spawn_star(world, sender_owner, coords, star_mass);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, star_id);
+    add_to_dust_pool(world, dust_dispatcher, quasar_id, star_id);
     set!(world, (BasalAttributes { entity: star_id, attributes: 20 }));
 
     let filler_star_one = spawn_star(world, sender_owner, coords, star_mass);
     let filler_star_two = spawn_star(world, sender_owner, coords, star_mass);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, filler_star_one);
-    add_to_dust_pool(world, dust_dispatcher, galaxy_id, filler_star_two);
+    add_to_dust_pool(world, dust_dispatcher, quasar_id, filler_star_one);
+    add_to_dust_pool(world, dust_dispatcher, quasar_id, filler_star_two);
 
     let non_member_star_id = spawn_star(world, sender_owner, coords, star_mass);
 
-    (world, star_id, non_member_star_id, galaxy_id, sender_owner, dust_dispatcher)
+    (world, star_id, non_member_star_id, quasar_id, sender_owner, dust_dispatcher)
 }
 
 #[test]
 #[available_gas(3000000000000)]
 fn test_claim_dust_valid() {
-    let (world, star_id, _, galaxy_id, sender_owner, dust_dispatcher) = setup();
+    let (world, star_id, _, quasar_id, sender_owner, dust_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
@@ -84,19 +84,19 @@ fn test_claim_dust_valid() {
     let expected_claimable_dust = get_expected_claimable_dust_for_star(
         new_ts,
         get!(world, star_id, Mass),
-        get!(world, galaxy_id, DustPool).total_mass,
+        get!(world, quasar_id, DustPool).total_mass,
         get!(world, star_id, DustAccretion),
-        get!(world, galaxy_id, DustEmission),
+        get!(world, quasar_id, DustEmission),
         star_sense
     );
     let expected_balance = old_dust_balance.balance + expected_claimable_dust;
 
     set_block_timestamp(new_ts);
 
-    //dust_dispatcher.update_emission(galaxy_id);
+    //dust_dispatcher.update_emission(quasar_id);
     dust_dispatcher.claim_dust(star_id);
 
-    let dust_cloud = get!(world, (100, 100, galaxy_id), DustCloud);
+    let dust_cloud = get!(world, (100, 100, quasar_id), DustCloud);
 
     println!("{}", expected_balance);
     println!("{}", dust_cloud.dust_balance);

@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x326f9573833cbf0f6bf2668eabcf0f0d8e72da164850df4b2bc0376595f15d2"
+original_class_hash = "0x326f9573833cbf0f6bf2668eabcf0f0d8e72da164850df4b2bc0376595f15d2"
+abi = "manifests/dev/base/abis/models/dojo_starter-AdminConfig-1365eccc.json"
+tag = "dojo_starter-AdminConfig"
+qualified_path = "dojo_starter::models::config::admin_config"
+manifest_name = "dojo_starter-AdminConfig-1365eccc"
+
+[[members]]
+name = "config_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "admin_address"
+type = "ContractAddress"
+key = false

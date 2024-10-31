@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x570755faa17bcffe5b340153abb2c55b6cf61a7e8a1988e4e4d1054da0c5311"
+original_class_hash = "0x570755faa17bcffe5b340153abb2c55b6cf61a7e8a1988e4e4d1054da0c5311"
+abi = "manifests/dev/base/abis/models/dojo_starter-DustEmissionConfig-2aa5fcba.json"
+tag = "dojo_starter-DustEmissionConfig"
+qualified_path = "dojo_starter::models::config::dust_emission_config"
+manifest_name = "dojo_starter-DustEmissionConfig-2aa5fcba"
+
+[[members]]
+name = "config_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "base_dust_emission"
+type = "u128"
+key = false

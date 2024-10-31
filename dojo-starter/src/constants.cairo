@@ -17,7 +17,7 @@ const MIN_HARVEST_TIME: u64 = 60 * 60;
 const BASE_HARVEST_TIME: u64 = 60 * 60 * 24;
 
 const MAX_ASTEROID_CLUSTER_MASS: u128 = 100_000;
-const BASE_GALAXY_MASS: u128 = 1_000_000_000;
+const BASE_QUASAR_MASS: u128 = 1_000_000_000;
 const BASE_STAR_MASS: u128 = 1_000_000;
 
 fn get_star_mass_ranges(star_level: u8) -> (u128, u128) {
@@ -41,7 +41,7 @@ const BASE_LOOSH_TRAVEL_COST: u128 = 5;
 fn get_travel_speed_multiplier(body_type: CosmicBodyType) -> u64 {
     return match body_type {
         CosmicBodyType::Star => 1,
-        CosmicBodyType::Galaxy => 60,
+        CosmicBodyType::Quasar => 60,
         CosmicBodyType::None => 60 * 24,
         _ => panic!("invalid body type")
     };
@@ -51,7 +51,7 @@ const BASE_TRAVEL_SPEED_PER_TILE: u64 = 60;
 fn get_loosh_travel_cost_multiplier(body_type: CosmicBodyType) -> u128 {
     return match body_type {
         CosmicBodyType::Star => 1, // Level 1
-        CosmicBodyType::Galaxy => 100, // Level 2
+        CosmicBodyType::Quasar => 100, // Level 2
         CosmicBodyType::None => 10_000, // Level 3
         _ => panic!("invalid body type")
     };

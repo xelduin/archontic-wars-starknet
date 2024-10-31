@@ -128,90 +128,24 @@
   },
   {
     "type": "impl",
-    "name": "CreationSystemsImpl",
-    "interface_name": "dojo_starter::systems::creation::contracts::creation_systems::ICreationSystems"
-  },
-  {
-    "type": "struct",
-    "name": "dojo_starter::models::vec2::Vec2",
-    "members": [
-      {
-        "name": "x",
-        "type": "core::integer::u64"
-      },
-      {
-        "name": "y",
-        "type": "core::integer::u64"
-      }
-    ]
+    "name": "ConfigSystemsImpl",
+    "interface_name": "dojo_starter::systems::config::contracts::config_systems::IConfigSystems"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::creation::contracts::creation_systems::ICreationSystems",
+    "name": "dojo_starter::systems::config::contracts::config_systems::IConfigSystems",
     "items": [
       {
         "type": "function",
-        "name": "create_quasar",
+        "name": "set_admin_config",
         "inputs": [
           {
-            "name": "coords",
-            "type": "dojo_starter::models::vec2::Vec2"
-          }
-        ],
-        "outputs": [
-          {
+            "name": "config_id",
             "type": "core::integer::u32"
-          }
-        ],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "create_protostar",
-        "inputs": [
-          {
-            "name": "coords",
-            "type": "dojo_starter::models::vec2::Vec2"
           },
           {
-            "name": "quasar_id",
-            "type": "core::integer::u32"
-          }
-        ],
-        "outputs": [
-          {
-            "type": "core::integer::u32"
-          }
-        ],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "create_asteroid_cluster",
-        "inputs": [
-          {
-            "name": "coords",
-            "type": "dojo_starter::models::vec2::Vec2"
-          },
-          {
-            "name": "star_id",
-            "type": "core::integer::u32"
-          }
-        ],
-        "outputs": [
-          {
-            "type": "core::integer::u32"
-          }
-        ],
-        "state_mutability": "external"
-      },
-      {
-        "type": "function",
-        "name": "form_star",
-        "inputs": [
-          {
-            "name": "protostar_id",
-            "type": "core::integer::u32"
+            "name": "admin_address",
+            "type": "core::starknet::contract_address::ContractAddress"
           }
         ],
         "outputs": [],
@@ -219,18 +153,138 @@
       },
       {
         "type": "function",
-        "name": "form_asteroids",
+        "name": "set_dust_value_config",
         "inputs": [
           {
-            "name": "star_id",
+            "name": "config_id",
             "type": "core::integer::u32"
           },
           {
-            "name": "cluster_id",
+            "name": "dust_to_mass",
+            "type": "core::integer::u128"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_dust_emission_config",
+        "inputs": [
+          {
+            "name": "config_id",
             "type": "core::integer::u32"
           },
           {
-            "name": "amount",
+            "name": "base_dust_emission",
+            "type": "core::integer::u128"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_harvest_time",
+        "inputs": [
+          {
+            "name": "config_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "min_harvest_time",
+            "type": "core::integer::u64"
+          },
+          {
+            "name": "base_harvest_time",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_base_cosmic_body_mass",
+        "inputs": [
+          {
+            "name": "config_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "base_star_mass",
+            "type": "core::integer::u64"
+          },
+          {
+            "name": "base_quasar_mass",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_min_orbit_center_mass",
+        "inputs": [
+          {
+            "name": "config_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "min_mass_multiplier",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_max_cosmic_body_mass",
+        "inputs": [
+          {
+            "name": "config_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "max_asteroid_cluster_mass",
+            "type": "core::integer::u64"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_loosh_cost",
+        "inputs": [
+          {
+            "name": "config_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "base_travel_cost",
+            "type": "core::integer::u128"
+          },
+          {
+            "name": "base_creation_cost",
+            "type": "core::integer::u128"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
+      {
+        "type": "function",
+        "name": "set_travel_speed",
+        "inputs": [
+          {
+            "name": "config_id",
+            "type": "core::integer::u32"
+          },
+          {
+            "name": "base_travel_speed",
             "type": "core::integer::u64"
           }
         ],
@@ -242,11 +296,11 @@
   {
     "type": "impl",
     "name": "IDojoInitImpl",
-    "interface_name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::IDojoInit"
+    "interface_name": "dojo_starter::systems::config::contracts::config_systems::config_systems::IDojoInit"
   },
   {
     "type": "interface",
-    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::IDojoInit",
+    "name": "dojo_starter::systems::config::contracts::config_systems::config_systems::IDojoInit",
     "items": [
       {
         "type": "function",
@@ -306,7 +360,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::systems::creation::contracts::creation_systems::creation_systems::Event",
+    "name": "dojo_starter::systems::config::contracts::config_systems::config_systems::Event",
     "kind": "enum",
     "variants": [
       {

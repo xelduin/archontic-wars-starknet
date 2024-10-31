@@ -1,6 +1,6 @@
 #[derive(Serde, Copy, Drop, Introspect)]
 pub enum LooshSink {
-    CreateGalaxy,
+    CreateQuasar,
     CreateProtostar,
     FormStar,
     CreateAsteroidCluster,
