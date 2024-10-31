@@ -20,10 +20,14 @@ mod creation_systems {
     use dojo_starter::systems::dust::contracts::dust_systems::dust_systems::InternalDustSystemsImpl;
     use dojo_starter::systems::loosh::contracts::loosh_systems::loosh_systems::InternalLooshSystemsImpl;
     use dojo_starter::systems::mass::contracts::mass_systems::mass_systems::InternalMassSystemsImpl;
+    use dojo_starter::systems::config::contracts::config_systems::config_systems::assert_caller_is_admin;
 
     use dojo_starter::constants::DUST_VALUE_CONFIG_ID;
+    use dojo_starter::constants::ADMIN_CONFIG_ID;
 
     use dojo_starter::models::config::DustValueConfig;
+    use dojo_starter::models::config::AdminConfig;
+
     use dojo_starter::models::owner::Owner;
     use dojo_starter::models::vec2::Vec2;
     use dojo_starter::models::position::{Position, OrbitCenterAtPosition};
@@ -62,6 +66,8 @@ mod creation_systems {
     #[generate_trait]
     impl InternalCreationSystemsImpl of InternalCreationSystemsTrait {
         fn create_quasar(world: IWorldDispatcher, coords: Vec2) -> u32 {
+            assert_caller_is_admin(world);
+
             let central_entity_at_pos = get!(world, (coords.x, coords.y, 0), OrbitCenterAtPosition);
             assert(central_entity_at_pos.entity == 0, 'coords are occupied');
 
