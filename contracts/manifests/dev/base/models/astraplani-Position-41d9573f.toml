@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x57f42e7af799c5a324a7336d48f4e1bbb5b06ecde6c12d770027028f2b51f22"
+original_class_hash = "0x57f42e7af799c5a324a7336d48f4e1bbb5b06ecde6c12d770027028f2b51f22"
+abi = "manifests/dev/base/abis/models/astraplani-Position-41d9573f.json"
+tag = "astraplani-Position"
+qualified_path = "astraplani::models::position::position"
+manifest_name = "astraplani-Position-41d9573f"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "vec"
+type = "Vec2"
+key = false

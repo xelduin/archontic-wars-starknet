@@ -22,6 +22,16 @@ mod mass_systems {
     use astraplani::models::position::{Position, PositionCustomImpl};
     use astraplani::models::dust_accretion::DustAccretion;
 
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct BodyMassChange {
+        #[key]
+        body_id: u32,
+        old_mass: u64,
+        new_mass: u64
+    }
+
     #[abi(embed_v0)]
     impl MassSystemsImpl of IMassSystems<ContractState> {
         fn transfer_mass(
@@ -72,6 +82,7 @@ mod mass_systems {
             world: IWorldDispatcher, body_id: u32, old_mass: u64, new_mass: u64
         ) {
             set!(world, (Mass { entity: body_id, mass: new_mass }));
+            emit!(world, (BodyMassChange { body_id, old_mass, new_mass }));
 
             let body_accretion = get!(world, body_id, DustAccretion);
             if body_accretion.in_dust_pool {

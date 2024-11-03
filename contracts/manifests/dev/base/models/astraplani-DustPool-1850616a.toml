@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x7fcf51d83e51843f98bac26b0f213dedfb95b0a7a2511934a2fce777ffab1f9"
+original_class_hash = "0x7fcf51d83e51843f98bac26b0f213dedfb95b0a7a2511934a2fce777ffab1f9"
+abi = "manifests/dev/base/abis/models/astraplani-DustPool-1850616a.json"
+tag = "astraplani-DustPool"
+qualified_path = "astraplani::models::dust_pool::dust_pool"
+manifest_name = "astraplani-DustPool-1850616a"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "total_mass"
+type = "u64"
+key = false

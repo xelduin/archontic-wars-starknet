@@ -42,6 +42,111 @@ mod dust_systems {
     };
     use astraplani::models::dust_cloud::DustCloud;
     use astraplani::models::position::Position;
+    use astraplani::models::vec2::Vec2;
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct DustPoolFormed {
+        #[key]
+        body_id: u32,
+        emission_rate: u128,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct DustClaimed {
+        #[key]
+        body_id: u32,
+        amount: u128,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct DustConsumed {
+        #[key]
+        body_id: u32,
+        amount: u128,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct DustPoolMassChange {
+        #[key]
+        body_id: u32,
+        old_mass: u64,
+        new_mass: u64
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct DustCloudChange {
+        #[key]
+        coords: Vec2,
+        old_dust_amount: u128,
+        new_dust_amount: u128
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct ARPSUpdated {
+        #[key]
+        body_id: u32,
+        updated_ARPS: u128,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct DustPoolEntered {
+        #[key]
+        body_id: u32,
+        pool_id: u32,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct DustPoolExited {
+        #[key]
+        body_id: u32,
+        pool_id: u32,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct HarvestActionBegan {
+        #[key]
+        body_id: u32,
+        cloud_coords: Vec2,
+        amount: u128,
+        harvest_end_ts: u64
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct HarvestActionEnded {
+        #[key]
+        body_id: u32,
+        cloud_coords: Vec2,
+        amount: u128,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct HarvestActionCancelled {
+        #[key]
+        body_id: u32,
+        cloud_coords: Vec2,
+    }
 
     #[abi(embed_v0)]
     impl DustSystemsImpl of IDustSystems<ContractState> {
@@ -88,6 +193,7 @@ mod dust_systems {
                     },
                 )
             );
+            emit!(world, (DustPoolFormed { body_id, emission_rate }));
         }
 
         fn enter_dust_pool(world: IWorldDispatcher, body_id: u32, pool_id: u32) {
@@ -115,6 +221,7 @@ mod dust_systems {
                     in_dust_pool: true
                 })
             );
+            emit!(world, (DustPoolEntered { body_id, pool_id }));
         }
 
         fn exit_dust_pool(world: IWorldDispatcher, body_id: u32) {
@@ -131,6 +238,7 @@ mod dust_systems {
             Self::decrease_total_pool_mass(world, pool_id, body_mass.mass);
 
             delete!(world, (body_dust_accretion));
+            emit!(world, (DustPoolExited { body_id, pool_id }));
         }
 
         fn update_emission(world: IWorldDispatcher, pool_id: u32) {
@@ -155,6 +263,7 @@ mod dust_systems {
                     last_update_ts: current_ts,
                 })
             );
+            emit!(world, (ARPSUpdated { body_id: pool_id, updated_ARPS }));
         }
 
         fn update_local_pool(world: IWorldDispatcher, body_id: u32) {
@@ -179,9 +288,10 @@ mod dust_systems {
             let new_dust_balance = current_dust.balance + body_unclaimed_dust;
             let dust_remainder = unclaimed_pool_dust - body_unclaimed_dust;
             let body_position = get!(world, body_id, Position);
-            let dust_cloud = get!(
+            let dust_cloud_balance = get!(
                 world, (body_position.vec.x, body_position.vec.y, pool_id), DustCloud
-            );
+            )
+                .dust_balance;
             set!(
                 world,
                 (
@@ -195,7 +305,18 @@ mod dust_systems {
                         x: body_position.vec.x,
                         y: body_position.vec.y,
                         orbit_center: pool_id,
-                        dust_balance: dust_cloud.dust_balance + dust_remainder
+                        dust_balance: dust_cloud_balance + dust_remainder
+                    }
+                )
+            );
+            emit!(
+                world,
+                (
+                    DustClaimed { body_id, amount: body_unclaimed_dust },
+                    DustCloudChange {
+                        coords: body_position.vec,
+                        old_dust_amount: dust_cloud_balance,
+                        new_dust_amount: dust_cloud_balance + dust_remainder
                     }
                 )
             );
@@ -223,16 +344,25 @@ mod dust_systems {
         }
 
         fn increase_total_pool_mass(world: IWorldDispatcher, pool_id: u32, mass: u64) {
-            let pool_mass_data = get!(world, pool_id, DustPool);
-            set!(
-                world, (DustPool { entity: pool_id, total_mass: pool_mass_data.total_mass + mass })
+            let pool_mass = get!(world, pool_id, DustPool).total_mass;
+            set!(world, (DustPool { entity: pool_id, total_mass: pool_mass + mass }));
+            emit!(
+                world,
+                (DustPoolMassChange {
+                    body_id: pool_id, old_mass: pool_mass, new_mass: pool_mass + mass
+                })
             );
         }
 
         fn decrease_total_pool_mass(world: IWorldDispatcher, pool_id: u32, mass: u64) {
-            let pool_mass_data = get!(world, pool_id, DustPool);
-            set!(
-                world, (DustPool { entity: pool_id, total_mass: pool_mass_data.total_mass - mass })
+            let pool_mass = get!(world, pool_id, DustPool).total_mass;
+            assert(pool_mass >= mass, 'pool mass too low');
+            set!(world, (DustPool { entity: pool_id, total_mass: pool_mass - mass }));
+            emit!(
+                world,
+                (DustPoolMassChange {
+                    body_id: pool_id, old_mass: pool_mass, new_mass: pool_mass - mass
+                })
             );
         }
 
@@ -256,6 +386,7 @@ mod dust_systems {
                     DustAccretion { entity: body_id, debt: new_dust_balance, in_dust_pool: true }
                 )
             );
+            emit!(world, (DustClaimed { body_id, amount: unclaimed_dust }));
         }
 
         fn consume_dust(world: IWorldDispatcher, body_id: u32, amount: u128) {
@@ -265,6 +396,7 @@ mod dust_systems {
             let new_dust_balance = dust_balance.balance - amount;
 
             set!(world, (DustBalance { entity: body_id, balance: new_dust_balance }));
+            emit!(world, (DustConsumed { body_id, amount }));
         }
 
         fn begin_dust_harvest(world: IWorldDispatcher, body_id: u32, harvest_amount: u128) {
@@ -298,6 +430,15 @@ mod dust_systems {
 
             set!(
                 world, (HarvestAction { entity: body_id, start_ts: cur_ts, end_ts, harvest_amount })
+            );
+            emit!(
+                world,
+                (HarvestActionBegan {
+                    body_id,
+                    cloud_coords: body_position.vec,
+                    amount: harvest_amount,
+                    harvest_end_ts: end_ts
+                })
             );
         }
 
@@ -342,6 +483,19 @@ mod dust_systems {
                     }
                 )
             );
+            emit!(
+                world,
+                (
+                    HarvestActionEnded {
+                        body_id, amount: harvested_dust, cloud_coords: body_position.vec
+                    },
+                    DustCloudChange {
+                        coords: body_position.vec,
+                        old_dust_amount: dust_cloud.dust_balance,
+                        new_dust_amount: dust_cloud.dust_balance + harvested_dust
+                    }
+                )
+            );
         }
 
         fn cancel_dust_harvest(world: IWorldDispatcher, body_id: u32) {
@@ -352,7 +506,10 @@ mod dust_systems {
             let harvest_action = get!(world, body_id, HarvestAction);
             assert(harvest_action.end_ts != 0, 'not harvesting');
 
+            let body_position_vec = get!(world, body_id, Position).vec;
+
             delete!(world, (harvest_action));
+            emit!(world, (HarvestActionCancelled { body_id, cloud_coords: body_position_vec }));
         }
     }
 }

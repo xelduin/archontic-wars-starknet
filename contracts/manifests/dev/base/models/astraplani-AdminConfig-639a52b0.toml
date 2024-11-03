@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x20a38788b82fe64edee1604f382f92a9d3e84e3a53fc14863fb518afece8dc1"
+original_class_hash = "0x20a38788b82fe64edee1604f382f92a9d3e84e3a53fc14863fb518afece8dc1"
+abi = "manifests/dev/base/abis/models/astraplani-AdminConfig-639a52b0.json"
+tag = "astraplani-AdminConfig"
+qualified_path = "astraplani::models::config::admin_config"
+manifest_name = "astraplani-AdminConfig-639a52b0"
+
+[[members]]
+name = "config_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "admin_address"
+type = "ContractAddress"
+key = false

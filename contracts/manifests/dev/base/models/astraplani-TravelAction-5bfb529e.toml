@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x68327b6742d1a483583ff6f53122468d943f5721e041345734662daaede6a8b"
+original_class_hash = "0x68327b6742d1a483583ff6f53122468d943f5721e041345734662daaede6a8b"
+abi = "manifests/dev/base/abis/models/astraplani-TravelAction-5bfb529e.json"
+tag = "astraplani-TravelAction"
+qualified_path = "astraplani::models::travel_action::travel_action"
+manifest_name = "astraplani-TravelAction-5bfb529e"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "depart_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "arrival_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "target_position"
+type = "Vec2"
+key = false

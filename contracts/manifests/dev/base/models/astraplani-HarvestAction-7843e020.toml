@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x7faa86a1d5ed2a99f9d1904126f8f2b4cb9d39333435f10bbed99716afdce28"
+original_class_hash = "0x7faa86a1d5ed2a99f9d1904126f8f2b4cb9d39333435f10bbed99716afdce28"
+abi = "manifests/dev/base/abis/models/astraplani-HarvestAction-7843e020.json"
+tag = "astraplani-HarvestAction"
+qualified_path = "astraplani::models::harvest_action::harvest_action"
+manifest_name = "astraplani-HarvestAction-7843e020"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "start_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "end_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "harvest_amount"
+type = "u128"
+key = false

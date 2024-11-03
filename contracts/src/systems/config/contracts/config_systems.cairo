@@ -49,7 +49,6 @@ mod config_systems {
     use astraplani::models::config::LooshCostConfig;
     use astraplani::models::config::TravelSpeedConfig;
 
-
     fn assert_caller_is_admin(world: IWorldDispatcher) {
         let admin_address = get!(world, ADMIN_CONFIG_ID, AdminConfig).admin_address;
         if admin_address != Zeroable::zero() {

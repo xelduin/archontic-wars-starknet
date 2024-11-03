@@ -1,0 +1,42 @@
+kind = "DojoModel"
+class_hash = "0x60c9a2d599e38060a0d872706034540dd7227a5e299fcb899d673645d8f3588"
+original_class_hash = "0x60c9a2d599e38060a0d872706034540dd7227a5e299fcb899d673645d8f3588"
+abi = "manifests/dev/base/abis/models/astraplani-ProtostarCreated-31864acb.json"
+tag = "astraplani-ProtostarCreated"
+qualified_path = "astraplani::systems::creation::contracts::creation_systems::creation_systems::protostar_created"
+manifest_name = "astraplani-ProtostarCreated-31864acb"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "owner"
+type = "ContractAddress"
+key = false
+
+[[members]]
+name = "mass"
+type = "u64"
+key = false
+
+[[members]]
+name = "coords"
+type = "Vec2"
+key = false
+
+[[members]]
+name = "parent_id"
+type = "u32"
+key = false
+
+[[members]]
+name = "creation_ts"
+type = "u64"
+key = false
+
+[[members]]
+name = "incubation_end_ts"
+type = "u64"
+key = false

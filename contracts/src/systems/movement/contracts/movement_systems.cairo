@@ -27,6 +27,44 @@ mod movement_systems {
     use astraplani::models::orbital_mass::OrbitalMass;
     use astraplani::models::mass::Mass;
 
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct TravelBegan {
+        #[key]
+        body_id: u32,
+        origin_vec: Vec2,
+        target_vec: Vec2,
+        arrival_ts: u64
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct TravelEnded {
+        #[key]
+        body_id: u32,
+        arrival_ts: u64
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct OrbitEntered {
+        #[key]
+        body_id: u32,
+        orbit_center: u32
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct OrbitExited {
+        #[key]
+        body_id: u32,
+        orbit_center: u32
+    }
+
     #[abi(embed_v0)]
     impl MovementSystemsImpl of IMovementSystems<ContractState> {
         fn begin_travel(ref world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
@@ -73,6 +111,12 @@ mod movement_systems {
             );
 
             set!(world, (TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }));
+            emit!(
+                world,
+                (TravelBegan {
+                    body_id, origin_vec: body_position.vec, target_vec: target_position, arrival_ts
+                })
+            );
         }
 
         fn end_travel(world: IWorldDispatcher, body_id: u32) {
@@ -85,6 +129,8 @@ mod movement_systems {
             set!(world, (Position { entity: body_id, vec: travel_action.target_position }));
 
             delete!(world, (travel_action));
+
+            emit!(world, (TravelEnded { body_id, arrival_ts: current_ts }));
         }
 
         fn enter_orbit(world: IWorldDispatcher, body_id: u32, orbit_center: u32) {
@@ -120,6 +166,7 @@ mod movement_systems {
                     Position { entity: body_id, vec: Vec2 { x: 1, y: 1 } }
                 )
             );
+            emit!(world, (OrbitEntered { body_id, orbit_center }));
         }
 
         fn exit_orbit(world: IWorldDispatcher, body_id: u32) {
@@ -149,7 +196,8 @@ mod movement_systems {
                     Orbit { entity: body_id, orbit_center: orbit_center_orbit.orbit_center },
                     Position { entity: body_id, vec: orbit_center_position.vec }
                 )
-            )
+            );
+            emit!(world, (OrbitExited { body_id, orbit_center: body_orbit.orbit_center }));
         }
     }
 }

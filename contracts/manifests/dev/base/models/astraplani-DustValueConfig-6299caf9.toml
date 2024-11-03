@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x627e61e5ba44959c82f1dbc92dd1aed2ce272c5db60fca815a37250a72b4aeb"
+original_class_hash = "0x627e61e5ba44959c82f1dbc92dd1aed2ce272c5db60fca815a37250a72b4aeb"
+abi = "manifests/dev/base/abis/models/astraplani-DustValueConfig-6299caf9.json"
+tag = "astraplani-DustValueConfig"
+qualified_path = "astraplani::models::config::dust_value_config"
+manifest_name = "astraplani-DustValueConfig-6299caf9"
+
+[[members]]
+name = "config_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "dust_to_mass"
+type = "u128"
+key = false

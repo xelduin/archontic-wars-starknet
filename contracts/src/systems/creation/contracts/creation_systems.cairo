@@ -38,6 +38,65 @@ mod creation_systems {
     use astraplani::models::incubation::Incubation;
     use astraplani::models::loosh_sink::LooshSink;
 
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct QuasarCreated {
+        #[key]
+        body_id: u32,
+        owner: ContractAddress,
+        mass: u64,
+        coords: Vec2,
+        parent_id: u32,
+        creation_ts: u64,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct ProtostarCreated {
+        #[key]
+        body_id: u32,
+        owner: ContractAddress,
+        mass: u64,
+        coords: Vec2,
+        parent_id: u32,
+        creation_ts: u64,
+        incubation_end_ts: u64,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct AsteroidClusterCreated {
+        #[key]
+        body_id: u32,
+        owner: ContractAddress,
+        mass: u64,
+        coords: Vec2,
+        parent_id: u32,
+        creation_ts: u64,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct StarFormed {
+        #[key]
+        body_id: u32,
+        creation_ts: u64,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct AsteroidsFormed {
+        #[key]
+        body_id: u32,
+        mass: u64,
+        creation_ts: u64,
+    }
+
     #[abi(embed_v0)]
     impl CreationSystemsImpl of ICreationSystems<ContractState> {
         fn create_quasar(ref world: IWorldDispatcher, coords: Vec2) -> u32 {
@@ -88,6 +147,17 @@ mod creation_systems {
                     x: coords.x, y: coords.y, orbit_center: 0, entity: body_id
                 })
             );
+            emit!(
+                world,
+                QuasarCreated {
+                    body_id,
+                    owner: player,
+                    mass,
+                    coords,
+                    parent_id: universe_id,
+                    creation_ts: get_block_timestamp()
+                }
+            );
 
             InternalDustSystemsImpl::form_dust_pool(world, body_id);
 
@@ -116,16 +186,27 @@ mod creation_systems {
 
             let creation_ts = get_block_timestamp();
             let incubation_period = 60 * 1000;
+            let incubation_end_ts = creation_ts + incubation_period;
             set!(
                 world,
                 (
-                    Incubation {
-                        entity: body_id, creation_ts, end_ts: creation_ts + incubation_period
-                    },
+                    Incubation { entity: body_id, creation_ts, end_ts: incubation_end_ts },
                     OrbitCenterAtPosition {
                         x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
                     }
                 )
+            );
+            emit!(
+                world,
+                (ProtostarCreated {
+                    body_id,
+                    owner: player,
+                    mass,
+                    coords,
+                    parent_id: quasar_id,
+                    creation_ts,
+                    incubation_end_ts
+                })
             );
 
             InternalDustSystemsImpl::enter_dust_pool(world, body_id, quasar_id);
@@ -155,6 +236,18 @@ mod creation_systems {
                 initial_mass,
                 star_id,
                 coords,
+            );
+
+            emit!(
+                world,
+                AsteroidClusterCreated {
+                    body_id,
+                    owner: player,
+                    mass: initial_mass,
+                    coords,
+                    parent_id: star_id,
+                    creation_ts: get_block_timestamp(),
+                }
             );
 
             return body_id;
@@ -204,6 +297,8 @@ mod creation_systems {
 
             set!(world, (CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
             delete!(world, (protostar_incubation));
+
+            emit!(world, (StarFormed { body_id: protostar_id, creation_ts: current_ts }));
         }
 
         fn form_asteroids(world: IWorldDispatcher, star_id: u32, cluster_id: u32, mass: u64) {
@@ -228,7 +323,11 @@ mod creation_systems {
 
             InternalDustSystemsImpl::consume_dust(world, star_id, dust_to_consume);
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
-            // Emit an event for asteroid formation
+
+            emit!(
+                world,
+                (AsteroidsFormed { body_id: cluster_id, mass, creation_ts: get_block_timestamp() })
+            );
         }
     }
 }

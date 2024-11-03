@@ -41,6 +41,7 @@ mod authority_systems {
     impl InternalAuthoritySystemsImpl of InternalAuthoritySystemsTrait {
         fn transfer_ownership(world: IWorldDispatcher, body_id: u32, new_owner: ContractAddress) {
             set!(world, (Owner { entity: body_id, address: new_owner }));
+            emit!(world, OwnershipTransferred { body_id, new_owner });
         }
     }
 }

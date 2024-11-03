@@ -20,6 +20,34 @@ mod loosh_systems {
     use astraplani::models::loosh_balance::LooshBalance;
     use astraplani::models::{loosh_sink::LooshSink};
 
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct LooshTransferred {
+        #[key]
+        sender: ContractAddress,
+        receiver: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct LooshBurned {
+        #[key]
+        sender: ContractAddress,
+        amount: u128,
+    }
+
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::model]
+    #[dojo::event]
+    struct LooshMinted {
+        #[key]
+        receiver: ContractAddress,
+        amount: u128,
+    }
+
     #[abi(embed_v0)]
     impl LooshSystemsImpl of ILooshSystems<ContractState> {
         fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
@@ -63,6 +91,7 @@ mod loosh_systems {
                     LooshBalance { address: receiver, balance: new_receiver_balance }
                 )
             );
+            emit!(world, LooshTransferred { sender, receiver, amount });
         }
 
         fn mint_loosh(world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
@@ -74,6 +103,7 @@ mod loosh_systems {
                     address: receiver, balance: current_loosh_balance.balance + amount
                 })
             );
+            emit!(world, LooshMinted { receiver, amount });
         }
 
         fn burn_loosh(world: IWorldDispatcher, address: ContractAddress, amount: u128,) {
@@ -81,6 +111,7 @@ mod loosh_systems {
             assert(loosh_balance.balance >= amount, 'insufficient loosh');
             let new_balance = loosh_balance.balance - amount;
             set!(world, (LooshBalance { address, balance: new_balance }));
+            emit!(world, LooshBurned { sender, amount });
         }
 
         fn spend_loosh(world: IWorldDispatcher, spender: ContractAddress, cost: u128) {

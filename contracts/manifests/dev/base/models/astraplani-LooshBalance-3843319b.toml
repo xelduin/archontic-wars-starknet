@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x4c142d65e3e5d4e3c857b6b4a20518d93adfdde1c592fa82a163f68bfe14fd5"
+original_class_hash = "0x4c142d65e3e5d4e3c857b6b4a20518d93adfdde1c592fa82a163f68bfe14fd5"
+abi = "manifests/dev/base/abis/models/astraplani-LooshBalance-3843319b.json"
+tag = "astraplani-LooshBalance"
+qualified_path = "astraplani::models::loosh_balance::loosh_balance"
+manifest_name = "astraplani-LooshBalance-3843319b"
+
+[[members]]
+name = "address"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "balance"
+type = "u128"
+key = false

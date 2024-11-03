@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x46e20fbc9ea9aa2e673a9df4c60aafa0619eaae587a0c9446603624d3c67ecc"
+original_class_hash = "0x46e20fbc9ea9aa2e673a9df4c60aafa0619eaae587a0c9446603624d3c67ecc"
+abi = "manifests/dev/base/abis/models/astraplani-Owner-534c3535.json"
+tag = "astraplani-Owner"
+qualified_path = "astraplani::models::owner::owner"
+manifest_name = "astraplani-Owner-534c3535"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "address"
+type = "ContractAddress"
+key = false
