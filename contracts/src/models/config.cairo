@@ -75,3 +75,11 @@ pub struct AdminConfig {
     pub config_id: u32,
     pub admin_address: ContractAddress,
 }
+
+#[derive(Copy, Drop, Serde)]
+#[dojo::model]
+pub struct IncubationTimeConfig {
+    #[key]
+    pub config_id: u32,
+    pub base_incubation_time: u64,
+}

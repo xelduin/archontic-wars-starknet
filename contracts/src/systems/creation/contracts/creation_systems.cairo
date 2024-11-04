@@ -24,9 +24,13 @@ mod creation_systems {
 
     use astraplani::constants::DUST_VALUE_CONFIG_ID;
     use astraplani::constants::ADMIN_CONFIG_ID;
+    use astraplani::constants::COSMIC_BODY_MASS_CONFIG_ID;
+    use astraplani::constants::INCUBATION_TIME_CONFIG_ID;
 
     use astraplani::models::config::DustValueConfig;
     use astraplani::models::config::AdminConfig;
+    use astraplani::models::config::BaseCosmicBodyMassConfig;
+    use astraplani::models::config::IncubationTimeConfig;
 
     use astraplani::models::owner::Owner;
     use astraplani::models::vec2::Vec2;
@@ -136,7 +140,8 @@ mod creation_systems {
 
             let body_id = world.uuid();
             let universe_id = 0;
-            let mass = 10000;
+            let mass = get!(world, COSMIC_BODY_MASS_CONFIG_ID, BaseCosmicBodyMassConfig)
+                .base_quasar_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Quasar, mass, universe_id, coords,
             );
@@ -144,7 +149,7 @@ mod creation_systems {
             set!(
                 world,
                 (OrbitCenterAtPosition {
-                    x: coords.x, y: coords.y, orbit_center: 0, entity: body_id
+                    x: coords.x, y: coords.y, orbit_center: universe_id, entity: body_id
                 })
             );
             emit!(
@@ -178,14 +183,15 @@ mod creation_systems {
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.uuid();
-            let mass = 1000;
-            // This will be lottery
+            let mass = get!(world, COSMIC_BODY_MASS_CONFIG_ID, BaseCosmicBodyMassConfig)
+                .base_star_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Protostar, mass, quasar_id, coords,
             );
 
             let creation_ts = get_block_timestamp();
-            let incubation_period = 60 * 1000;
+            let incubation_period = get!(world, INCUBATION_TIME_CONFIG_ID, IncubationTimeConfig)
+                .base_incubation_time;
             let incubation_end_ts = creation_ts + incubation_period;
             set!(
                 world,

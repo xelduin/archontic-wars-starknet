@@ -86,6 +86,7 @@ writes = [
     "astraplani-Mass",
     "astraplani-OrbitalMass",
     "astraplani-Owner",
+    "astraplani-LooshBalance",
 ]
 init_calldata = []
 tag = "astraplani-creation_systems"

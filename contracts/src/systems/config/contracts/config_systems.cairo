@@ -29,6 +29,7 @@ trait IConfigSystems {
         base_creation_cost: u128
     );
     fn set_travel_speed(ref world: IWorldDispatcher, config_id: u32, base_travel_speed: u64);
+    fn set_incubation_time(ref world: IWorldDispatcher, config_id: u32, base_incubation_time: u64);
 }
 
 // Dojo decorator
@@ -48,6 +49,7 @@ mod config_systems {
     use astraplani::models::config::MaxCosmicBodyMassConfig;
     use astraplani::models::config::LooshCostConfig;
     use astraplani::models::config::TravelSpeedConfig;
+    use astraplani::models::config::IncubationTimeConfig;
 
     fn assert_caller_is_admin(world: IWorldDispatcher) {
         let admin_address = get!(world, ADMIN_CONFIG_ID, AdminConfig).admin_address;
@@ -122,6 +124,13 @@ mod config_systems {
         fn set_travel_speed(ref world: IWorldDispatcher, config_id: u32, base_travel_speed: u64) {
             assert_caller_is_admin(world);
             set!(world, (TravelSpeedConfig { config_id, base_travel_speed }));
+        }
+
+        fn set_incubation_time(
+            ref world: IWorldDispatcher, config_id: u32, base_incubation_time: u64
+        ) {
+            assert_caller_is_admin(world);
+            set!(world, (IncubationTimeConfig { config_id, base_incubation_time }));
         }
     }
 }

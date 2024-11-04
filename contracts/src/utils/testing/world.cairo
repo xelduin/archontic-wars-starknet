@@ -38,6 +38,7 @@ fn spawn_world() -> IWorldDispatcher {
         config::max_cosmic_body_mass_config::TEST_CLASS_HASH,
         config::loosh_cost_config::TEST_CLASS_HASH,
         config::travel_speed_config::TEST_CLASS_HASH,
+        config::incubation_time_config::TEST_CLASS_HASH,
     ];
 
     let world = spawn_test_world(["astraplani"].span(), models.span());
@@ -51,7 +52,8 @@ fn spawn_world() -> IWorldDispatcher {
 
 use astraplani::constants::{
     ADMIN_CONFIG_ID, DUST_VALUE_CONFIG_ID, DUST_EMISSION_CONFIG_ID, LOOSH_COST_CONFIG_ID,
-    HARVEST_TIME_CONFIG_ID, COSMIC_BODY_MASS_CONFIG_ID, TRAVEL_SPEED_CONFIG_ID
+    HARVEST_TIME_CONFIG_ID, COSMIC_BODY_MASS_CONFIG_ID, TRAVEL_SPEED_CONFIG_ID,
+    INCUBATION_TIME_CONFIG_ID
 };
 
 const DUST_TO_MASS_CONVERSION: u128 = 1;
@@ -65,6 +67,7 @@ const BASE_LOOSH_TRAVEL_COST: u128 = 5;
 const BASE_LOOSH_CREATION_COST: u128 = 10;
 
 const BASE_TRAVEL_SECONDS_PER_TILE: u64 = 60;
+const BASE_INCUBATION_TIME: u64 = 60 * 60;
 
 const MIN_HARVEST_SECONDS: u64 = 60 * 60;
 const BASE_HARVEST_SECONDS: u64 = 60 * 60 * 24;
@@ -105,6 +108,9 @@ fn setup_config(world: IWorldDispatcher) {
                 min_harvest_time: MIN_HARVEST_SECONDS,
                 base_harvest_time: BASE_HARVEST_SECONDS,
             },
+            config::IncubationTimeConfig {
+                config_id: INCUBATION_TIME_ID, base_incubation_time: BASE_INCUBATION_TIME
+            }
         )
     );
 }
