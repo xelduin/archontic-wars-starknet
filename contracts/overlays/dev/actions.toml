@@ -1,6 +1,0 @@
-tag = "astraplani-actions"
-writes = [
-    "astraplani-Moves",
-    "astraplani-Position",
-    "astraplani-DirectionsAvailable",
-]

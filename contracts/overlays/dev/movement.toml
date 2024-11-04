@@ -1,0 +1,7 @@
+tag = "astraplani-movement_systems"
+writes = [
+    "astraplani-Position",
+    "astraplani-TravelAction",
+    "astraplani-OrbitalMass",
+    "astraplani-Orbit",
+]

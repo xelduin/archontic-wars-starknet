@@ -1,0 +1,11 @@
+tag = "astraplani-creation_systems"
+writes = [
+    "astraplani-OrbitCenterAtPosition",
+    "astraplani-Incubation",
+    "astraplani-CosmicBody",
+    "astraplani-Position",
+    "astraplani-Orbit",
+    "astraplani-Mass",
+    "astraplani-OrbitalMass",
+    "astraplani-Owner",
+]

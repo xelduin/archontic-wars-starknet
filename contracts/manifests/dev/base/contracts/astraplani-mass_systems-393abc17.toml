@@ -1,6 +1,6 @@
 kind = "DojoContract"
-class_hash = "0x59456b8066bfa660415f2c415415bfe2764d85368c61c44b3efd0978acc9c2d"
-original_class_hash = "0x59456b8066bfa660415f2c415415bfe2764d85368c61c44b3efd0978acc9c2d"
+class_hash = "0x6f0a61c7542e7f38b16c447820578fb0c1e9146f90c52de967d57739b3af4a7"
+original_class_hash = "0x6f0a61c7542e7f38b16c447820578fb0c1e9146f90c52de967d57739b3af4a7"
 base_class_hash = "0x0"
 abi = "manifests/dev/base/abis/contracts/astraplani-mass_systems-393abc17.json"
 reads = []

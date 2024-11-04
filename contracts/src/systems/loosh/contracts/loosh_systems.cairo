@@ -111,7 +111,7 @@ mod loosh_systems {
             assert(loosh_balance.balance >= amount, 'insufficient loosh');
             let new_balance = loosh_balance.balance - amount;
             set!(world, (LooshBalance { address, balance: new_balance }));
-            emit!(world, LooshBurned { sender, amount });
+            emit!(world, LooshBurned { sender: address, amount });
         }
 
         fn spend_loosh(world: IWorldDispatcher, spender: ContractAddress, cost: u128) {
