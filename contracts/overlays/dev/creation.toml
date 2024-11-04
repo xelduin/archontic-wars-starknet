@@ -1,8 +1,15 @@
-tag = "astraplani-dust_systems"
+tag = "astraplani-creation_systems"
 writes = [
+    "astraplani-OrbitCenterAtPosition",
+    "astraplani-Incubation",
+    "astraplani-CosmicBody",
+    "astraplani-Position",
+    "astraplani-Orbit",
+    "astraplani-Mass",
+    "astraplani-OrbitalMass",
+    "astraplani-Owner",
+    "astraplani-LooshBalance",
     "astraplani-DustEmission",
     "astraplani-DustAccretion",
     "astraplani-DustBalance",
-    "astraplani-DustCloud",
-    "astraplani-HarvestAction",
 ]
