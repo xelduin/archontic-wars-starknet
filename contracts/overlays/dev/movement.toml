@@ -4,4 +4,5 @@ writes = [
     "astraplani-TravelAction",
     "astraplani-OrbitalMass",
     "astraplani-Orbit",
+    "astraplani-LooshBalance"
 ]

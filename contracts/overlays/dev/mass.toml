@@ -1,4 +1,6 @@
 tag = "astraplani-mass_systems"
 writes = [
     "astraplani-Mass",
+    "astraplani-Orbit",
+    "astraplani-OrbitalMass"
 ]

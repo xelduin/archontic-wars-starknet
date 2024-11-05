@@ -38,8 +38,8 @@ manifest_name = "astraplani-authority_systems-79ed83b1"
 [[contracts]]
 kind = "DojoContract"
 address = "0x4f04d60dd2441333f268a2348ce3eecf9391af91dba6be6fc5ff4be2e164dc4"
-class_hash = "0x3283025662784af1374e74f3f4b5298619aa5e10493ed0df56d5a2decb92df0"
-original_class_hash = "0x3283025662784af1374e74f3f4b5298619aa5e10493ed0df56d5a2decb92df0"
+class_hash = "0x2d190a36241c0cf3bdf9edd70b635228756897dfef2d1dc32ac707d490a967b"
+original_class_hash = "0x2d190a36241c0cf3bdf9edd70b635228756897dfef2d1dc32ac707d490a967b"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-config_systems-78d3837b.json"
 reads = []
@@ -53,6 +53,7 @@ writes = [
     "astraplani-LooshCostConfig",
     "astraplani-TravelSpeedConfig",
     "astraplani-AdminConfig",
+    "astraplani-IncubationTimeConfig",
 ]
 init_calldata = []
 tag = "astraplani-config_systems"
@@ -66,14 +67,15 @@ systems = [
     "set_max_cosmic_body_mass",
     "set_loosh_cost",
     "set_travel_speed",
+    "set_incubation_time",
 ]
 manifest_name = "astraplani-config_systems-78d3837b"
 
 [[contracts]]
 kind = "DojoContract"
 address = "0x893a2e7086701fc8ceb2bf7ee788568bb466f5e0f9270fc9160a8fcc43ef6a"
-class_hash = "0x7432f6ed05206096eaaaf1ef3dd6e9a7567dc059ed66ff2bcdccf4ef58a054c"
-original_class_hash = "0x7432f6ed05206096eaaaf1ef3dd6e9a7567dc059ed66ff2bcdccf4ef58a054c"
+class_hash = "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381"
+original_class_hash = "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-creation_systems-52c9602e.json"
 reads = []
@@ -87,6 +89,11 @@ writes = [
     "astraplani-OrbitalMass",
     "astraplani-Owner",
     "astraplani-LooshBalance",
+    "astraplani-DustEmission",
+    "astraplani-DustAccretion",
+    "astraplani-DustBalance",
+    "astraplani-BasalAttributes",
+    "astraplani-DustPool",
 ]
 init_calldata = []
 tag = "astraplani-creation_systems"
@@ -144,12 +151,16 @@ manifest_name = "astraplani-loosh_systems-42f3e6e3"
 [[contracts]]
 kind = "DojoContract"
 address = "0x1c4df618056fe655e8aef693140268eb30e77a4fe0eff67679c2a314f8d8d79"
-class_hash = "0x6f0a61c7542e7f38b16c447820578fb0c1e9146f90c52de967d57739b3af4a7"
-original_class_hash = "0x6f0a61c7542e7f38b16c447820578fb0c1e9146f90c52de967d57739b3af4a7"
+class_hash = "0x283eaa7892285682bea79c8a41f5a7ac8f8ee2a5756469dbc5d26493a5ae9f7"
+original_class_hash = "0x283eaa7892285682bea79c8a41f5a7ac8f8ee2a5756469dbc5d26493a5ae9f7"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-mass_systems-393abc17.json"
 reads = []
-writes = ["astraplani-Mass"]
+writes = [
+    "astraplani-Mass",
+    "astraplani-Orbit",
+    "astraplani-OrbitalMass",
+]
 init_calldata = []
 tag = "astraplani-mass_systems"
 systems = ["transfer_mass"]
@@ -168,6 +179,7 @@ writes = [
     "astraplani-TravelAction",
     "astraplani-OrbitalMass",
     "astraplani-Orbit",
+    "astraplani-LooshBalance",
 ]
 init_calldata = []
 tag = "astraplani-movement_systems"
@@ -813,6 +825,25 @@ key = false
 
 [[models.members]]
 name = "end_ts"
+type = "u64"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x3da7dc5a004da6b450e2706925859633b2e6121095ff7c399df30860e0568da"
+original_class_hash = "0x3da7dc5a004da6b450e2706925859633b2e6121095ff7c399df30860e0568da"
+abi = "manifests/dev/deployment/abis/models/astraplani-IncubationTimeConfig-5059cc31.json"
+tag = "astraplani-IncubationTimeConfig"
+qualified_path = "astraplani::models::config::incubation_time_config"
+manifest_name = "astraplani-IncubationTimeConfig-5059cc31"
+
+[[models.members]]
+name = "config_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "base_incubation_time"
 type = "u64"
 key = false
 

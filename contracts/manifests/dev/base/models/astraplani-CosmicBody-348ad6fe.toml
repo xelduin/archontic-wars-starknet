@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0xfa216313f1d886922fe8a6b6346d56c6ca05dd6bca907991715cafe4b4caa"
+original_class_hash = "0xfa216313f1d886922fe8a6b6346d56c6ca05dd6bca907991715cafe4b4caa"
+abi = "manifests/dev/base/abis/models/astraplani-CosmicBody-348ad6fe.json"
+tag = "astraplani-CosmicBody"
+qualified_path = "astraplani::models::cosmic_body::cosmic_body"
+manifest_name = "astraplani-CosmicBody-348ad6fe"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "body_type"
+type = "CosmicBodyType"
+key = false

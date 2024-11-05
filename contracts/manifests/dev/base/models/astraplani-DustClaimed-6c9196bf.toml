@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x54173b358bed16f2b2bbd27072299ccc6d25bea0d9c781beedfe5f9ce87c1f5"
+original_class_hash = "0x54173b358bed16f2b2bbd27072299ccc6d25bea0d9c781beedfe5f9ce87c1f5"
+abi = "manifests/dev/base/abis/models/astraplani-DustClaimed-6c9196bf.json"
+tag = "astraplani-DustClaimed"
+qualified_path = "astraplani::systems::dust::contracts::dust_systems::dust_systems::dust_claimed"
+manifest_name = "astraplani-DustClaimed-6c9196bf"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "amount"
+type = "u128"
+key = false

@@ -12,4 +12,6 @@ writes = [
     "astraplani-DustEmission",
     "astraplani-DustAccretion",
     "astraplani-DustBalance",
+    "astraplani-BasalAttributes",
+    "astraplani-DustPool"
 ]

@@ -1,0 +1,16 @@
+kind = "DojoContract"
+class_hash = "0x3489ea0b1a2a76caa09467488d97b942ff96bad73fcd334148c051d7332587"
+original_class_hash = "0x3489ea0b1a2a76caa09467488d97b942ff96bad73fcd334148c051d7332587"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/astraplani-movement_systems-7c87ea31.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "astraplani-movement_systems"
+systems = [
+    "begin_travel",
+    "end_travel",
+    "enter_orbit",
+    "exit_orbit",
+]
+manifest_name = "astraplani-movement_systems-7c87ea31"

@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x56d61b2ccaa76ad74288db1ac855d87014f9929e03974ae32ca07973805d6bb"
+original_class_hash = "0x56d61b2ccaa76ad74288db1ac855d87014f9929e03974ae32ca07973805d6bb"
+abi = "manifests/dev/base/abis/models/astraplani-LooshTransferred-68767d8d.json"
+tag = "astraplani-LooshTransferred"
+qualified_path = "astraplani::systems::loosh::contracts::loosh_systems::loosh_systems::loosh_transferred"
+manifest_name = "astraplani-LooshTransferred-68767d8d"
+
+[[members]]
+name = "sender"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "receiver"
+type = "ContractAddress"
+key = false
+
+[[members]]
+name = "amount"
+type = "u128"
+key = false

@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x50bbc13e99e619606904851ca9d9187dd4e42d89764b5fc03f28726f56bd9e3"
+original_class_hash = "0x50bbc13e99e619606904851ca9d9187dd4e42d89764b5fc03f28726f56bd9e3"
+abi = "manifests/dev/base/abis/models/astraplani-OwnershipTransferred-206c2f92.json"
+tag = "astraplani-OwnershipTransferred"
+qualified_path = "astraplani::systems::authority::contracts::authority_systems::authority_systems::ownership_transferred"
+manifest_name = "astraplani-OwnershipTransferred-206c2f92"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "new_owner"
+type = "ContractAddress"
+key = false

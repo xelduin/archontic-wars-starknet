@@ -8,5 +8,6 @@ writes = [
     "astraplani-MaxCosmicBodyMassConfig",
     "astraplani-LooshCostConfig",
     "astraplani-TravelSpeedConfig",
-    "astraplani-AdminConfig"
+    "astraplani-AdminConfig",
+    "astraplani-IncubationTimeConfig"
 ]

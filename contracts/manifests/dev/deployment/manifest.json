@@ -1501,8 +1501,8 @@
     {
       "kind": "DojoContract",
       "address": "0x4f04d60dd2441333f268a2348ce3eecf9391af91dba6be6fc5ff4be2e164dc4",
-      "class_hash": "0x3283025662784af1374e74f3f4b5298619aa5e10493ed0df56d5a2decb92df0",
-      "original_class_hash": "0x3283025662784af1374e74f3f4b5298619aa5e10493ed0df56d5a2decb92df0",
+      "class_hash": "0x2d190a36241c0cf3bdf9edd70b635228756897dfef2d1dc32ac707d490a967b",
+      "original_class_hash": "0x2d190a36241c0cf3bdf9edd70b635228756897dfef2d1dc32ac707d490a967b",
       "base_class_hash": "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2",
       "abi": [
         {
@@ -1796,6 +1796,22 @@
               ],
               "outputs": [],
               "state_mutability": "external"
+            },
+            {
+              "type": "function",
+              "name": "set_incubation_time",
+              "inputs": [
+                {
+                  "name": "config_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "base_incubation_time",
+                  "type": "core::integer::u64"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "external"
             }
           ]
         },
@@ -1887,7 +1903,8 @@
         "astraplani-MaxCosmicBodyMassConfig",
         "astraplani-LooshCostConfig",
         "astraplani-TravelSpeedConfig",
-        "astraplani-AdminConfig"
+        "astraplani-AdminConfig",
+        "astraplani-IncubationTimeConfig"
       ],
       "init_calldata": [],
       "tag": "astraplani-config_systems",
@@ -1900,15 +1917,16 @@
         "set_min_orbit_center_mass",
         "set_max_cosmic_body_mass",
         "set_loosh_cost",
-        "set_travel_speed"
+        "set_travel_speed",
+        "set_incubation_time"
       ],
       "manifest_name": "astraplani-config_systems-78d3837b"
     },
     {
       "kind": "DojoContract",
       "address": "0x893a2e7086701fc8ceb2bf7ee788568bb466f5e0f9270fc9160a8fcc43ef6a",
-      "class_hash": "0x7432f6ed05206096eaaaf1ef3dd6e9a7567dc059ed66ff2bcdccf4ef58a054c",
-      "original_class_hash": "0x7432f6ed05206096eaaaf1ef3dd6e9a7567dc059ed66ff2bcdccf4ef58a054c",
+      "class_hash": "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381",
+      "original_class_hash": "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381",
       "base_class_hash": "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2",
       "abi": [
         {
@@ -2239,7 +2257,12 @@
         "astraplani-Mass",
         "astraplani-OrbitalMass",
         "astraplani-Owner",
-        "astraplani-LooshBalance"
+        "astraplani-LooshBalance",
+        "astraplani-DustEmission",
+        "astraplani-DustAccretion",
+        "astraplani-DustBalance",
+        "astraplani-BasalAttributes",
+        "astraplani-DustPool"
       ],
       "init_calldata": [],
       "tag": "astraplani-creation_systems",
@@ -2855,8 +2878,8 @@
     {
       "kind": "DojoContract",
       "address": "0x1c4df618056fe655e8aef693140268eb30e77a4fe0eff67679c2a314f8d8d79",
-      "class_hash": "0x6f0a61c7542e7f38b16c447820578fb0c1e9146f90c52de967d57739b3af4a7",
-      "original_class_hash": "0x6f0a61c7542e7f38b16c447820578fb0c1e9146f90c52de967d57739b3af4a7",
+      "class_hash": "0x283eaa7892285682bea79c8a41f5a7ac8f8ee2a5756469dbc5d26493a5ae9f7",
+      "original_class_hash": "0x283eaa7892285682bea79c8a41f5a7ac8f8ee2a5756469dbc5d26493a5ae9f7",
       "base_class_hash": "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2",
       "abi": [
         {
@@ -3097,7 +3120,9 @@
       ],
       "reads": [],
       "writes": [
-        "astraplani-Mass"
+        "astraplani-Mass",
+        "astraplani-Orbit",
+        "astraplani-OrbitalMass"
       ],
       "init_calldata": [],
       "tag": "astraplani-mass_systems",
@@ -3404,7 +3429,8 @@
         "astraplani-Position",
         "astraplani-TravelAction",
         "astraplani-OrbitalMass",
-        "astraplani-Orbit"
+        "astraplani-Orbit",
+        "astraplani-LooshBalance"
       ],
       "init_calldata": [],
       "tag": "astraplani-movement_systems",
@@ -15672,6 +15698,433 @@
       "tag": "astraplani-Incubation",
       "qualified_path": "astraplani::models::incubation::incubation",
       "manifest_name": "astraplani-Incubation-7b61c0be"
+    },
+    {
+      "kind": "DojoModel",
+      "members": [
+        {
+          "name": "config_id",
+          "type": "u32",
+          "key": true
+        },
+        {
+          "name": "base_incubation_time",
+          "type": "u64",
+          "key": false
+        }
+      ],
+      "class_hash": "0x3da7dc5a004da6b450e2706925859633b2e6121095ff7c399df30860e0568da",
+      "original_class_hash": "0x3da7dc5a004da6b450e2706925859633b2e6121095ff7c399df30860e0568da",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "DojoModelImpl",
+          "interface_name": "dojo::model::model::IModel"
+        },
+        {
+          "type": "struct",
+          "name": "core::byte_array::ByteArray",
+          "members": [
+            {
+              "name": "data",
+              "type": "core::array::Array::<core::bytes_31::bytes31>"
+            },
+            {
+              "name": "pending_word",
+              "type": "core::felt252"
+            },
+            {
+              "name": "pending_word_len",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "core::option::Option::<core::integer::u32>",
+          "variants": [
+            {
+              "name": "Some",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "None",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::model::layout::FieldLayout",
+          "members": [
+            {
+              "name": "selector",
+              "type": "core::felt252"
+            },
+            {
+              "name": "layout",
+              "type": "dojo::model::layout::Layout"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<dojo::model::layout::FieldLayout>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<dojo::model::layout::FieldLayout>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<dojo::model::layout::Layout>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<dojo::model::layout::Layout>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::model::layout::Layout",
+          "variants": [
+            {
+              "name": "Fixed",
+              "type": "core::array::Span::<core::integer::u8>"
+            },
+            {
+              "name": "Struct",
+              "type": "core::array::Span::<dojo::model::layout::FieldLayout>"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<dojo::model::layout::Layout>"
+            },
+            {
+              "name": "Array",
+              "type": "core::array::Span::<dojo::model::layout::Layout>"
+            },
+            {
+              "name": "ByteArray",
+              "type": "()"
+            },
+            {
+              "name": "Enum",
+              "type": "core::array::Span::<dojo::model::layout::FieldLayout>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::model::introspect::Member",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "ty",
+              "type": "dojo::model::introspect::Ty"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<dojo::model::introspect::Member>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<dojo::model::introspect::Member>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::model::introspect::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<dojo::model::introspect::Member>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, dojo::model::introspect::Ty)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, dojo::model::introspect::Ty)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::model::introspect::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, dojo::model::introspect::Ty)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<dojo::model::introspect::Ty>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<dojo::model::introspect::Ty>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::model::introspect::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::model::introspect::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::model::introspect::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<dojo::model::introspect::Ty>"
+            },
+            {
+              "name": "Array",
+              "type": "core::array::Span::<dojo::model::introspect::Ty>"
+            },
+            {
+              "name": "ByteArray",
+              "type": "()"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::model::model::IModel",
+          "items": [
+            {
+              "type": "function",
+              "name": "name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::byte_array::ByteArray"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "namespace",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::byte_array::ByteArray"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "tag",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::byte_array::ByteArray"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "version",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::integer::u8"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "selector",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "name_hash",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "namespace_hash",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::felt252"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "unpacked_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::option::Option::<core::integer::u32>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "packed_size",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::option::Option::<core::integer::u32>"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "layout",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::model::layout::Layout"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "schema",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::model::introspect::Ty"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "incubation_time_configImpl",
+          "interface_name": "astraplani::models::config::Iincubation_time_config"
+        },
+        {
+          "type": "struct",
+          "name": "astraplani::models::config::IncubationTimeConfig",
+          "members": [
+            {
+              "name": "config_id",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "base_incubation_time",
+              "type": "core::integer::u64"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "astraplani::models::config::Iincubation_time_config",
+          "items": [
+            {
+              "type": "function",
+              "name": "ensure_abi",
+              "inputs": [
+                {
+                  "name": "model",
+                  "type": "astraplani::models::config::IncubationTimeConfig"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "astraplani::models::config::incubation_time_config::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ],
+      "tag": "astraplani-IncubationTimeConfig",
+      "qualified_path": "astraplani::models::config::incubation_time_config",
+      "manifest_name": "astraplani-IncubationTimeConfig-5059cc31"
     },
     {
       "kind": "DojoModel",

@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x1f1835ae8c19d62d9ce45f514d677f9dd1e4abb0277086bf1fbcb9b822fbed3"
+original_class_hash = "0x1f1835ae8c19d62d9ce45f514d677f9dd1e4abb0277086bf1fbcb9b822fbed3"
+abi = "manifests/dev/base/abis/models/astraplani-OrbitExited-21057ff1.json"
+tag = "astraplani-OrbitExited"
+qualified_path = "astraplani::systems::movement::contracts::movement_systems::movement_systems::orbit_exited"
+manifest_name = "astraplani-OrbitExited-21057ff1"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "orbit_center"
+type = "u32"
+key = false

@@ -21,6 +21,8 @@ mod mass_systems {
     use astraplani::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use astraplani::models::position::{Position, PositionCustomImpl};
     use astraplani::models::dust_accretion::DustAccretion;
+    use astraplani::models::orbital_mass::OrbitalMass;
+    use astraplani::models::orbit::Orbit;
 
     #[derive(Copy, Drop, Serde)]
     #[dojo::model]
@@ -67,6 +69,19 @@ mod mass_systems {
             let body_mass = get!(world, body_id, (Mass));
             let new_mass = mass + body_mass.mass;
 
+            let orbit_center = get!(world, body_id, Orbit).orbit_center;
+            let orbital_mass = get!(world, orbit_center, OrbitalMass).orbital_mass;
+
+            set!(
+                world,
+                (
+                    Mass { entity: body_id, mass: new_mass },
+                    OrbitalMass {
+                        entity: orbit_center, orbital_mass: orbital_mass + body_mass.mass
+                    }
+                )
+            );
+
             Self::on_body_mass_change(world, body_id, body_mass.mass, new_mass);
         }
 
@@ -75,13 +90,25 @@ mod mass_systems {
             assert(body_mass.mass > mass, 'not enough mass');
             let new_mass = body_mass.mass - mass;
 
+            let orbit_center = get!(world, body_id, Orbit).orbit_center;
+            let orbital_mass = get!(world, orbit_center, OrbitalMass).orbital_mass;
+
+            set!(
+                world,
+                (
+                    Mass { entity: body_id, mass: new_mass },
+                    OrbitalMass {
+                        entity: orbit_center, orbital_mass: orbital_mass - body_mass.mass
+                    }
+                )
+            );
+
             Self::on_body_mass_change(world, body_id, body_mass.mass, new_mass);
         }
 
         fn on_body_mass_change(
             world: IWorldDispatcher, body_id: u32, old_mass: u64, new_mass: u64
         ) {
-            set!(world, (Mass { entity: body_id, mass: new_mass }));
             emit!(world, (BodyMassChange { body_id, old_mass, new_mass }));
 
             let body_accretion = get!(world, body_id, DustAccretion);

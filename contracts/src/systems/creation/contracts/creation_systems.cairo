@@ -41,6 +41,7 @@ mod creation_systems {
     use astraplani::models::cosmic_body::{CosmicBody, CosmicBodyType};
     use astraplani::models::incubation::Incubation;
     use astraplani::models::loosh_sink::LooshSink;
+    use astraplani::models::basal_attributes::BasalAttributes;
 
     #[derive(Copy, Drop, Serde)]
     #[dojo::model]
@@ -113,7 +114,7 @@ mod creation_systems {
 
         fn create_asteroid_cluster(ref world: IWorldDispatcher, coords: Vec2, star_id: u32) -> u32 {
             return InternalCreationSystemsImpl::create_asteroid_cluster(
-                world, coords, star_id, initial_mass: 1
+                world, coords, star_id, initial_mass: 100
             );
         }
 
@@ -193,13 +194,15 @@ mod creation_systems {
             let incubation_period = get!(world, INCUBATION_TIME_CONFIG_ID, IncubationTimeConfig)
                 .base_incubation_time;
             let incubation_end_ts = creation_ts + incubation_period;
+            let attributes = 20;
             set!(
                 world,
                 (
                     Incubation { entity: body_id, creation_ts, end_ts: incubation_end_ts },
                     OrbitCenterAtPosition {
                         x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
-                    }
+                    },
+                    BasalAttributes { entity: body_id, attributes }
                 )
             );
             emit!(

@@ -14,13 +14,15 @@ export MAX_ASTEROID_CLUSTER_MASS=100000;
 export BASE_LOOSH_TRAVEL_COST=5;
 export BASE_LOOSH_CREATION_COST=10;
 export BASE_TRAVEL_SECONDS_PER_TILE=60;
-export MIN_HARVEST_SECONDS=(60 * 60);
-export BASE_HARVEST_SECONDS=(60 * 60 * 24);
+export MIN_HARVEST_SECONDS=3600;
+export BASE_HARVEST_SECONDS=86400;
+export BASE_INCUBATION_TIME=60;
 
 
 # sozo execute --world <WORLD_ADDRESS> <CONTRACT> <ENTRYPOINT>
 
 #sozo execute config_systems set_admin_config -c 0, --wait
+sozo execute config_systems set_incubation_time -c 0,$BASE_INCUBATION_TIME --wait
 sozo execute config_systems set_dust_value_config -c 0,$DUST_TO_MASS_CONVERSION --wait
 sozo execute config_systems set_dust_emission_config -c 0,$BASE_DUST_EMISSION_RATE --wait
 sozo execute config_systems set_harvest_time -c 0,$MIN_HARVEST_SECONDS,$BASE_HARVEST_SECONDS --wait

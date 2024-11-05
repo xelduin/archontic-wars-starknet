@@ -1,0 +1,14 @@
+kind = "DojoContract"
+class_hash = "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381"
+original_class_hash = "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/astraplani-creation_systems-52c9602e.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "astraplani-creation_systems"
+systems = [
+    "form_star",
+    "form_asteroids",
+]
+manifest_name = "astraplani-creation_systems-52c9602e"
