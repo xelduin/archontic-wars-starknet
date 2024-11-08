@@ -14,6 +14,9 @@ use astraplani::models::harvest_action::HarvestAction;
 use astraplani::models::travel_action::TravelAction;
 use astraplani::models::position::Position;
 
+use astraplani::constants::DUST_VALUE_CONFIG_ID;
+use astraplani::models::config::DustValueConfig;
+
 use astraplani::utils::dust_farm::{
     calculate_ARPS, get_expected_dust_increase, get_expected_claimable_dust_for_star,
     get_harvest_end_ts
@@ -136,13 +139,15 @@ fn test_harvest_begin_not_owner() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('harvest amount too high', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_begin_insufficient_mass() {
-    let (_, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
+    let (world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let harvest_amount = 1_000_000;
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
+    let asteroid_cluster_mass = get!(world, asteroid_cluster_id, Mass).mass;
+    let mass_to_dust = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).mass_to_dust;
+    let harvest_capacity: u128 = asteroid_cluster_mass.try_into().unwrap() * mass_to_dust;
+    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_capacity + 1);
 }
 
 #[test]

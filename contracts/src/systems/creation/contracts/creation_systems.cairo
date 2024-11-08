@@ -327,8 +327,8 @@ mod creation_systems {
             let asteroid_cluster_orbit = get!(world, cluster_id, Orbit);
             assert(asteroid_cluster_orbit.orbit_center == star_id, 'asteroid cluster not in orbit');
 
-            let dust_to_mass = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).dust_to_mass;
-            let dust_to_consume = dust_to_mass * mass.try_into().unwrap();
+            let mass_to_dust = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).mass_to_dust;
+            let dust_to_consume = mass_to_dust * mass.try_into().unwrap();
 
             InternalDustSystemsImpl::consume_dust(world, star_id, dust_to_consume);
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);

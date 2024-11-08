@@ -1,8 +1,11 @@
 use dojo::world::IWorldDispatcher;
 
 use astraplani::constants::HARVEST_TIME_CONFIG_ID;
+use astraplani::constants::DUST_VALUE_CONFIG_ID;
 
 use astraplani::models::config::HarvestTimeConfig;
+use astraplani::models::config::DustValueConfig;
+
 use astraplani::models::dust_emission::DustEmission;
 use astraplani::models::dust_accretion::DustAccretion;
 use astraplani::models::mass::Mass;
@@ -71,14 +74,17 @@ fn get_expected_claimable_dust_for_star(
 fn get_harvest_end_ts(
     world: IWorldDispatcher, start_ts: u64, harvest_amount: u128, mass: u64
 ) -> u64 {
-    assert(mass.try_into().unwrap() >= harvest_amount, 'cant harvest more than the mass');
+    let mass_to_dust = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).mass_to_dust;
+    let dust_capacity = mass.try_into().unwrap() * mass_to_dust;
+
+    assert(dust_capacity >= harvest_amount, 'cant harvest more than the mass');
 
     let harvest_time_config = get!(world, HARVEST_TIME_CONFIG_ID, HarvestTimeConfig);
 
     let min_time = harvest_time_config.min_harvest_time;
     let base_time = harvest_time_config.base_harvest_time;
 
-    let harvest_time = base_time.try_into().unwrap() * harvest_amount / mass.try_into().unwrap();
+    let harvest_time = base_time.try_into().unwrap() * harvest_amount / dust_capacity;
 
     let result: u64 = if harvest_time.try_into().unwrap() < min_time {
         start_ts + min_time

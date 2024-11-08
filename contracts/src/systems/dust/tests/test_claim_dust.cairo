@@ -96,10 +96,7 @@ fn test_claim_dust_valid() {
     //dust_dispatcher.update_emission(quasar_id);
     dust_dispatcher.claim_dust(star_id);
 
-    let dust_cloud = get!(world, (100, 100, quasar_id), DustCloud);
-
-    println!("{}", expected_balance);
-    println!("{}", dust_cloud.dust_balance);
+    //let dust_cloud = get!(world, (100, 100, quasar_id), DustCloud);
 
     let new_dust_balance = get!(world, star_id, DustBalance);
 

@@ -24,8 +24,10 @@ mod dust_systems {
     };
 
     use astraplani::constants::DUST_EMISSION_CONFIG_ID;
+    use astraplani::constants::DUST_VALUE_CONFIG_ID;
 
     use astraplani::models::config::DustEmissionConfig;
+    use astraplani::models::config::DustValueConfig;
 
     use astraplani::models::dust_pool::DustPool;
     use astraplani::models::dust_balance::DustBalance;
@@ -416,8 +418,10 @@ mod dust_systems {
             );
             assert(dust_cloud.dust_balance >= harvest_amount, 'not enough dust');
 
-            let body_mass = get!(world, body_id, Mass);
-            assert(body_mass.mass.try_into().unwrap() >= harvest_amount, 'harvest amount too high');
+            let body_mass = get!(world, body_id, Mass).mass;
+            let mass_to_dust = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).mass_to_dust;
+            let harvest_capacity: u128 = body_mass.try_into().unwrap() * mass_to_dust;
+            assert(harvest_capacity >= harvest_amount, 'harvest amount too high');
 
             // CHECK FOR ACTIONS
             let harvest_action = get!(world, body_id, HarvestAction);
@@ -426,7 +430,7 @@ mod dust_systems {
             assert(travel_action.arrival_ts == 0, 'cannot harvest while travelling');
 
             let cur_ts = get_block_timestamp();
-            let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, body_mass.mass);
+            let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, body_mass);
 
             set!(
                 world, (HarvestAction { entity: body_id, start_ts: cur_ts, end_ts, harvest_amount })

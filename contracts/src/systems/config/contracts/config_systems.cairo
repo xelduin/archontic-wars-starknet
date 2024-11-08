@@ -6,7 +6,7 @@ trait IConfigSystems {
     fn set_admin_config(
         ref world: IWorldDispatcher, config_id: u32, admin_address: ContractAddress
     );
-    fn set_dust_value_config(ref world: IWorldDispatcher, config_id: u32, dust_to_mass: u128);
+    fn set_dust_value_config(ref world: IWorldDispatcher, config_id: u32, mass_to_dust: u128);
     fn set_dust_emission_config(
         ref world: IWorldDispatcher, config_id: u32, base_dust_emission: u128
     );
@@ -68,9 +68,9 @@ mod config_systems {
             set!(world, (AdminConfig { config_id, admin_address }));
         }
 
-        fn set_dust_value_config(ref world: IWorldDispatcher, config_id: u32, dust_to_mass: u128) {
+        fn set_dust_value_config(ref world: IWorldDispatcher, config_id: u32, mass_to_dust: u128) {
             assert_caller_is_admin(world);
-            set!(world, (DustValueConfig { config_id, dust_to_mass }));
+            set!(world, (DustValueConfig { config_id, mass_to_dust }));
         }
 
         fn set_dust_emission_config(

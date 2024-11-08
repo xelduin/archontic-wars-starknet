@@ -56,7 +56,7 @@ use astraplani::constants::{
     INCUBATION_TIME_CONFIG_ID
 };
 
-const DUST_TO_MASS_CONVERSION: u128 = 1;
+const MASS_TO_DUST_CONVERSION: u128 = 1 * 1_000_000_000_000_000_000;
 const BASE_DUST_EMISSION_RATE: u128 = 1 * 1_000_000_000_000_000_000;
 
 const BASE_STAR_MASS: u64 = 1_000_000;
@@ -79,7 +79,7 @@ fn setup_config(world: IWorldDispatcher) {
         (
             // DUST CONFIGS
             config::DustValueConfig {
-                config_id: DUST_VALUE_CONFIG_ID, dust_to_mass: DUST_TO_MASS_CONVERSION
+                config_id: DUST_VALUE_CONFIG_ID, mass_to_dust: MASS_TO_DUST_CONVERSION
             },
             config::DustEmissionConfig {
                 config_id: DUST_EMISSION_CONFIG_ID, base_dust_emission: BASE_DUST_EMISSION_RATE
@@ -109,7 +109,7 @@ fn setup_config(world: IWorldDispatcher) {
                 base_harvest_time: BASE_HARVEST_SECONDS,
             },
             config::IncubationTimeConfig {
-                config_id: INCUBATION_TIME_ID, base_incubation_time: BASE_INCUBATION_TIME
+                config_id: INCUBATION_TIME_CONFIG_ID, base_incubation_time: BASE_INCUBATION_TIME
             }
         )
     );

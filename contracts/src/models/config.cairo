@@ -3,7 +3,7 @@
 pub struct DustValueConfig {
     #[key]
     pub config_id: u32,
-    pub dust_to_mass: u128,
+    pub mass_to_dust: u128,
 }
 
 #[derive(Copy, Drop, Serde)]
