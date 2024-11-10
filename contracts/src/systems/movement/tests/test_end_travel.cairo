@@ -20,13 +20,16 @@ use astraplani::systems::movement::contracts::movement_systems::{
     movement_systems, IMovementSystemsDispatcher, IMovementSystemsDispatcherTrait
 };
 
-
 use astraplani::utils::testing::{
-    world::spawn_world, spawners::spawn_star, spawners::spawn_asteroid_cluster
+    world::spawn_world, spawners::spawn_star, spawners::spawn_asteroid_cluster,
+    spawners::spawn_quasar
 };
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
+use astraplani::utils::testing::constants::{
+    BASE_DUST_EMISSION_RATE, BASE_QUASAR_MASS, BASE_STAR_MASS
+};
 
 // Mock setup for the test
 fn setup() -> (
@@ -44,23 +47,26 @@ fn setup() -> (
 
     let sender_owner = contract_address_const::<'sender_owner'>();
 
+    let quasar_vec = Vec2 { x: 1, y: 1 };
     let origin_vec = Vec2 { x: 20, y: 20 };
     let destination_vec = Vec2 { x: 42, y: 99 };
 
-    let asteroid_cluster_mass = 100;
+    let quasar_id = spawn_quasar(
+        world, sender_owner, quasar_vec, BASE_QUASAR_MASS, BASE_DUST_EMISSION_RATE
+    );
 
-    let orbit_center_body_type = CosmicBodyType::None;
+    let asteroid_cluster_mass = 100;
+    let asteroid_cluster_id = spawn_asteroid_cluster(
+        world, sender_owner, origin_vec, quasar_id, asteroid_cluster_mass
+    );
+
+    let star_id = spawn_star(world, sender_owner, origin_vec, quasar_id, BASE_STAR_MASS);
+
+    let orbit_center_body_type = CosmicBodyType::Quasar;
     let loosh_cost = get_loosh_travel_cost(
         world, origin_vec, destination_vec, orbit_center_body_type
     );
     set!(world, (LooshBalance { address: sender_owner, balance: loosh_cost }));
-
-    let asteroid_cluster_id = spawn_asteroid_cluster(
-        world, sender_owner, origin_vec, asteroid_cluster_mass
-    );
-
-    let star_id = spawn_star(world, sender_owner, origin_vec, 1000);
-
     (
         world,
         asteroid_cluster_id,

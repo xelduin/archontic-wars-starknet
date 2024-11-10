@@ -76,9 +76,7 @@ mod mass_systems {
                 world,
                 (
                     Mass { entity: body_id, mass: new_mass },
-                    OrbitalMass {
-                        entity: orbit_center, orbital_mass: orbital_mass + body_mass.mass
-                    }
+                    OrbitalMass { entity: orbit_center, orbital_mass: orbital_mass + mass }
                 )
             );
 
@@ -97,9 +95,7 @@ mod mass_systems {
                 world,
                 (
                     Mass { entity: body_id, mass: new_mass },
-                    OrbitalMass {
-                        entity: orbit_center, orbital_mass: orbital_mass - body_mass.mass
-                    }
+                    OrbitalMass { entity: orbit_center, orbital_mass: orbital_mass - mass }
                 )
             );
 

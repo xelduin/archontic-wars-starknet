@@ -36,7 +36,7 @@ fn setup() -> (
 
     let star_coords = Vec2 { x: 42, y: 23 };
     let star_mass = 1_000;
-    let star_id = spawn_star(world, star_owner, star_coords, star_mass);
+    let star_id = spawn_star(world, star_owner, star_coords, quasar_id, star_mass);
 
     set!(world, (LooshBalance { address: star_owner, balance: 1_000_000_000_000_000 }));
 

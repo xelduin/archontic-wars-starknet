@@ -59,8 +59,10 @@ fn setup() -> (
     let quasar_mass = 5_000_000;
     let quasar_id = spawn_quasar(world, sender_owner, coords, emission_rate, quasar_mass);
 
-    let star_id = spawn_star(world, sender_owner, coords, 1_000_000);
-    let asteroid_cluster_id = spawn_asteroid_cluster(world, sender_owner, coords, 10_000);
+    let star_id = spawn_star(world, sender_owner, coords, quasar_id, 1_000_000);
+    let asteroid_cluster_id = spawn_asteroid_cluster(
+        world, sender_owner, coords, quasar_id, 10_000
+    );
 
     set!(
         world,

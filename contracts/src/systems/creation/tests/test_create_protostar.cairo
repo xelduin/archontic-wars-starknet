@@ -14,6 +14,10 @@ use astraplani::utils::testing::{world::spawn_world, spawners::spawn_quasar, spa
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
+use astraplani::utils::testing::constants::{
+    BASE_DUST_EMISSION_RATE, MASS_TO_DUST_CONVERSION, BASE_QUASAR_MASS, BASE_STAR_MASS
+};
+
 // Mock setup for the test
 fn setup() -> (IWorldDispatcher, ContractAddress, u32, u32, ICreationSystemsDispatcher) {
     let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
@@ -27,13 +31,13 @@ fn setup() -> (IWorldDispatcher, ContractAddress, u32, u32, ICreationSystemsDisp
     let player = contract_address_const::<'old_owner'>();
 
     let quasar_coords = Vec2 { x: 23, y: 32 };
-    let emission_rate = 1_000_000;
-    let quasar_mass = 1_000_000;
-    let quasar_id = spawn_quasar(world, player, quasar_coords, emission_rate, quasar_mass);
+
+    let quasar_id = spawn_quasar(
+        world, player, quasar_coords, BASE_QUASAR_MASS, BASE_DUST_EMISSION_RATE
+    );
 
     let far_star_coords = Vec2 { x: 42, y: 23 };
-    let far_star_mass = 1_000;
-    let far_star_id = spawn_star(world, player, far_star_coords, far_star_mass);
+    let far_star_id = spawn_star(world, player, far_star_coords, quasar_id, BASE_STAR_MASS);
 
     set!(world, (LooshBalance { address: player, balance: 1_000_000_000_000_000 }));
 

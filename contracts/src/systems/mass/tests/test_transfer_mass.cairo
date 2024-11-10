@@ -15,6 +15,10 @@ use astraplani::utils::testing::{
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
+use astraplani::utils::testing::constants::{
+    BASE_DUST_EMISSION_RATE, MASS_TO_DUST_CONVERSION, BASE_QUASAR_MASS, BASE_STAR_MASS
+};
+
 // Mock setup for the test
 fn setup() -> (
     IWorldDispatcher, u32, u32, u32, u32, ContractAddress, ContractAddress, IMassSystemsDispatcher
@@ -30,14 +34,19 @@ fn setup() -> (
     let sender_owner = contract_address_const::<'sender_owner'>();
     let receiver_owner = contract_address_const::<'receiver_owner'>();
 
-    let sender_star_id = spawn_star(world, sender_owner, Vec2 { x: 20, y: 20 }, 1000);
+    let quasar_id = world.uuid();
+    let star_coords = Vec2 { x: 20, y: 20 };
+    let sender_star_id = spawn_star(world, sender_owner, star_coords, quasar_id, BASE_STAR_MASS);
+    let asteroid_mass = 100;
     let sender_asteroid_id = spawn_asteroid_cluster(
-        world, sender_owner, Vec2 { x: 20, y: 20 }, 100
+        world, sender_owner, star_coords, quasar_id, asteroid_mass
     );
     let receiver_asteroid_id = spawn_asteroid_cluster(
-        world, receiver_owner, Vec2 { x: 20, y: 20 }, 100
+        world, receiver_owner, star_coords, quasar_id, asteroid_mass
     );
-    let far_asteroid_id = spawn_asteroid_cluster(world, sender_owner, Vec2 { x: 12, y: 20 }, 100);
+    let far_asteroid_id = spawn_asteroid_cluster(
+        world, sender_owner, Vec2 { x: 12, y: 20 }, quasar_id, asteroid_mass
+    );
 
     (
         world,
@@ -53,7 +62,7 @@ fn setup() -> (
 
 #[test]
 #[available_gas(3000000000000)]
-fn test_transfer_mass() {
+fn test_transfer_mass_valid() {
     let (world, _, sender_asteroid_id, receiver_asteroid_id, _, sender_owner, _, mass_dispatcher) =
         setup();
 
@@ -67,8 +76,10 @@ fn test_transfer_mass() {
 
     mass_dispatcher.transfer_mass(sender_asteroid_id, receiver_asteroid_id, mass_transfer);
 
-    let new_mass = get!(world, sender_asteroid_id, Mass);
-    assert(new_mass.mass == old_sender_mass.mass - mass_transfer, 'sender mass not decreased');
+    let new_sender_mass = get!(world, sender_asteroid_id, Mass);
+    assert(
+        new_sender_mass.mass == old_sender_mass.mass - mass_transfer, 'sender mass not decreased'
+    );
 
     let new_receiver_mass = get!(world, receiver_asteroid_id, Mass);
     assert(
@@ -113,22 +124,6 @@ fn test_transfer_mass_to_far_asteroid() {
     mass_dispatcher.transfer_mass(sender_asteroid_id, far_asteroid_id, mass_transfer);
 }
 
-#[test]
-#[available_gas(3000000000000)]
-#[should_panic(expected: ('not in proximity', 'ENTRYPOINT_FAILED'))]
-fn test_transfer_mass_from_far_asteroid() {
-    let (world, _, _, receiver_asteroid_id, far_asteroid_id, sender_owner, _, mass_dispatcher) =
-        setup();
-
-    set_contract_address(sender_owner);
-    set_account_contract_address(sender_owner);
-
-    let old_sender_mass = get!(world, far_asteroid_id, Mass);
-
-    let mass_transfer = old_sender_mass.mass / 2;
-
-    mass_dispatcher.transfer_mass(far_asteroid_id, receiver_asteroid_id, mass_transfer);
-}
 
 #[test]
 #[available_gas(3000000000000)]

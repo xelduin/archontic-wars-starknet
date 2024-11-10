@@ -26,8 +26,7 @@ use astraplani::systems::dust::contracts::dust_systems::{
 };
 
 use astraplani::utils::testing::{
-    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star,
-    spawners::spawn_asteroid_cluster, dust_pool::add_to_dust_pool
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star, dust_pool::add_to_dust_pool
 };
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
@@ -52,16 +51,16 @@ fn setup() -> (IWorldDispatcher, u32, u32, u32, ContractAddress, IDustSystemsDis
     let quasar_id = spawn_quasar(world, sender_owner, coords, emission_rate, quasar_mass);
 
     let star_mass = 200;
-    let star_id = spawn_star(world, sender_owner, coords, star_mass);
+    let star_id = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
     add_to_dust_pool(world, dust_dispatcher, quasar_id, star_id);
     set!(world, (BasalAttributes { entity: star_id, attributes: 20 }));
 
-    let filler_star_one = spawn_star(world, sender_owner, coords, star_mass);
-    let filler_star_two = spawn_star(world, sender_owner, coords, star_mass);
+    let filler_star_one = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
+    let filler_star_two = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
     add_to_dust_pool(world, dust_dispatcher, quasar_id, filler_star_one);
     add_to_dust_pool(world, dust_dispatcher, quasar_id, filler_star_two);
 
-    let non_member_star_id = spawn_star(world, sender_owner, coords, star_mass);
+    let non_member_star_id = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
 
     (world, star_id, non_member_star_id, quasar_id, sender_owner, dust_dispatcher)
 }

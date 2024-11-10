@@ -10,9 +10,7 @@ use astraplani::systems::loosh::contracts::loosh_systems::{
     loosh_systems, ILooshSystemsDispatcher, ILooshSystemsDispatcherTrait
 };
 
-use astraplani::utils::testing::{
-    world::spawn_world, spawners::spawn_star, spawners::spawn_asteroid_cluster
-};
+use astraplani::utils::testing::{world::spawn_world};
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 

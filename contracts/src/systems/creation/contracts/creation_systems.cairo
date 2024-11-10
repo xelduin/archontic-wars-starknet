@@ -34,7 +34,7 @@ mod creation_systems {
 
     use astraplani::models::owner::Owner;
     use astraplani::models::vec2::Vec2;
-    use astraplani::models::position::{Position, OrbitCenterAtPosition};
+    use astraplani::models::position::{Position, OrbitCenterAtPosition, PositionCustomImpl};
     use astraplani::models::orbit::Orbit;
     use astraplani::models::orbital_mass::OrbitalMass;
     use astraplani::models::mass::Mass;
@@ -324,8 +324,11 @@ mod creation_systems {
                 'invalid asteroid cluster id'
             );
 
-            let asteroid_cluster_orbit = get!(world, cluster_id, Orbit);
-            assert(asteroid_cluster_orbit.orbit_center == star_id, 'asteroid cluster not in orbit');
+            let star_position = get!(world, star_id, Position);
+            let asteroid_cluster_position = get!(world, cluster_id, Position);
+            assert(
+                star_position.is_equal(world, asteroid_cluster_position), 'asteroid cluster too far'
+            );
 
             let mass_to_dust = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).mass_to_dust;
             let dust_to_consume = mass_to_dust * mass.try_into().unwrap();

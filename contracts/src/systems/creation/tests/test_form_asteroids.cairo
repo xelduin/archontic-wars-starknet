@@ -25,7 +25,9 @@ use astraplani::utils::testing::{
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
-const BASE_INCUBATION_PERIOD: u64 = 60 * 1000;
+use astraplani::utils::testing::constants::{
+    BASE_DUST_EMISSION_RATE, MASS_TO_DUST_CONVERSION, BASE_QUASAR_MASS, BASE_STAR_MASS
+};
 
 // Mock setup for the test
 fn setup() -> (
@@ -50,30 +52,27 @@ fn setup() -> (
     let not_star_owner = contract_address_const::<'not_star_owner'>();
 
     let quasar_coords = Vec2 { x: 23, y: 32 };
-    let emission_rate = 1_000_000;
-    let quasar_mass = 1_000_000;
-    let quasar_id = spawn_quasar(world, star_owner, quasar_coords, emission_rate, quasar_mass);
+    let quasar_id = spawn_quasar(
+        world, star_owner, quasar_coords, BASE_QUASAR_MASS, BASE_DUST_EMISSION_RATE
+    );
 
     let star_coords = Vec2 { x: 42, y: 23 };
-    let star_mass = 1_000;
-    let star_id = spawn_star(world, star_owner, star_coords, star_mass);
+    let star_id = spawn_star(world, star_owner, star_coords, quasar_id, BASE_STAR_MASS);
 
     let far_star_coords = Vec2 { x: 1, y: 2 };
-    let far_star_id = spawn_star(world, star_owner, far_star_coords, star_mass);
+    let far_star_id = spawn_star(world, star_owner, far_star_coords, quasar_id, BASE_STAR_MASS);
 
-    let asteroid_cluster_coords = Vec2 { x: 1, y: 2 };
     let asteroid_cluster_mass = 100;
     let asteroid_cluster_id = spawn_asteroid_cluster(
-        world, star_owner, asteroid_cluster_coords, asteroid_cluster_mass
+        world, star_owner, star_coords, quasar_id, asteroid_cluster_mass
     );
 
     set!(
         world,
         (
-            Orbit { entity: asteroid_cluster_id, orbit_center: star_id },
-            DustBalance { entity: star_id, balance: 1_000_000_000_000_000 },
-            DustBalance { entity: far_star_id, balance: 1_000_000_000_000_000 },
-            DustBalance { entity: quasar_id, balance: 1_000_000_000_000_000 }
+            DustBalance { entity: star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION },
+            DustBalance { entity: far_star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION },
+            DustBalance { entity: quasar_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION }
         )
     );
 
@@ -166,8 +165,8 @@ fn test_form_asteroids_not_asteroid_cluster() {
 
 #[test]
 #[available_gas(3000000000000)]
-#[should_panic(expected: ('asteroid cluster not in orbit', 'ENTRYPOINT_FAILED'))]
-fn test_form_asteroids_not_in_orbit() {
+#[should_panic(expected: ('asteroid cluster too far', 'ENTRYPOINT_FAILED'))]
+fn test_form_asteroids_not_in_proximity() {
     let (_, star_owner, _, _, _, far_star_id, asteroid_cluster_id, creation_dispatcher) = setup();
 
     set_contract_address(star_owner);

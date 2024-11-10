@@ -15,7 +15,7 @@ use astraplani::systems::creation::contracts::creation_systems::{
 };
 
 use astraplani::utils::testing::{
-    world::spawn_world, spawners::spawn_quasar, spawners::spawn_star, spawners::spawn_protostar
+    world::spawn_world, spawners::spawn_quasar, spawners::spawn_protostar
 };
 
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
@@ -48,7 +48,7 @@ fn setup() -> (
     let end_ts = creation_ts + BASE_INCUBATION_PERIOD;
 
     let protostar_id = spawn_protostar(
-        world, protostar_owner, protostar_coords, protostar_mass, creation_ts, end_ts
+        world, protostar_owner, protostar_coords, quasar_id, protostar_mass, creation_ts, end_ts
     );
 
     set!(world, (LooshBalance { address: protostar_owner, balance: 1_000_000_000_000_000 }));
