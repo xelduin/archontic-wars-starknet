@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x25bf8173fb2c6896960e1da197275eb0f5dfa353e2adbc331b6cb9eef1e292d"
+original_class_hash = "0x25bf8173fb2c6896960e1da197275eb0f5dfa353e2adbc331b6cb9eef1e292d"
+abi = "manifests/dev/base/abis/models/astraplani-TravelBegan-2e26bd66.json"
+tag = "astraplani-TravelBegan"
+qualified_path = "astraplani::systems::movement::contracts::movement_systems::movement_systems::travel_began"
+manifest_name = "astraplani-TravelBegan-2e26bd66"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "origin_vec"
+type = "Vec2"
+key = false
+
+[[members]]
+name = "target_vec"
+type = "Vec2"
+key = false
+
+[[members]]
+name = "arrival_ts"
+type = "u64"
+key = false

@@ -1,0 +1,37 @@
+kind = "DojoModel"
+class_hash = "0x3d24115da7d0981ae669b230ce21e7068698f242e2642b25ea79da374cced25"
+original_class_hash = "0x3d24115da7d0981ae669b230ce21e7068698f242e2642b25ea79da374cced25"
+abi = "manifests/dev/base/abis/models/astraplani-AsteroidClusterCreated-671b52d3.json"
+tag = "astraplani-AsteroidClusterCreated"
+qualified_path = "astraplani::systems::creation::contracts::creation_systems::creation_systems::asteroid_cluster_created"
+manifest_name = "astraplani-AsteroidClusterCreated-671b52d3"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "owner"
+type = "ContractAddress"
+key = false
+
+[[members]]
+name = "mass"
+type = "u64"
+key = false
+
+[[members]]
+name = "coords"
+type = "Vec2"
+key = false
+
+[[members]]
+name = "parent_id"
+type = "u32"
+key = false
+
+[[members]]
+name = "creation_ts"
+type = "u64"
+key = false

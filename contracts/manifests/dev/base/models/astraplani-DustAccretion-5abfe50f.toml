@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x284fcc9bdcbf998b8b0706a8125181a42233b74ff7406aa03141c2f14c2dd87"
+original_class_hash = "0x284fcc9bdcbf998b8b0706a8125181a42233b74ff7406aa03141c2f14c2dd87"
+abi = "manifests/dev/base/abis/models/astraplani-DustAccretion-5abfe50f.json"
+tag = "astraplani-DustAccretion"
+qualified_path = "astraplani::models::dust_accretion::dust_accretion"
+manifest_name = "astraplani-DustAccretion-5abfe50f"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "debt"
+type = "u128"
+key = false
+
+[[members]]
+name = "in_dust_pool"
+type = "bool"
+key = false

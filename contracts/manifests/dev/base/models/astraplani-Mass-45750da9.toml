@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x3e69cc497b9c207a51a3d1dd026e99281a32a143eeca693d291e6e615c719c9"
+original_class_hash = "0x3e69cc497b9c207a51a3d1dd026e99281a32a143eeca693d291e6e615c719c9"
+abi = "manifests/dev/base/abis/models/astraplani-Mass-45750da9.json"
+tag = "astraplani-Mass"
+qualified_path = "astraplani::models::mass::mass"
+manifest_name = "astraplani-Mass-45750da9"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "mass"
+type = "u64"
+key = false

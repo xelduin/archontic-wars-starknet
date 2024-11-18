@@ -1,0 +1,15 @@
+kind = "DojoContract"
+class_hash = "0x3d593ac5c20d994a1b1d720ed32f9003fb187796e794e8448b0f060e0338487"
+original_class_hash = "0x3d593ac5c20d994a1b1d720ed32f9003fb187796e794e8448b0f060e0338487"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/astraplani-loosh_systems-42f3e6e3.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "astraplani-loosh_systems"
+systems = [
+    "l1_receive_loosh",
+    "transfer_loosh",
+    "burn_loosh",
+]
+manifest_name = "astraplani-loosh_systems-42f3e6e3"

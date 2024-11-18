@@ -38,8 +38,8 @@ manifest_name = "astraplani-authority_systems-79ed83b1"
 [[contracts]]
 kind = "DojoContract"
 address = "0x4f04d60dd2441333f268a2348ce3eecf9391af91dba6be6fc5ff4be2e164dc4"
-class_hash = "0x2d190a36241c0cf3bdf9edd70b635228756897dfef2d1dc32ac707d490a967b"
-original_class_hash = "0x2d190a36241c0cf3bdf9edd70b635228756897dfef2d1dc32ac707d490a967b"
+class_hash = "0x7f3eb749a4033ef47d990302cc65f52c43fe790b053cf85b79083a2ea7d067a"
+original_class_hash = "0x7f3eb749a4033ef47d990302cc65f52c43fe790b053cf85b79083a2ea7d067a"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-config_systems-78d3837b.json"
 reads = []
@@ -74,8 +74,8 @@ manifest_name = "astraplani-config_systems-78d3837b"
 [[contracts]]
 kind = "DojoContract"
 address = "0x893a2e7086701fc8ceb2bf7ee788568bb466f5e0f9270fc9160a8fcc43ef6a"
-class_hash = "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381"
-original_class_hash = "0x4d62bfa4acc70347463ac12b5108d70257be2771c50102c14381902ba51f381"
+class_hash = "0x360413117387cb738164b1854c0022591a086745370ef140a21c7b3dea2533d"
+original_class_hash = "0x360413117387cb738164b1854c0022591a086745370ef140a21c7b3dea2533d"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-creation_systems-52c9602e.json"
 reads = []
@@ -106,8 +106,8 @@ manifest_name = "astraplani-creation_systems-52c9602e"
 [[contracts]]
 kind = "DojoContract"
 address = "0x211676101be50b429d93c71e3ff2e63bb15ec894d3f4532ff1124eed8910e75"
-class_hash = "0x304a8c54148b1261e3fc4506f425fb70381d3aa611e77bed5340ec6c2f8c5d8"
-original_class_hash = "0x304a8c54148b1261e3fc4506f425fb70381d3aa611e77bed5340ec6c2f8c5d8"
+class_hash = "0x723940533a4800e2a48fcb0cf25722cb7867e902fbaad986f26f6c3dd2a9e04"
+original_class_hash = "0x723940533a4800e2a48fcb0cf25722cb7867e902fbaad986f26f6c3dd2a9e04"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-dust_systems-187f0a61.json"
 reads = []
@@ -151,8 +151,8 @@ manifest_name = "astraplani-loosh_systems-42f3e6e3"
 [[contracts]]
 kind = "DojoContract"
 address = "0x1c4df618056fe655e8aef693140268eb30e77a4fe0eff67679c2a314f8d8d79"
-class_hash = "0x283eaa7892285682bea79c8a41f5a7ac8f8ee2a5756469dbc5d26493a5ae9f7"
-original_class_hash = "0x283eaa7892285682bea79c8a41f5a7ac8f8ee2a5756469dbc5d26493a5ae9f7"
+class_hash = "0x5676e375c0920cd12c0853b1cac6e54046bbfae067ad848eaa2f23075dfe26a"
+original_class_hash = "0x5676e375c0920cd12c0853b1cac6e54046bbfae067ad848eaa2f23075dfe26a"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-mass_systems-393abc17.json"
 reads = []
@@ -169,8 +169,8 @@ manifest_name = "astraplani-mass_systems-393abc17"
 [[contracts]]
 kind = "DojoContract"
 address = "0x55361bf6fa65606c90571aa1ee4bb172f80987b618ac745f27cdc6b7587200d"
-class_hash = "0x3489ea0b1a2a76caa09467488d97b942ff96bad73fcd334148c051d7332587"
-original_class_hash = "0x3489ea0b1a2a76caa09467488d97b942ff96bad73fcd334148c051d7332587"
+class_hash = "0x3b9c3f4d7611e908151b542f1391b0338a78c72dba9200c789b52cba2ba2cff"
+original_class_hash = "0x3b9c3f4d7611e908151b542f1391b0338a78c72dba9200c789b52cba2ba2cff"
 base_class_hash = "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2"
 abi = "manifests/dev/deployment/abis/contracts/astraplani-movement_systems-7c87ea31.json"
 reads = []
@@ -186,8 +186,6 @@ tag = "astraplani-movement_systems"
 systems = [
     "begin_travel",
     "end_travel",
-    "enter_orbit",
-    "exit_orbit",
 ]
 manifest_name = "astraplani-movement_systems-7c87ea31"
 
@@ -662,8 +660,8 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x627e61e5ba44959c82f1dbc92dd1aed2ce272c5db60fca815a37250a72b4aeb"
-original_class_hash = "0x627e61e5ba44959c82f1dbc92dd1aed2ce272c5db60fca815a37250a72b4aeb"
+class_hash = "0x2ab8e3a3065755c0ee38da65ce6229dfdbdaead3bd496462e625dd46e4cc2fc"
+original_class_hash = "0x2ab8e3a3065755c0ee38da65ce6229dfdbdaead3bd496462e625dd46e4cc2fc"
 abi = "manifests/dev/deployment/abis/models/astraplani-DustValueConfig-6299caf9.json"
 tag = "astraplani-DustValueConfig"
 qualified_path = "astraplani::models::config::dust_value_config"
@@ -675,7 +673,7 @@ type = "u32"
 key = true
 
 [[models.members]]
-name = "dust_to_mass"
+name = "mass_to_dust"
 type = "u128"
 key = false
 
@@ -1054,44 +1052,6 @@ key = true
 
 [[models.members]]
 name = "entity"
-type = "u32"
-key = false
-
-[[models]]
-kind = "DojoModel"
-class_hash = "0x5aac421e8bad94b514300c9b1c218d0c8384cd61cb64d46cfedeb10be61daaf"
-original_class_hash = "0x5aac421e8bad94b514300c9b1c218d0c8384cd61cb64d46cfedeb10be61daaf"
-abi = "manifests/dev/deployment/abis/models/astraplani-OrbitEntered-67e52916.json"
-tag = "astraplani-OrbitEntered"
-qualified_path = "astraplani::systems::movement::contracts::movement_systems::movement_systems::orbit_entered"
-manifest_name = "astraplani-OrbitEntered-67e52916"
-
-[[models.members]]
-name = "body_id"
-type = "u32"
-key = true
-
-[[models.members]]
-name = "orbit_center"
-type = "u32"
-key = false
-
-[[models]]
-kind = "DojoModel"
-class_hash = "0x1f1835ae8c19d62d9ce45f514d677f9dd1e4abb0277086bf1fbcb9b822fbed3"
-original_class_hash = "0x1f1835ae8c19d62d9ce45f514d677f9dd1e4abb0277086bf1fbcb9b822fbed3"
-abi = "manifests/dev/deployment/abis/models/astraplani-OrbitExited-21057ff1.json"
-tag = "astraplani-OrbitExited"
-qualified_path = "astraplani::systems::movement::contracts::movement_systems::movement_systems::orbit_exited"
-manifest_name = "astraplani-OrbitExited-21057ff1"
-
-[[models.members]]
-name = "body_id"
-type = "u32"
-key = true
-
-[[models.members]]
-name = "orbit_center"
 type = "u32"
 key = false
 

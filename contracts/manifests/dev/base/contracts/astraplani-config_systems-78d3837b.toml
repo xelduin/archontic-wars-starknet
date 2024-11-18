@@ -1,0 +1,22 @@
+kind = "DojoContract"
+class_hash = "0x7f3eb749a4033ef47d990302cc65f52c43fe790b053cf85b79083a2ea7d067a"
+original_class_hash = "0x7f3eb749a4033ef47d990302cc65f52c43fe790b053cf85b79083a2ea7d067a"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/astraplani-config_systems-78d3837b.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "astraplani-config_systems"
+systems = [
+    "set_admin_config",
+    "set_dust_value_config",
+    "set_dust_emission_config",
+    "set_harvest_time",
+    "set_base_cosmic_body_mass",
+    "set_min_orbit_center_mass",
+    "set_max_cosmic_body_mass",
+    "set_loosh_cost",
+    "set_travel_speed",
+    "set_incubation_time",
+]
+manifest_name = "astraplani-config_systems-78d3837b"

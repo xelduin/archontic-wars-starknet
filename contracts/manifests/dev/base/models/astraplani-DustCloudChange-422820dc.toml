@@ -1,0 +1,22 @@
+kind = "DojoModel"
+class_hash = "0x5e6012e83d8c867ce674ac183ea4d1c1dcd44b1a48c60c0e8ebdaccf0c92199"
+original_class_hash = "0x5e6012e83d8c867ce674ac183ea4d1c1dcd44b1a48c60c0e8ebdaccf0c92199"
+abi = "manifests/dev/base/abis/models/astraplani-DustCloudChange-422820dc.json"
+tag = "astraplani-DustCloudChange"
+qualified_path = "astraplani::systems::dust::contracts::dust_systems::dust_systems::dust_cloud_change"
+manifest_name = "astraplani-DustCloudChange-422820dc"
+
+[[members]]
+name = "coords"
+type = "Vec2"
+key = true
+
+[[members]]
+name = "old_dust_amount"
+type = "u128"
+key = false
+
+[[members]]
+name = "new_dust_amount"
+type = "u128"
+key = false

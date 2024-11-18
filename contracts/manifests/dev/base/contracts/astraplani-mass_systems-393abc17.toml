@@ -1,0 +1,11 @@
+kind = "DojoContract"
+class_hash = "0x5676e375c0920cd12c0853b1cac6e54046bbfae067ad848eaa2f23075dfe26a"
+original_class_hash = "0x5676e375c0920cd12c0853b1cac6e54046bbfae067ad848eaa2f23075dfe26a"
+base_class_hash = "0x0"
+abi = "manifests/dev/base/abis/contracts/astraplani-mass_systems-393abc17.json"
+reads = []
+writes = []
+init_calldata = []
+tag = "astraplani-mass_systems"
+systems = ["transfer_mass"]
+manifest_name = "astraplani-mass_systems-393abc17"

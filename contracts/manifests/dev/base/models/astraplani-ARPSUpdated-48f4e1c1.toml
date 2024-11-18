@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x5955217e0c2329c51fb8362d73ecc64adcb4406d0e490634a7ec17210eb6745"
+original_class_hash = "0x5955217e0c2329c51fb8362d73ecc64adcb4406d0e490634a7ec17210eb6745"
+abi = "manifests/dev/base/abis/models/astraplani-ARPSUpdated-48f4e1c1.json"
+tag = "astraplani-ARPSUpdated"
+qualified_path = "astraplani::systems::dust::contracts::dust_systems::dust_systems::arps_updated"
+manifest_name = "astraplani-ARPSUpdated-48f4e1c1"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "updated_ARPS"
+type = "u128"
+key = false

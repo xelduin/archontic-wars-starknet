@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x4171a0102af0aaf5c18a4f8bc287ca1abdc839310bacff424a581bb0efd1753"
+original_class_hash = "0x4171a0102af0aaf5c18a4f8bc287ca1abdc839310bacff424a581bb0efd1753"
+abi = "manifests/dev/base/abis/models/astraplani-TravelEnded-291a39e4.json"
+tag = "astraplani-TravelEnded"
+qualified_path = "astraplani::systems::movement::contracts::movement_systems::movement_systems::travel_ended"
+manifest_name = "astraplani-TravelEnded-291a39e4"
+
+[[members]]
+name = "body_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "arrival_ts"
+type = "u64"
+key = false

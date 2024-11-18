@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0x65e8db7ff174e1bbf061c5b61d65d5e67e70b81c2fc79f359fb20b2faf8545b"
+original_class_hash = "0x65e8db7ff174e1bbf061c5b61d65d5e67e70b81c2fc79f359fb20b2faf8545b"
+abi = "manifests/dev/base/abis/models/astraplani-OrbitCenterAtPosition-4c17817e.json"
+tag = "astraplani-OrbitCenterAtPosition"
+qualified_path = "astraplani::models::position::orbit_center_at_position"
+manifest_name = "astraplani-OrbitCenterAtPosition-4c17817e"
+
+[[members]]
+name = "x"
+type = "u64"
+key = true
+
+[[members]]
+name = "y"
+type = "u64"
+key = true
+
+[[members]]
+name = "orbit_center"
+type = "u32"
+key = true
+
+[[members]]
+name = "entity"
+type = "u32"
+key = false

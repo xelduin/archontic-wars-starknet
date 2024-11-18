@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x4f6c119280840cf80431ffec873c59e9409877f34023baad6c6f260243f9818"
+original_class_hash = "0x4f6c119280840cf80431ffec873c59e9409877f34023baad6c6f260243f9818"
+abi = "manifests/dev/base/abis/models/astraplani-OrbitalMass-3895cb33.json"
+tag = "astraplani-OrbitalMass"
+qualified_path = "astraplani::models::orbital_mass::orbital_mass"
+manifest_name = "astraplani-OrbitalMass-3895cb33"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "orbital_mass"
+type = "u64"
+key = false

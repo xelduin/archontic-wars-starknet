@@ -1,0 +1,27 @@
+kind = "DojoModel"
+class_hash = "0xacd901abf7fed7bb36fa4c51378c8830215821f00da34d20b20421fcb9f385"
+original_class_hash = "0xacd901abf7fed7bb36fa4c51378c8830215821f00da34d20b20421fcb9f385"
+abi = "manifests/dev/base/abis/models/astraplani-DustEmission-11db0034.json"
+tag = "astraplani-DustEmission"
+qualified_path = "astraplani::models::dust_emission::dust_emission"
+manifest_name = "astraplani-DustEmission-11db0034"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "emission_rate"
+type = "u128"
+key = false
+
+[[members]]
+name = "ARPS"
+type = "u128"
+key = false
+
+[[members]]
+name = "last_update_ts"
+type = "u64"
+key = false

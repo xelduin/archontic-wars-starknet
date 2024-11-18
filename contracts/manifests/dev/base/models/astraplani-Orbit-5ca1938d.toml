@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x1b49b331a86b8d1a7f5389f06821944b8edf670280310bd3e7f49111c027a9c"
+original_class_hash = "0x1b49b331a86b8d1a7f5389f06821944b8edf670280310bd3e7f49111c027a9c"
+abi = "manifests/dev/base/abis/models/astraplani-Orbit-5ca1938d.json"
+tag = "astraplani-Orbit"
+qualified_path = "astraplani::models::orbit::orbit"
+manifest_name = "astraplani-Orbit-5ca1938d"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "orbit_center"
+type = "u32"
+key = false

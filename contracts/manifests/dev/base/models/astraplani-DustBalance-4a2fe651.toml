@@ -1,0 +1,17 @@
+kind = "DojoModel"
+class_hash = "0x73e2d5533d7f4971eac49daf22d5385dbc66d0e0b2e93974934fd278b97f1ce"
+original_class_hash = "0x73e2d5533d7f4971eac49daf22d5385dbc66d0e0b2e93974934fd278b97f1ce"
+abi = "manifests/dev/base/abis/models/astraplani-DustBalance-4a2fe651.json"
+tag = "astraplani-DustBalance"
+qualified_path = "astraplani::models::dust_balance::dust_balance"
+manifest_name = "astraplani-DustBalance-4a2fe651"
+
+[[members]]
+name = "entity"
+type = "u32"
+key = true
+
+[[members]]
+name = "balance"
+type = "u128"
+key = false
