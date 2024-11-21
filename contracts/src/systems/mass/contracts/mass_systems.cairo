@@ -1,7 +1,7 @@
 use starknet::{ContractAddress};
 
 // Define the interface for the Dust system
-#[dojo::interface]
+#[starknet::interface]
 trait IMassSystems {
     fn transfer_mass(
         ref world: IWorldDispatcher, sender_body_id: u32, receiver_body_id: u32, mass: u64

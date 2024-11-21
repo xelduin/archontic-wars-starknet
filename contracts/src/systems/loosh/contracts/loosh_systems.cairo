@@ -3,7 +3,7 @@ use dojo::world::IWorldDispatcher;
 use astraplani::models::loosh_sink::LooshSink;
 
 // Define the interface
-#[dojo::interface]
+#[starknet::interface]
 trait ILooshSystems {
     fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
     fn transfer_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);

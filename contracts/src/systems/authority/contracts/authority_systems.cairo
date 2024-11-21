@@ -1,7 +1,7 @@
 use starknet::{ContractAddress};
 
 // Define the interface for the Dust system
-#[dojo::interface]
+#[starknet::interface]
 trait IAuthoritySystems {
     fn transfer_ownership(ref world: IWorldDispatcher, body_id: u32, new_owner: ContractAddress);
 }

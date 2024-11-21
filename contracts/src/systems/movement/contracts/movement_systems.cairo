@@ -1,7 +1,7 @@
 use astraplani::models::vec2::Vec2;
 
 // Define the interface for the Body movement system
-#[dojo::interface]
+#[starknet::interface]
 trait IMovementSystems {
     fn begin_travel(ref world: IWorldDispatcher, body_id: u32, target_position: Vec2);
     fn end_travel(ref world: IWorldDispatcher, body_id: u32);

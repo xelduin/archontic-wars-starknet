@@ -4,7 +4,7 @@ use astraplani::models::{
 
 
 // Define the interface for the Dust system
-#[dojo::interface]
+#[starknet::interface]
 trait IDustSystems {
     fn claim_dust(ref world: IWorldDispatcher, body_id: u32);
     fn update_emission(ref world: IWorldDispatcher, body_id: u32);

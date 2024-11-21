@@ -1,7 +1,7 @@
 use starknet::{ContractAddress};
 
 // Define the interface for the Dust system
-#[dojo::interface]
+#[starknet::interface]
 trait IConfigSystems {
     fn set_admin_config(
         ref world: IWorldDispatcher, config_id: u32, admin_address: ContractAddress
