@@ -53,17 +53,17 @@ mod loosh_systems {
 
     #[abi(embed_v0)]
     impl LooshSystemsImpl of ILooshSystems<ContractState> {
-        fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
+        fn l1_receive_loosh(ref self: ContractState, receiver: ContractAddress, amount: u128,) {
             InternalLooshSystemsImpl::mint_loosh(world, receiver, amount);
         }
 
-        fn transfer_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
+        fn transfer_loosh(ref self: ContractState, receiver: ContractAddress, amount: u128,) {
             let sender = get_caller_address();
 
             InternalLooshSystemsImpl::transfer_loosh(world, sender, receiver, amount);
         }
 
-        fn burn_loosh(ref world: IWorldDispatcher, amount: u128,) {
+        fn burn_loosh(ref self: ContractState, amount: u128,) {
             let sender = get_caller_address();
 
             InternalLooshSystemsImpl::burn_loosh(world, sender, amount);

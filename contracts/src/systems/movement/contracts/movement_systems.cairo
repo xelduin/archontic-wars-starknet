@@ -48,11 +48,11 @@ mod movement_systems {
 
     #[abi(embed_v0)]
     impl MovementSystemsImpl of IMovementSystems<ContractState> {
-        fn begin_travel(ref world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
+        fn begin_travel(ref self: ContractState, body_id: u32, target_position: Vec2) {
             InternalMovementSystemsImpl::begin_travel(world, body_id, target_position);
         }
 
-        fn end_travel(ref world: IWorldDispatcher, body_id: u32) {
+        fn end_travel(ref self: ContractState, body_id: u32) {
             InternalMovementSystemsImpl::end_travel(world, body_id);
         }
     }

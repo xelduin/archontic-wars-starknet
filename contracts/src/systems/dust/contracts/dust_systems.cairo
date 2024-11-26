@@ -155,26 +155,26 @@ mod dust_systems {
 
     #[abi(embed_v0)]
     impl DustSystemsImpl of IDustSystems<ContractState> {
-        fn claim_dust(ref world: IWorldDispatcher, body_id: u32) {
+        fn claim_dust(ref self: ContractState, body_id: u32) {
             //InternalDustSystemsImpl::claim_dust(world, body_id);
             InternalDustSystemsImpl::update_local_pool(world, body_id);
         }
 
-        fn update_emission(ref world: IWorldDispatcher, body_id: u32) {
+        fn update_emission(ref self: ContractState, body_id: u32) {
             InternalDustSystemsImpl::update_emission(world, body_id);
         }
 
-        fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32) {
+        fn enter_dust_pool(ref self: ContractState, body_id: u32, pool_id: u32) {
             InternalDustSystemsImpl::enter_dust_pool(world, body_id, pool_id);
         }
 
-        fn begin_dust_harvest(ref world: IWorldDispatcher, body_id: u32, harvest_amount: u128) {
+        fn begin_dust_harvest(ref self: ContractState, body_id: u32, harvest_amount: u128) {
             InternalDustSystemsImpl::begin_dust_harvest(world, body_id, harvest_amount);
         }
-        fn end_dust_harvest(ref world: IWorldDispatcher, body_id: u32) {
+        fn end_dust_harvest(ref self: ContractState, body_id: u32) {
             InternalDustSystemsImpl::end_dust_harvest(world, body_id);
         }
-        fn cancel_dust_harvest(ref world: IWorldDispatcher, body_id: u32) {
+        fn cancel_dust_harvest(ref self: ContractState, body_id: u32) {
             InternalDustSystemsImpl::cancel_dust_harvest(world, body_id);
         }
     }

@@ -107,25 +107,25 @@ mod creation_systems {
 
     #[abi(embed_v0)]
     impl CreationSystemsImpl of ICreationSystems<ContractState> {
-        fn create_quasar(ref world: IWorldDispatcher, coords: Vec2) -> u32 {
+        fn create_quasar(ref self: ContractState, coords: Vec2) -> u32 {
             return InternalCreationSystemsImpl::create_quasar(world, coords);
         }
 
-        fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32 {
+        fn create_protostar(ref self: ContractState, coords: Vec2, quasar_id: u32) -> u32 {
             return InternalCreationSystemsImpl::create_protostar(world, coords, quasar_id);
         }
 
-        fn create_asteroid_cluster(ref world: IWorldDispatcher, coords: Vec2, star_id: u32) -> u32 {
+        fn create_asteroid_cluster(ref self: ContractState, coords: Vec2, star_id: u32) -> u32 {
             return InternalCreationSystemsImpl::create_asteroid_cluster(
                 world, coords, star_id, initial_mass: 100
             );
         }
 
-        fn form_star(ref world: IWorldDispatcher, protostar_id: u32) {
+        fn form_star(ref self: ContractState, protostar_id: u32) {
             InternalCreationSystemsImpl::form_star(world, protostar_id);
         }
 
-        fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32, amount: u64) {
+        fn form_asteroids(ref self: ContractState, star_id: u32, cluster_id: u32, amount: u64) {
             InternalCreationSystemsImpl::form_asteroids(world, star_id, cluster_id, amount);
         }
     }
