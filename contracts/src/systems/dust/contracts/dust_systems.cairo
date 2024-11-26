@@ -50,7 +50,6 @@ mod dust_systems {
     use astraplani::models::vec2::Vec2;
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct DustPoolFormed {
         #[key]
@@ -59,7 +58,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct DustClaimed {
         #[key]
@@ -68,7 +66,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct DustConsumed {
         #[key]
@@ -77,7 +74,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct DustPoolMassChange {
         #[key]
@@ -87,7 +83,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct DustCloudChange {
         #[key]
@@ -97,7 +92,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct ARPSUpdated {
         #[key]
@@ -106,7 +100,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct DustPoolEntered {
         #[key]
@@ -115,7 +108,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct DustPoolExited {
         #[key]
@@ -124,7 +116,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct HarvestActionBegan {
         #[key]
@@ -135,7 +126,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct HarvestActionEnded {
         #[key]
@@ -145,7 +135,6 @@ mod dust_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct HarvestActionCancelled {
         #[key]
@@ -156,25 +145,31 @@ mod dust_systems {
     #[abi(embed_v0)]
     impl DustSystemsImpl of IDustSystems<ContractState> {
         fn claim_dust(ref self: ContractState, body_id: u32) {
+            let mut world = self.world_default();
             //InternalDustSystemsImpl::claim_dust(world, body_id);
             InternalDustSystemsImpl::update_local_pool(world, body_id);
         }
 
         fn update_emission(ref self: ContractState, body_id: u32) {
+            let mut world = self.world_default();
             InternalDustSystemsImpl::update_emission(world, body_id);
         }
 
         fn enter_dust_pool(ref self: ContractState, body_id: u32, pool_id: u32) {
+            let mut world = self.world_default();
             InternalDustSystemsImpl::enter_dust_pool(world, body_id, pool_id);
         }
 
         fn begin_dust_harvest(ref self: ContractState, body_id: u32, harvest_amount: u128) {
+            let mut world = self.world_default();
             InternalDustSystemsImpl::begin_dust_harvest(world, body_id, harvest_amount);
         }
         fn end_dust_harvest(ref self: ContractState, body_id: u32) {
+            let mut world = self.world_default();
             InternalDustSystemsImpl::end_dust_harvest(world, body_id);
         }
         fn cancel_dust_harvest(ref self: ContractState, body_id: u32) {
+            let mut world = self.world_default();
             InternalDustSystemsImpl::cancel_dust_harvest(world, body_id);
         }
     }

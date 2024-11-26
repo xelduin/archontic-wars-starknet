@@ -54,8 +54,8 @@ mod config_systems {
         fn set_admin_config(
             ref self: ContractState, config_id: u32, admin_address: ContractAddress
         ) {
-            assert_caller_is_admin(world);
             //set!(world, (AdminConfig { config_id, admin_address }));
+            assert_caller_is_admin(world);
             let mut world = self.world_default();
             world.write_model(@(AdminConfig { config_id, admin_address }));
         }

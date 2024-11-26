@@ -47,7 +47,6 @@ mod creation_systems {
     use astraplani::models::basal_attributes::BasalAttributes;
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct QuasarCreated {
         #[key]
@@ -60,7 +59,6 @@ mod creation_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct ProtostarCreated {
         #[key]
@@ -74,7 +72,6 @@ mod creation_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct AsteroidClusterCreated {
         #[key]
@@ -87,7 +84,6 @@ mod creation_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct StarFormed {
         #[key]
@@ -96,7 +92,6 @@ mod creation_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct AsteroidsFormed {
         #[key]
@@ -108,34 +103,40 @@ mod creation_systems {
     #[abi(embed_v0)]
     impl CreationSystemsImpl of ICreationSystems<ContractState> {
         fn create_quasar(ref self: ContractState, coords: Vec2) -> u32 {
+            let mut world = self.world_default();
             return InternalCreationSystemsImpl::create_quasar(world, coords);
         }
 
         fn create_protostar(ref self: ContractState, coords: Vec2, quasar_id: u32) -> u32 {
+            let mut world = self.world_default();
             return InternalCreationSystemsImpl::create_protostar(world, coords, quasar_id);
         }
 
         fn create_asteroid_cluster(ref self: ContractState, coords: Vec2, star_id: u32) -> u32 {
+            let mut world = self.world_default();
             return InternalCreationSystemsImpl::create_asteroid_cluster(
                 world, coords, star_id, initial_mass: 100
             );
         }
 
         fn form_star(ref self: ContractState, protostar_id: u32) {
+            let mut world = self.world_default();
             InternalCreationSystemsImpl::form_star(world, protostar_id);
         }
 
         fn form_asteroids(ref self: ContractState, star_id: u32, cluster_id: u32, amount: u64) {
+            let mut world = self.world_default();
             InternalCreationSystemsImpl::form_asteroids(world, star_id, cluster_id, amount);
         }
     }
 
     #[generate_trait]
     impl InternalCreationSystemsImpl of InternalCreationSystemsTrait {
-        fn create_quasar(world: IWorldDispatcher, coords: Vec2) -> u32 {
+        fn create_quasar(mut world: IWorldDispatcher, coords: Vec2) -> u32 {
             assert_caller_is_admin(world);
 
-            let central_entity_at_pos = get!(world, (coords.x, coords.y, 0), OrbitCenterAtPosition);
+            let central_entity_at_pos: OrbitCenterAtPosition = world
+                .read_model((coords.x, coords.y, 0));
             assert(central_entity_at_pos.entity == 0, 'coords are occupied');
 
             let player = get_caller_address();
@@ -144,42 +145,42 @@ mod creation_systems {
 
             let body_id = world.uuid();
             let universe_id = 0;
-            let mass = get!(world, COSMIC_BODY_MASS_CONFIG_ID, BaseCosmicBodyMassConfig)
+            let mass: BaseCosmicBodyMassConfig = world
+                .read_model(COSMIC_BODY_MASS_CONFIG_ID)
                 .base_quasar_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Quasar, mass, universe_id, coords,
             );
 
-            set!(
-                world,
-                (OrbitCenterAtPosition {
-                    x: coords.x, y: coords.y, orbit_center: universe_id, entity: body_id
-                })
-            );
-            emit!(
-                world,
-                QuasarCreated {
-                    body_id,
-                    owner: player,
-                    mass,
-                    coords,
-                    parent_id: universe_id,
-                    creation_ts: get_block_timestamp()
-                }
-            );
+            world
+                .write_model(
+                    @(OrbitCenterAtPosition {
+                        x: coords.x, y: coords.y, orbit_center: universe_id, entity: body_id
+                    })
+                );
+            world
+                .emit_event(
+                    @QuasarCreated {
+                        body_id,
+                        owner: player,
+                        mass,
+                        coords,
+                        parent_id: universe_id,
+                        creation_ts: get_block_timestamp()
+                    }
+                );
 
             InternalDustSystemsImpl::form_dust_pool(world, body_id);
 
             return body_id;
         }
 
-        fn create_protostar(world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32 {
-            let quasar_body = get!(world, quasar_id, CosmicBody);
+        fn create_protostar(mut world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32 {
+            let quasar_body: CosmicBody = world.read_model(quasar_id);
             assert(quasar_body.body_type == CosmicBodyType::Quasar, 'invalid quasar id');
 
-            let central_entity_at_pos = get!(
-                world, (coords.x, coords.y, quasar_id), OrbitCenterAtPosition
-            );
+            let central_entity_at_pos: OrbitCenterAtPosition = world
+                .read_model((coords.x, coords.y, quasar_id));
             assert(central_entity_at_pos.entity == 0, 'coords are occupied');
 
             let player = get_caller_address();
@@ -187,39 +188,41 @@ mod creation_systems {
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.uuid();
-            let mass = get!(world, COSMIC_BODY_MASS_CONFIG_ID, BaseCosmicBodyMassConfig)
+            let mass: BaseCosmicBodyMassConfig = world
+                .read_model(COSMIC_BODY_MASS_CONFIG_ID)
                 .base_star_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Protostar, mass, quasar_id, coords,
             );
 
             let creation_ts = get_block_timestamp();
-            let incubation_period = get!(world, INCUBATION_TIME_CONFIG_ID, IncubationTimeConfig)
+            let incubation_period: IncubationTimeConfig = world
+                .read_model(INCUBATION_TIME_CONFIG_ID)
                 .base_incubation_time;
             let incubation_end_ts = creation_ts + incubation_period;
             let attributes = 20;
-            set!(
-                world,
-                (
-                    Incubation { entity: body_id, creation_ts, end_ts: incubation_end_ts },
-                    OrbitCenterAtPosition {
-                        x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
-                    },
-                    BasalAttributes { entity: body_id, attributes }
-                )
-            );
-            emit!(
-                world,
-                (ProtostarCreated {
-                    body_id,
-                    owner: player,
-                    mass,
-                    coords,
-                    parent_id: quasar_id,
-                    creation_ts,
-                    incubation_end_ts
-                })
-            );
+            world
+                .write_model(
+                    @(
+                        Incubation { entity: body_id, creation_ts, end_ts: incubation_end_ts },
+                        OrbitCenterAtPosition {
+                            x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
+                        },
+                        BasalAttributes { entity: body_id, attributes }
+                    )
+                );
+            world
+                .emit_event(
+                    @(ProtostarCreated {
+                        body_id,
+                        owner: player,
+                        mass,
+                        coords,
+                        parent_id: quasar_id,
+                        creation_ts,
+                        incubation_end_ts
+                    })
+                );
 
             InternalDustSystemsImpl::enter_dust_pool(world, body_id, quasar_id);
 
@@ -227,13 +230,13 @@ mod creation_systems {
         }
 
         fn create_asteroid_cluster(
-            world: IWorldDispatcher, coords: Vec2, star_id: u32, initial_mass: u64
+            mut world: IWorldDispatcher, coords: Vec2, star_id: u32, initial_mass: u64
         ) -> u32 {
-            let star_body = get!(world, star_id, (CosmicBody));
+            let star_body : CosmicBody = world.read_model(star_id);
             assert(star_body.body_type == CosmicBodyType::Star, 'invalid star id');
 
             let player = get_caller_address();
-            let star_owner = get!(world, star_id, Owner);
+            let star_owner : Owner = world.read_model(star_id),
             assert(star_owner.address == player, 'caller must own star');
 
             let loosh_cost = get_loosh_cost(LooshSink::CreateAsteroidCluster);
@@ -250,9 +253,8 @@ mod creation_systems {
                 coords,
             );
 
-            emit!(
-                world,
-                AsteroidClusterCreated {
+            world.emit_event(
+                @AsteroidClusterCreated {
                     body_id,
                     owner: player,
                     mass: initial_mass,
@@ -266,7 +268,7 @@ mod creation_systems {
         }
 
         fn create_cosmic_body(
-            world: IWorldDispatcher,
+            mut world: IWorldDispatcher,
             owner: ContractAddress,
             body_id: u32,
             body_type: CosmicBodyType,
@@ -274,11 +276,10 @@ mod creation_systems {
             orbit_center: u32,
             coords: Vec2,
         ) {
-            let orbit_center_orbital_mass = get!(world, orbit_center, OrbitalMass);
+            let orbit_center_orbital_mass : OrbitalMass = world.read_model(orbit_center);
 
-            set!(
-                world,
-                (
+            world.write_model(
+                @(
                     CosmicBody { entity: body_id, body_type },
                     Position { entity: body_id, vec: coords },
                     Orbit { entity: body_id, orbit_center },
@@ -292,56 +293,55 @@ mod creation_systems {
             );
         }
 
-        fn form_star(world: IWorldDispatcher, protostar_id: u32) {
+        fn form_star(mut world: IWorldDispatcher, protostar_id: u32) {
             let player = get_caller_address();
-            let protostar_owner = get!(world, protostar_id, Owner);
+            let protostar_owner : Owner = world.read_model(protostar_id);
             assert(protostar_owner.address == player, 'caller must be owner');
 
-            let protostar_body = get!(world, protostar_id, CosmicBody);
+            let protostar_body : CosmicBody = world.read_model(protostar_id);
             assert(protostar_body.body_type == CosmicBodyType::Protostar, 'invalid protostar id');
 
-            let protostar_incubation = get!(world, protostar_id, (Incubation));
+            let protostar_incubation : Incubation = world.read_model(protostar_id);
             let current_ts = get_block_timestamp();
             assert(current_ts >= protostar_incubation.end_ts, 'incubation not over');
 
             let loosh_cost = get_loosh_cost(LooshSink::FormStar);
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
-            set!(world, (CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
-            delete!(world, (protostar_incubation));
+            world.write_model(@(CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
+            world.erase_model(@protostar_incubation);
 
-            emit!(world, (StarFormed { body_id: protostar_id, creation_ts: current_ts }));
+            world.emit_event(@(StarFormed { body_id: protostar_id, creation_ts: current_ts }));
         }
 
-        fn form_asteroids(world: IWorldDispatcher, star_id: u32, cluster_id: u32, mass: u64) {
+        fn form_asteroids(mut world: IWorldDispatcher, star_id: u32, cluster_id: u32, mass: u64) {
             let player = get_caller_address();
-            let star_owner = get!(world, star_id, Owner);
+            let star_owner : Owner = world.read_model(star_id);
             assert(star_owner.address == player, 'caller must own star');
 
-            let star_body = get!(world, star_id, CosmicBody);
+            let star_body : CosmicBody = world.read_model(star_id);
             assert(star_body.body_type == CosmicBodyType::Star, 'invalid star id');
 
-            let asteroid_cluster_body = get!(world, cluster_id, CosmicBody);
+            let asteroid_cluster_body :  CosmicBody= world.read_model(cluster_id);
             assert(
                 asteroid_cluster_body.body_type == CosmicBodyType::AsteroidCluster,
                 'invalid asteroid cluster id'
             );
 
-            let star_position = get!(world, star_id, Position);
-            let asteroid_cluster_position = get!(world, cluster_id, Position);
+            let star_position :  Position= world.read_model(star_id);
+            let asteroid_cluster_position :  Position= world.read_model(cluster_id);
             assert(
                 star_position.is_equal(world, asteroid_cluster_position), 'asteroid cluster too far'
             );
 
-            let mass_to_dust = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).mass_to_dust;
+            let mass_to_dust :  DustValueConfig= world.read_model(DUST_VALUE_CONFIG_ID).mass_to_dust;
             let dust_to_consume = mass_to_dust * mass.try_into().unwrap();
 
             InternalDustSystemsImpl::consume_dust(world, star_id, dust_to_consume);
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
 
-            emit!(
-                world,
-                (AsteroidsFormed { body_id: cluster_id, mass, creation_ts: get_block_timestamp() })
+            world.emit_event(
+                @(AsteroidsFormed { body_id: cluster_id, mass, creation_ts: get_block_timestamp() })
             );
         }
     }
