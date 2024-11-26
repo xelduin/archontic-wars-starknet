@@ -5,18 +5,21 @@ use astraplani::models::{
 
 // Define the interface for the Dust system
 #[starknet::interface]
-trait IDustSystems {
-    fn claim_dust(ref world: IWorldDispatcher, body_id: u32);
-    fn update_emission(ref world: IWorldDispatcher, body_id: u32);
-    fn enter_dust_pool(ref world: IWorldDispatcher, body_id: u32, pool_id: u32);
-    fn begin_dust_harvest(ref world: IWorldDispatcher, body_id: u32, harvest_amount: u128);
-    fn end_dust_harvest(ref world: IWorldDispatcher, body_id: u32);
-    fn cancel_dust_harvest(ref world: IWorldDispatcher, body_id: u32);
+trait IDustSystems<T> {
+    fn claim_dust(ref self: T, body_id: u32);
+    fn update_emission(ref self: T, body_id: u32);
+    fn enter_dust_pool(ref self: T, body_id: u32, pool_id: u32);
+    fn begin_dust_harvest(ref self: T, body_id: u32, harvest_amount: u128);
+    fn end_dust_harvest(ref self: T, body_id: u32);
+    fn cancel_dust_harvest(ref self: T, body_id: u32);
 }
 
 // Dojo decorator
 #[dojo::contract]
 mod dust_systems {
+    use dojo::model::{ModelStorage, ModelValueStorage};
+    use dojo::event::EventStorage;
+
     use super::{IDustSystems};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use astraplani::utils::dust_farm::{

@@ -2,8 +2,8 @@ use starknet::{ContractAddress};
 
 // Define the interface for the Dust system
 #[starknet::interface]
-trait IAuthoritySystems {
-    fn transfer_ownership(ref world: IWorldDispatcher, body_id: u32, new_owner: ContractAddress);
+trait IAuthoritySystems<T> {
+    fn transfer_ownership(ref self: T, body_id: u32, new_owner: ContractAddress);
 }
 
 // Dojo decorator
@@ -14,10 +14,12 @@ mod authority_systems {
 
     use astraplani::models::owner::Owner;
 
+    use dojo::model::{ModelStorage, ModelValueStorage};
+    use dojo::event::EventStorage;
+
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
-    struct OwnershipTransferred {
+    pub struct OwnershipTransferred {
         #[key]
         body_id: u32,
         new_owner: ContractAddress,
@@ -25,11 +27,11 @@ mod authority_systems {
 
     #[abi(embed_v0)]
     impl AuthoritySystemsImpl of IAuthoritySystems<ContractState> {
-        fn transfer_ownership(
-            ref world: IWorldDispatcher, body_id: u32, new_owner: ContractAddress
-        ) {
+        fn transfer_ownership(ref self: ContractState, body_id: u32, new_owner: ContractAddress) {
+            let mut world = self.world_default();
+
             let caller = get_caller_address();
-            let ownership = get!(world, body_id, (Owner));
+            let ownership: Owner = world.read_model(body_id);
 
             assert(caller == ownership.address, 'not owner');
 
@@ -39,9 +41,11 @@ mod authority_systems {
 
     #[generate_trait]
     impl InternalAuthoritySystemsImpl of InternalAuthoritySystemsTrait {
-        fn transfer_ownership(world: IWorldDispatcher, body_id: u32, new_owner: ContractAddress) {
-            set!(world, (Owner { entity: body_id, address: new_owner }));
-            emit!(world, OwnershipTransferred { body_id, new_owner });
+        fn transfer_ownership(
+            mut world: IWorldDispatcher, body_id: u32, new_owner: ContractAddress
+        ) {
+            world.write_model(@Owner { entity: body_id, address: new_owner });
+            world.emit_event(@OwnershipTransferred { body_id, new_owner });
         }
     }
 }

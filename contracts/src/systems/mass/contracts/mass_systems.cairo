@@ -2,15 +2,16 @@ use starknet::{ContractAddress};
 
 // Define the interface for the Dust system
 #[starknet::interface]
-trait IMassSystems {
-    fn transfer_mass(
-        ref world: IWorldDispatcher, sender_body_id: u32, receiver_body_id: u32, mass: u64
-    );
+trait IMassSystems<T> {
+    fn transfer_mass(ref self: T, sender_body_id: u32, receiver_body_id: u32, mass: u64);
 }
 
 // Dojo decorator
 #[dojo::contract]
 mod mass_systems {
+    use dojo::model::{ModelStorage, ModelValueStorage};
+    use dojo::event::EventStorage;
+
     use super::{IMassSystems};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
 
@@ -25,7 +26,6 @@ mod mass_systems {
     use astraplani::models::orbit::Orbit;
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct BodyMassChange {
         #[key]
@@ -37,7 +37,7 @@ mod mass_systems {
     #[abi(embed_v0)]
     impl MassSystemsImpl of IMassSystems<ContractState> {
         fn transfer_mass(
-            ref world: IWorldDispatcher, sender_body_id: u32, receiver_body_id: u32, mass: u64
+            ref self: ContractState, sender_body_id: u32, receiver_body_id: u32, mass: u64
         ) {
             let caller = get_caller_address();
             let ownership = get!(world, sender_body_id, (Owner));

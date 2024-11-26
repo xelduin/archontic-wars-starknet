@@ -2,18 +2,21 @@ use starknet::{ContractAddress, get_caller_address};
 use astraplani::models::vec2::Vec2;
 
 // Define the interface for the Body creation system
-#[dojo::interface]
-trait ICreationSystems {
-    fn create_quasar(ref world: IWorldDispatcher, coords: Vec2) -> u32;
-    fn create_protostar(ref world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32;
-    fn create_asteroid_cluster(ref world: IWorldDispatcher, coords: Vec2, star_id: u32) -> u32;
-    fn form_star(ref world: IWorldDispatcher, protostar_id: u32);
-    fn form_asteroids(ref world: IWorldDispatcher, star_id: u32, cluster_id: u32, amount: u64);
+#[starknet::interface]
+trait ICreationSystems<T> {
+    fn create_quasar(ref self: T, coords: Vec2) -> u32;
+    fn create_protostar(ref self: T, coords: Vec2, quasar_id: u32) -> u32;
+    fn create_asteroid_cluster(ref self: T, coords: Vec2, star_id: u32) -> u32;
+    fn form_star(ref self: T, protostar_id: u32);
+    fn form_asteroids(ref self: T, star_id: u32, cluster_id: u32, amount: u64);
 }
 
 // Dojo decorator
 #[dojo::contract]
 mod creation_systems {
+    use dojo::model::{ModelStorage, ModelValueStorage};
+    use dojo::event::EventStorage;
+
     use super::{ICreationSystems, get_loosh_cost};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
 

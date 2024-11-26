@@ -2,14 +2,17 @@ use astraplani::models::vec2::Vec2;
 
 // Define the interface for the Body movement system
 #[starknet::interface]
-trait IMovementSystems {
-    fn begin_travel(ref world: IWorldDispatcher, body_id: u32, target_position: Vec2);
-    fn end_travel(ref world: IWorldDispatcher, body_id: u32);
+trait IMovementSystems<T> {
+    fn begin_travel(ref self: T, body_id: u32, target_position: Vec2);
+    fn end_travel(ref self: T, body_id: u32);
 }
 
 // Dojo decorator
 #[dojo::contract]
 mod movement_systems {
+    use dojo::model::{ModelStorage, ModelValueStorage};
+    use dojo::event::EventStorage;
+
     use super::IMovementSystems;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use astraplani::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};

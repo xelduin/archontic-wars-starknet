@@ -4,15 +4,18 @@ use astraplani::models::loosh_sink::LooshSink;
 
 // Define the interface
 #[starknet::interface]
-trait ILooshSystems {
-    fn l1_receive_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
-    fn transfer_loosh(ref world: IWorldDispatcher, receiver: ContractAddress, amount: u128);
-    fn burn_loosh(ref world: IWorldDispatcher, amount: u128);
+trait ILooshSystems<T> {
+    fn l1_receive_loosh(ref self: T, receiver: ContractAddress, amount: u128);
+    fn transfer_loosh(ref self: T, receiver: ContractAddress, amount: u128);
+    fn burn_loosh(ref self: T, amount: u128);
 }
 
 // Dojo decorator
 #[dojo::contract]
 mod loosh_systems {
+    use dojo::model::{ModelStorage, ModelValueStorage};
+    use dojo::event::EventStorage;
+
     use super::{ILooshSystems};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
 
