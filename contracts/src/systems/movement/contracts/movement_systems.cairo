@@ -60,17 +60,17 @@ mod movement_systems {
     #[generate_trait]
     impl InternalMovementSystemsImpl of InternalMovementSystemsTrait {
         fn begin_travel(world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
-            let cur_travel_action = get!(world, body_id, TravelAction);
+            let cur_travel_action : TravelAction = world.read_model(body_id);
             assert(cur_travel_action.arrival_ts == 0, 'body already travelling');
 
-            let body_position = get!(world, body_id, (Position));
+            let body_position : Position = world.read_model(body_id);
             assert(body_position.vec.is_equal(target_position) == false, 'already at target pos');
 
-            let traveler_body_type = get!(world, body_id, (CosmicBody)).body_type;
+            let traveler_body_type : CosmicBody = world.read_model(body_id).body_type;
             assert(traveler_body_type == CosmicBodyType::AsteroidCluster, 'body type cant travel');
 
-            let orbit_center_id = get!(world, body_id, Orbit).orbit_center;
-            let orbit_center_body_type = get!(world, orbit_center_id, CosmicBody).body_type;
+            let orbit_center_id : Orbit = world.read_model(body_id).orbit_center;
+            let orbit_center_body_type : CosmicBody = world.read_model(orbit_center_id).body_type;
 
             let player = get_caller_address();
             let travel_cost = get_loosh_travel_cost(
@@ -83,27 +83,25 @@ mod movement_systems {
                 world, depart_ts, body_position.vec, target_position, orbit_center_body_type
             );
 
-            set!(world, (TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }));
-            emit!(
-                world,
-                (TravelBegan {
+            world.write_model(@(TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }));
+            world.emit_event(@(TravelBegan {
                     body_id, origin_vec: body_position.vec, target_vec: target_position, arrival_ts
                 })
             );
         }
 
         fn end_travel(world: IWorldDispatcher, body_id: u32) {
-            let cur_travel_action = get!(world, body_id, (TravelAction));
+            let cur_travel_action : TravelAction = world.read_model(body_id);
             let current_ts = get_block_timestamp();
 
             assert(cur_travel_action.arrival_ts != 0, 'invalid travel action');
             assert(current_ts >= cur_travel_action.arrival_ts, 'not arrived');
 
-            set!(world, (Position { entity: body_id, vec: cur_travel_action.target_position }));
+            world.write_model(@(Position { entity: body_id, vec: cur_travel_action.target_position }));
 
-            delete!(world, (cur_travel_action));
+            world.erase_model(@(cur_travel_action));
 
-            emit!(world, (TravelEnded { body_id, arrival_ts: current_ts }));
+            world.emit_event(@(TravelEnded { body_id, arrival_ts: current_ts }));
         }
     }
 }

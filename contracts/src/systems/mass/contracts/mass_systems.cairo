@@ -40,7 +40,7 @@ mod mass_systems {
             ref self: ContractState, sender_body_id: u32, receiver_body_id: u32, mass: u64
         ) {
             let caller = get_caller_address();
-            let ownership = get!(world, sender_body_id, (Owner));
+            let ownership : Owner = world.read_model(sender_body_id);
             assert(caller == ownership.address, 'not owner');
 
             InternalMassSystemsImpl::transfer_mass(world, sender_body_id, receiver_body_id, mass);
@@ -52,13 +52,13 @@ mod mass_systems {
         fn transfer_mass(
             world: IWorldDispatcher, sender_body_id: u32, receiver_body_id: u32, mass: u64
         ) {
-            let sender_type = get!(world, sender_body_id, (CosmicBody));
+            let sender_type : CosmicBody = world.read_model(sender_body_id);
             assert(
                 sender_type.body_type == CosmicBodyType::AsteroidCluster, 'not asteroid cluster'
             );
 
-            let sender_position = get!(world, sender_body_id, (Position));
-            let receiver_position = get!(world, receiver_body_id, (Position));
+            let sender_position : Position = world.read_model(sender_body_id);
+            let receiver_position : Position = world.read_model(receiver_body_id);
             assert(sender_position.is_equal(world, receiver_position), 'not in proximity');
 
             Self::decrease_mass(world, sender_body_id, mass);
@@ -66,15 +66,13 @@ mod mass_systems {
         }
 
         fn increase_mass(world: IWorldDispatcher, body_id: u32, mass: u64) {
-            let body_mass = get!(world, body_id, (Mass));
+            let body_mass : Mass = world.read_model(body_id);
             let new_mass = mass + body_mass.mass;
 
-            let orbit_center = get!(world, body_id, Orbit).orbit_center;
-            let orbital_mass = get!(world, orbit_center, OrbitalMass).orbital_mass;
+            let orbit_center : Orbit = world.read_model(body_id).orbit_center;
+            let orbital_mass : OrbitalMass = world.read_model(orbit_center).orbital_mass;
 
-            set!(
-                world,
-                (
+            world.write_model(@(
                     Mass { entity: body_id, mass: new_mass },
                     OrbitalMass { entity: orbit_center, orbital_mass: orbital_mass + mass }
                 )
@@ -84,16 +82,14 @@ mod mass_systems {
         }
 
         fn decrease_mass(world: IWorldDispatcher, body_id: u32, mass: u64) {
-            let body_mass = get!(world, body_id, (Mass));
+            let body_mass : Mass = world.read_model(body_id);
             assert(body_mass.mass > mass, 'not enough mass');
             let new_mass = body_mass.mass - mass;
 
-            let orbit_center = get!(world, body_id, Orbit).orbit_center;
-            let orbital_mass = get!(world, orbit_center, OrbitalMass).orbital_mass;
+            let orbit_center : Orbit = world.read_model(body_id).orbit_center;
+            let orbital_mass : OrbitalMass = world.read_model(orbit_center).orbital_mass;
 
-            set!(
-                world,
-                (
+            world.write_model(@(
                     Mass { entity: body_id, mass: new_mass },
                     OrbitalMass { entity: orbit_center, orbital_mass: orbital_mass - mass }
                 )
@@ -105,9 +101,9 @@ mod mass_systems {
         fn on_body_mass_change(
             world: IWorldDispatcher, body_id: u32, old_mass: u64, new_mass: u64
         ) {
-            emit!(world, (BodyMassChange { body_id, old_mass, new_mass }));
+            world.emit_event(@(BodyMassChange { body_id, old_mass, new_mass }));
 
-            let body_accretion = get!(world, body_id, DustAccretion);
+            let body_accretion : DustAccretion = world.read_model(body_id);
             if body_accretion.in_dust_pool {
                 InternalDustSystemsImpl::update_pool_member(world, body_id, old_mass, new_mass);
             }
