@@ -74,12 +74,12 @@ fn get_expected_claimable_dust_for_star(
 fn get_harvest_end_ts(
     world: IWorldDispatcher, start_ts: u64, harvest_amount: u128, mass: u64
 ) -> u64 {
-    let mass_to_dust = get!(world, DUST_VALUE_CONFIG_ID, DustValueConfig).mass_to_dust;
+    let mass_to_dust : DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID).mass_to_dust;
     let dust_capacity = mass.try_into().unwrap() * mass_to_dust;
 
     assert(dust_capacity >= harvest_amount, 'cant harvest more than the mass');
 
-    let harvest_time_config = get!(world, HARVEST_TIME_CONFIG_ID, HarvestTimeConfig);
+    let harvest_time_config : HarvestTimeConfig = world.read_model(HARVEST_TIME_CONFIG_ID);
 
     let min_time = harvest_time_config.min_harvest_time;
     let base_time = harvest_time_config.base_harvest_time;

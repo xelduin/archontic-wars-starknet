@@ -16,7 +16,7 @@ fn get_arrival_ts(
     target_pos: Vec2,
     orbit_center_body_type: CosmicBodyType
 ) -> u64 {
-    let base_travel_speed = get!(world, TRAVEL_SPEED_CONFIG_ID, TravelSpeedConfig)
+    let base_travel_speed :  TravelSpeedConfig = world.read_model(TRAVEL_SPEED_CONFIG_ID)
         .base_travel_speed;
 
     let distance = origin_pos.chebyshev_distance(target_pos);
@@ -37,7 +37,7 @@ fn get_loosh_travel_cost(
 ) -> u128 {
     let distance = origin_pos.chebyshev_distance(target_pos);
 
-    let base_travel_cost = get!(world, LOOSH_COST_CONFIG_ID, LooshCostConfig).base_travel_cost;
+    let base_travel_cost :  LooshCostConfig = world.read_model(LOOSH_COST_CONFIG_ID).base_travel_cost;
     let cost = get_loosh_travel_cost_multiplier(orbit_center_body_type) * base_travel_cost;
 
     return cost * distance.try_into().unwrap();
