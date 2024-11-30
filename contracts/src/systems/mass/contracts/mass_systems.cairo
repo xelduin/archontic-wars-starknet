@@ -39,6 +39,8 @@ mod mass_systems {
         fn transfer_mass(
             ref self: ContractState, sender_body_id: u32, receiver_body_id: u32, mass: u64
         ) {
+            let mut world = self.world_default();
+
             let caller = get_caller_address();
             let ownership : Owner = world.read_model(sender_body_id);
             assert(caller == ownership.address, 'not owner');
