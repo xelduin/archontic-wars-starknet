@@ -28,7 +28,7 @@ mod authority_systems {
     #[abi(embed_v0)]
     impl AuthoritySystemsImpl of IAuthoritySystems<ContractState> {
         fn transfer_ownership(ref self: ContractState, body_id: u32, new_owner: ContractAddress) {
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
 
             let caller = get_caller_address();
             let ownership: Owner = world.read_model(body_id);

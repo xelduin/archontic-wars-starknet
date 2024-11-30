@@ -56,14 +56,14 @@ mod config_systems {
         ) {
             //set!(world, (AdminConfig { config_id, admin_address }));
             assert_caller_is_admin(world);
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world.write_model(@(AdminConfig { config_id, admin_address }));
         }
 
         fn set_dust_value_config(ref self: ContractState, config_id: u32, mass_to_dust: u128) {
             assert_caller_is_admin(world);
             //set!(world, (DustValueConfig { config_id, mass_to_dust }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world.write_model(@(DustValueConfig { config_id, mass_to_dust }));
         }
 
@@ -72,7 +72,7 @@ mod config_systems {
         ) {
             assert_caller_is_admin(world);
             //set!(world, (DustEmissionConfig { config_id, base_dust_emission }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world.write_model(@(DustEmissionConfig { config_id, base_dust_emission }));
         }
 
@@ -81,7 +81,7 @@ mod config_systems {
         ) {
             assert_caller_is_admin(world);
             //set!(world, (HarvestTimeConfig { config_id, min_harvest_time, base_harvest_time }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world
                 .write_model(
                     @(HarvestTimeConfig { config_id, min_harvest_time, base_harvest_time })
@@ -94,7 +94,7 @@ mod config_systems {
             assert_caller_is_admin(world);
             //set!(world, (BaseCosmicBodyMassConfig { config_id, base_star_mass, base_quasar_mass
             //}));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world
                 .write_model(
                     @(BaseCosmicBodyMassConfig { config_id, base_star_mass, base_quasar_mass })
@@ -106,7 +106,7 @@ mod config_systems {
         ) {
             assert_caller_is_admin(world);
             //set!(world, (MinOrbitCenterMassConfig { config_id, min_mass_multiplier }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world.write_model(@(MinOrbitCenterMassConfig { config_id, min_mass_multiplier }));
         }
 
@@ -115,7 +115,7 @@ mod config_systems {
         ) {
             assert_caller_is_admin(world);
             //set!(world, (MaxCosmicBodyMassConfig { config_id, max_asteroid_cluster_mass }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world.write_model(@(MaxCosmicBodyMassConfig { config_id, max_asteroid_cluster_mass }));
         }
 
@@ -127,7 +127,7 @@ mod config_systems {
         ) {
             assert_caller_is_admin(world);
             //set!(world, (LooshCostConfig { config_id, base_travel_cost, base_creation_cost }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world
                 .write_model(
                     @(LooshCostConfig { config_id, base_travel_cost, base_creation_cost })
@@ -137,14 +137,14 @@ mod config_systems {
         fn set_travel_speed(ref self: ContractState, config_id: u32, base_travel_speed: u64) {
             assert_caller_is_admin(world);
             //set!(world, (TravelSpeedConfig { config_id, base_travel_speed }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world.write_model(@(TravelSpeedConfig { config_id, base_travel_speed }));
         }
 
         fn set_incubation_time(ref self: ContractState, config_id: u32, base_incubation_time: u64) {
             assert_caller_is_admin(world);
             //set!(world, (IncubationTimeConfig { config_id, base_incubation_time }));
-            let mut world = self.world_default();
+            let mut world = self.world(@"ns");
             world.write_model(@(IncubationTimeConfig { config_id, base_incubation_time }));
         }
     }
