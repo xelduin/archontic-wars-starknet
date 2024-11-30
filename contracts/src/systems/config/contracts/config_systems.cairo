@@ -41,7 +41,7 @@ mod config_systems {
     use astraplani::models::config::TravelSpeedConfig;
     use astraplani::models::config::IncubationTimeConfig;
 
-    fn assert_caller_is_admin(world: IWorldDispatcher) {
+    fn assert_caller_is_admin(mut world: IWorldDispatcher) {
         let admin_address = get!(world, ADMIN_CONFIG_ID, AdminConfig).admin_address;
         if admin_address != Zeroable::zero() {
             assert(starknet::get_caller_address() == admin_address, 'not admin');
