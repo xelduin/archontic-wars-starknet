@@ -42,10 +42,10 @@ mod config_systems {
     use astraplani::models::config::TravelSpeedConfig;
     use astraplani::models::config::IncubationTimeConfig;
 
-    fn assert_caller_is_admin(mut world: IWorldDispatcher) {
-        let admin_address = get!(world, ADMIN_CONFIG_ID, AdminConfig).admin_address;
-        if admin_address != Zeroable::zero() {
-            assert(starknet::get_caller_address() == admin_address, 'not admin');
+    fn assert_caller_is_admin(mut world: WorldStorage) {
+        let admin_config : AdminConfig = world.read_model(ADMIN_CONFIG_ID);
+        if admin_config.admin_address != Zeroable::zero() {
+            assert(starknet::get_caller_address() == admin_config.admin_address, 'not admin');
         }
     }
 
@@ -55,6 +55,8 @@ mod config_systems {
         fn set_admin_config(
             ref self: ContractState, config_id: u32, admin_address: ContractAddress
         ) {
+            let mut world = self.world(@"ns");
+
             //set!(world, (AdminConfig { config_id, admin_address }));
             assert_caller_is_admin(world);
             let mut world = self.world(@"ns");
@@ -62,6 +64,8 @@ mod config_systems {
         }
 
         fn set_dust_value_config(ref self: ContractState, config_id: u32, mass_to_dust: u128) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (DustValueConfig { config_id, mass_to_dust }));
             let mut world = self.world(@"ns");
@@ -71,6 +75,8 @@ mod config_systems {
         fn set_dust_emission_config(
             ref self: ContractState, config_id: u32, base_dust_emission: u128
         ) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (DustEmissionConfig { config_id, base_dust_emission }));
             let mut world = self.world(@"ns");
@@ -80,6 +86,8 @@ mod config_systems {
         fn set_harvest_time(
             ref self: ContractState, config_id: u32, min_harvest_time: u64, base_harvest_time: u64
         ) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (HarvestTimeConfig { config_id, min_harvest_time, base_harvest_time }));
             let mut world = self.world(@"ns");
@@ -92,6 +100,8 @@ mod config_systems {
         fn set_base_cosmic_body_mass(
             ref self: ContractState, config_id: u32, base_star_mass: u64, base_quasar_mass: u64
         ) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (BaseCosmicBodyMassConfig { config_id, base_star_mass, base_quasar_mass
             //}));
@@ -105,6 +115,8 @@ mod config_systems {
         fn set_min_orbit_center_mass(
             ref self: ContractState, config_id: u32, min_mass_multiplier: u64
         ) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (MinOrbitCenterMassConfig { config_id, min_mass_multiplier }));
             let mut world = self.world(@"ns");
@@ -114,6 +126,8 @@ mod config_systems {
         fn set_max_cosmic_body_mass(
             ref self: ContractState, config_id: u32, max_asteroid_cluster_mass: u64
         ) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (MaxCosmicBodyMassConfig { config_id, max_asteroid_cluster_mass }));
             let mut world = self.world(@"ns");
@@ -126,6 +140,8 @@ mod config_systems {
             base_travel_cost: u128,
             base_creation_cost: u128
         ) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (LooshCostConfig { config_id, base_travel_cost, base_creation_cost }));
             let mut world = self.world(@"ns");
@@ -136,6 +152,8 @@ mod config_systems {
         }
 
         fn set_travel_speed(ref self: ContractState, config_id: u32, base_travel_speed: u64) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (TravelSpeedConfig { config_id, base_travel_speed }));
             let mut world = self.world(@"ns");
@@ -143,6 +161,8 @@ mod config_systems {
         }
 
         fn set_incubation_time(ref self: ContractState, config_id: u32, base_incubation_time: u64) {
+            let mut world = self.world(@"ns");
+
             assert_caller_is_admin(world);
             //set!(world, (IncubationTimeConfig { config_id, base_incubation_time }));
             let mut world = self.world(@"ns");
