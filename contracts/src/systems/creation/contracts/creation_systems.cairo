@@ -147,9 +147,8 @@ mod creation_systems {
 
             let body_id = world.dispatcher.uuid();
             let universe_id = 0;
-            let mass: BaseCosmicBodyMassConfig = world
-                .read_model(COSMIC_BODY_MASS_CONFIG_ID)
-                .base_quasar_mass;
+            let body_mass_config : BaseCosmicBodyMassConfig = world.read_model(COSMIC_BODY_MASS_CONFIG_ID);
+            let mass = body_mass_config.base_quasar_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Quasar, mass, universe_id, coords,
             );
@@ -190,17 +189,16 @@ mod creation_systems {
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.dispatcher.uuid();
-            let mass: BaseCosmicBodyMassConfig = world
-                .read_model(COSMIC_BODY_MASS_CONFIG_ID)
-                .base_star_mass;
+            let body_mass_config: BaseCosmicBodyMassConfig = world.read_model(COSMIC_BODY_MASS_CONFIG_ID);
+            let mass = body_mass_config.base_star_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Protostar, mass, quasar_id, coords,
             );
 
             let creation_ts = get_block_timestamp();
-            let incubation_period: IncubationTimeConfig = world
-                .read_model(INCUBATION_TIME_CONFIG_ID)
-                .base_incubation_time;
+            let incubation_config : IncubationTimeConfig = world
+                .read_model(INCUBATION_TIME_CONFIG_ID);
+            let incubation_period = incubation_config.base_incubation_time;
             let incubation_end_ts = creation_ts + incubation_period;
             let attributes = 20;
             world
@@ -336,7 +334,8 @@ mod creation_systems {
                 star_position.is_equal(world, asteroid_cluster_position), 'asteroid cluster too far'
             );
 
-            let mass_to_dust :  DustValueConfig= world.read_model(DUST_VALUE_CONFIG_ID).mass_to_dust;
+            let dust_value_config : DustValueConfig= world.read_model(DUST_VALUE_CONFIG_ID);
+            let mass_to_dust = dust_value_config.mass_to_dust;
             let dust_to_consume = mass_to_dust * mass.try_into().unwrap();
 
             InternalDustSystemsImpl::consume_dust(world, star_id, dust_to_consume);

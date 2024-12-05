@@ -181,8 +181,8 @@ mod dust_systems {
             let cosmic_body_type : CosmicBody = world.read_model(body_id);
             assert(cosmic_body_type.body_type == CosmicBodyType::Quasar, 'must be quasar');
 
-            let emission_rate : DustEmissionConfig = world.read_model(DUST_EMISSION_CONFIG_ID)
-                .base_dust_emission;
+            let dust_emission_config : DustEmissionConfig = world.read_model(DUST_EMISSION_CONFIG_ID);
+            let emission_rate = dust_emission_config.base_dust_emission;
 
             let current_ts = get_block_timestamp();
 
@@ -200,7 +200,7 @@ mod dust_systems {
             let child_orbit : Orbit = world.read_model(body_id);
             assert(child_orbit.orbit_center == pool_id, 'not in orbit');
 
-            let child_dust_accretion = world.read_model(body_id, (DustAccretion));
+            let child_dust_accretion : DustAccretion = world.read_model(body_id);
             assert(child_dust_accretion.in_dust_pool == false, 'already in dust pool');
 
             let child_mass : Mass = world.read_model(body_id);
@@ -284,8 +284,8 @@ mod dust_systems {
             let new_dust_balance = current_dust.balance + body_unclaimed_dust;
             let dust_remainder = unclaimed_pool_dust - body_unclaimed_dust;
             let body_position : Position = world.read_model(body_id);
-            let dust_cloud_balance : DustCloud = world.read_model((body_position.vec.x, body_position.vec.y, pool_id))
-                .dust_balance;
+            let dust_cloud : DustCloud = world.read_model((body_position.vec.x, body_position.vec.y, pool_id));
+            let dust_cloud_balance = dust_cloud.dust_balance;
             world.write_model(@(
                     DustBalance { entity: body_id, balance: new_dust_balance },
                     DustAccretion {
@@ -334,7 +334,8 @@ mod dust_systems {
         }
 
         fn increase_total_pool_mass(mut world: WorldStorage, pool_id: u32, mass: u64) {
-            let pool_mass : DustPool = world.read_model(pool_id).total_mass;
+            let dust_pool : DustPool = world.read_model(pool_id);
+            let pool_mass = dust_pool.total_mass;
             world.write_model(@(DustPool { entity: pool_id, total_mass: pool_mass + mass }));
             world.emit_event(@(DustPoolMassChange {
                     body_id: pool_id, old_mass: pool_mass, new_mass: pool_mass + mass
@@ -343,7 +344,8 @@ mod dust_systems {
         }
 
         fn decrease_total_pool_mass(mut world: WorldStorage, pool_id: u32, mass: u64) {
-            let pool_mass : DustPool = world.read_model(pool_id).total_mass;
+            let dust_pool : DustPool = world.read_model(pool_id);
+            let pool_mass = dust_pool.total_mass;
             assert(pool_mass >= mass, 'pool mass too low');
             world.write_model(@(DustPool { entity: pool_id, total_mass: pool_mass - mass }));
             world.emit_event(@(DustPoolMassChange {
@@ -396,9 +398,10 @@ mod dust_systems {
             let dust_cloud : DustCloud = world.read_model((body_position.vec.x, body_position.vec.y, body_orbit.orbit_center));
             assert(dust_cloud.dust_balance >= harvest_amount, 'not enough dust');
 
-            let body_mass : Mass = world.read_model(body_id).mass;
-            let mass_to_dust : DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID).mass_to_dust;
-            let harvest_capacity: u128 = body_mass.try_into().unwrap() * mass_to_dust;
+            let body_mass : Mass = world.read_model(body_id)
+            let dust_value_config : DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID);
+            let mass_to_dust = dust_value_config.mass_to_dust;
+            let harvest_capacity: u128 = body_mass.mass.try_into().unwrap() * mass_to_dust;
             assert(harvest_capacity >= harvest_amount, 'harvest amount too high');
 
             // CHECK FOR ACTIONS
@@ -408,7 +411,7 @@ mod dust_systems {
             assert(travel_action.arrival_ts == 0, 'cannot harvest while travelling');
 
             let cur_ts = get_block_timestamp();
-            let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, body_mass);
+            let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, body_mass.mass);
 
             world.write_model(@(HarvestAction { entity: body_id, start_ts: cur_ts, end_ts, harvest_amount })
             );
@@ -477,10 +480,10 @@ mod dust_systems {
             let harvest_action : HarvestAction = world.read_model(body_id);
             assert(harvest_action.end_ts != 0, 'not harvesting');
 
-            let body_position_vec : Position = world.read_model(body_id).vec;
+            let body_position : Position = world.read_model(body_id);
 
             world.erase_model(@(harvest_action));
-            world.emit_event(@(HarvestActionCancelled { body_id, cloud_coords: body_position_vec }));
+            world.emit_event(@(HarvestActionCancelled { body_id, cloud_coords: body_position.vec }));
         }
     }
 }

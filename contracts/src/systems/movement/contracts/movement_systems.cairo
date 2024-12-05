@@ -65,11 +65,15 @@ mod movement_systems {
             let body_position : Position = world.read_model(body_id);
             assert(body_position.vec.is_equal(target_position) == false, 'already at target pos');
 
-            let traveler_body_type : CosmicBody = world.read_model(body_id).body_type;
+            let traveler_body : CosmicBody = world.read_model(body_id);
+            let traveler_body_type = traveler_body.body_type;
             assert(traveler_body_type == CosmicBodyType::AsteroidCluster, 'body type cant travel');
 
-            let orbit_center_id : Orbit = world.read_model(body_id).orbit_center;
-            let orbit_center_body_type : CosmicBody = world.read_model(orbit_center_id).body_type;
+            let orbit : Orbit = world.read_model(body_id);
+            let orbit_center_id = orbit.orbit_center;
+
+            let orbit_center_body : CosmicBody = world.read_model(orbit_center_id);
+            let orbit_center_body_type = orbit_center_body.body_type;
 
             let player = get_caller_address();
             let travel_cost = get_loosh_travel_cost(
