@@ -17,6 +17,7 @@ mod creation_systems {
     use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
+    use dojo::world::IWorldDispatcherTrait;
 
     use super::{ICreationSystems, get_loosh_cost};
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
@@ -144,7 +145,7 @@ mod creation_systems {
             let loosh_cost = get_loosh_cost(LooshSink::CreateQuasar);
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
-            let body_id = world.uuid();
+            let body_id = world.dispatcher.uuid();
             let universe_id = 0;
             let mass: BaseCosmicBodyMassConfig = world
                 .read_model(COSMIC_BODY_MASS_CONFIG_ID)
@@ -188,7 +189,7 @@ mod creation_systems {
             let loosh_cost = get_loosh_cost(LooshSink::CreateProtostar);
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
-            let body_id = world.uuid();
+            let body_id = world.dispatcher.uuid();
             let mass: BaseCosmicBodyMassConfig = world
                 .read_model(COSMIC_BODY_MASS_CONFIG_ID)
                 .base_star_mass;
@@ -243,7 +244,7 @@ mod creation_systems {
             let loosh_cost = get_loosh_cost(LooshSink::CreateAsteroidCluster);
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
-            let body_id = world.uuid();
+            let body_id = world.dispatcher.uuid();
             Self::create_cosmic_body(
                 world,
                 player,
