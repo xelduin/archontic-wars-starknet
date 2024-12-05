@@ -9,6 +9,7 @@ trait IMassSystems<T> {
 // Dojo decorator
 #[dojo::contract]
 mod mass_systems {
+    use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
 
@@ -52,7 +53,7 @@ mod mass_systems {
     #[generate_trait]
     impl InternalMassSystemsImpl of InternalMassSystemsTrait {
         fn transfer_mass(
-            world: IWorldDispatcher, sender_body_id: u32, receiver_body_id: u32, mass: u64
+            mut world: WorldStorage, sender_body_id: u32, receiver_body_id: u32, mass: u64
         ) {
             let sender_type : CosmicBody = world.read_model(sender_body_id);
             assert(
@@ -67,33 +68,33 @@ mod mass_systems {
             Self::increase_mass(world, receiver_body_id, mass);
         }
 
-        fn increase_mass(world: IWorldDispatcher, body_id: u32, mass: u64) {
+        fn increase_mass(mut world: WorldStorage, body_id: u32, mass: u64) {
             let body_mass : Mass = world.read_model(body_id);
             let new_mass = mass + body_mass.mass;
 
-            let orbit_center : Orbit = world.read_model(body_id).orbit_center;
-            let orbital_mass : OrbitalMass = world.read_model(orbit_center).orbital_mass;
+            let body_orbit : Orbit = world.read_model(body_id);
+            let parent_orbital_mass : OrbitalMass = world.read_model(body_orbit.orbit_center);
 
             world.write_model(@(
                     Mass { entity: body_id, mass: new_mass },
-                    OrbitalMass { entity: orbit_center, orbital_mass: orbital_mass + mass }
+                    OrbitalMass { entity: body_orbit.orbit_center, orbital_mass: parent_orbital_mass.orbital_mass + mass }
                 )
             );
 
             Self::on_body_mass_change(world, body_id, body_mass.mass, new_mass);
         }
 
-        fn decrease_mass(world: IWorldDispatcher, body_id: u32, mass: u64) {
+        fn decrease_mass(mut world: WorldStorage, body_id: u32, mass: u64) {
             let body_mass : Mass = world.read_model(body_id);
             assert(body_mass.mass > mass, 'not enough mass');
             let new_mass = body_mass.mass - mass;
 
-            let orbit_center : Orbit = world.read_model(body_id).orbit_center;
-            let orbital_mass : OrbitalMass = world.read_model(orbit_center).orbital_mass;
+            let body_orbit : Orbit = world.read_model(body_id);
+            let parent_orbital_mass : OrbitalMass = world.read_model(body_orbit.orbit_center);
 
             world.write_model(@(
                     Mass { entity: body_id, mass: new_mass },
-                    OrbitalMass { entity: orbit_center, orbital_mass: orbital_mass - mass }
+                    OrbitalMass { entity: body_orbit.orbit_center, orbital_mass: parent_orbital_mass.orbital_mass - mass }
                 )
             );
 
@@ -101,7 +102,7 @@ mod mass_systems {
         }
 
         fn on_body_mass_change(
-            world: IWorldDispatcher, body_id: u32, old_mass: u64, new_mass: u64
+            mut world: WorldStorage, body_id: u32, old_mass: u64, new_mass: u64
         ) {
             world.emit_event(@(BodyMassChange { body_id, old_mass, new_mass }));
 

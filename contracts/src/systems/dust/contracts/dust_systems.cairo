@@ -17,6 +17,7 @@ trait IDustSystems<T> {
 // Dojo decorator
 #[dojo::contract]
 mod dust_systems {
+    use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
 
@@ -176,7 +177,7 @@ mod dust_systems {
 
     #[generate_trait]
     impl InternalDustSystemsImpl of InternalDustSystemsTrait {
-        fn form_dust_pool(world: IWorldDispatcher, body_id: u32) {
+        fn form_dust_pool(mut world: WorldStorage, body_id: u32) {
             let cosmic_body_type : CosmicBody = world.read_model(body_id);
             assert(cosmic_body_type.body_type == CosmicBodyType::Quasar, 'must be quasar');
 
@@ -195,7 +196,7 @@ mod dust_systems {
             world.emit_event(@(DustPoolFormed { body_id, emission_rate }));
         }
 
-        fn enter_dust_pool(world: IWorldDispatcher, body_id: u32, pool_id: u32) {
+        fn enter_dust_pool(mut world: WorldStorage, body_id: u32, pool_id: u32) {
             let child_orbit : Orbit = world.read_model(body_id);
             assert(child_orbit.orbit_center == pool_id, 'not in orbit');
 
@@ -221,7 +222,7 @@ mod dust_systems {
             world.emit_event(@(DustPoolEntered { body_id, pool_id }));
         }
 
-        fn exit_dust_pool(world: IWorldDispatcher, body_id: u32) {
+        fn exit_dust_pool(mut world: WorldStorage, body_id: u32) {
             let body_orbit : Orbit = world.read_model(body_id);
             let pool_id = body_orbit.orbit_center;
 
@@ -238,7 +239,7 @@ mod dust_systems {
             world.emit_event(@(DustPoolExited { body_id, pool_id }));
         }
 
-        fn update_emission(world: IWorldDispatcher, pool_id: u32) {
+        fn update_emission(mut world: WorldStorage, pool_id: u32) {
             let dust_emission : DustEmission = world.read_model(pool_id);
             assert(dust_emission.emission_rate > 0, 'no emission');
 
@@ -261,7 +262,7 @@ mod dust_systems {
             world.emit_event(@(ARPSUpdated { body_id: pool_id, updated_ARPS }));
         }
 
-        fn update_local_pool(world: IWorldDispatcher, body_id: u32) {
+        fn update_local_pool(mut world: WorldStorage, body_id: u32) {
             let body_accretion : DustAccretion = world.read_model(body_id);
             assert(body_accretion.in_dust_pool, 'not in dust pool');
 
@@ -311,7 +312,7 @@ mod dust_systems {
             );
         }
 
-        fn update_pool_member(world: IWorldDispatcher, body_id: u32, old_mass: u64, new_mass: u64) {
+        fn update_pool_member(mut world: WorldStorage, body_id: u32, old_mass: u64, new_mass: u64) {
             assert(old_mass != new_mass, 'no mass change');
 
             let body_accretion : DustAccretion = world.read_model(body_id);
@@ -332,7 +333,7 @@ mod dust_systems {
             }
         }
 
-        fn increase_total_pool_mass(world: IWorldDispatcher, pool_id: u32, mass: u64) {
+        fn increase_total_pool_mass(mut world: WorldStorage, pool_id: u32, mass: u64) {
             let pool_mass : DustPool = world.read_model(pool_id).total_mass;
             world.write_model(@(DustPool { entity: pool_id, total_mass: pool_mass + mass }));
             world.emit_event(@(DustPoolMassChange {
@@ -341,7 +342,7 @@ mod dust_systems {
             );
         }
 
-        fn decrease_total_pool_mass(world: IWorldDispatcher, pool_id: u32, mass: u64) {
+        fn decrease_total_pool_mass(mut world: WorldStorage, pool_id: u32, mass: u64) {
             let pool_mass : DustPool = world.read_model(pool_id).total_mass;
             assert(pool_mass >= mass, 'pool mass too low');
             world.write_model(@(DustPool { entity: pool_id, total_mass: pool_mass - mass }));
@@ -351,7 +352,7 @@ mod dust_systems {
             );
         }
 
-        fn claim_dust(world: IWorldDispatcher, body_id: u32) {
+        fn claim_dust(mut world: WorldStorage, body_id: u32) {
             let body_accretion : DustAccretion = world.read_model(body_id);
             assert(body_accretion.in_dust_pool, 'not in dust pool');
 
@@ -372,7 +373,7 @@ mod dust_systems {
             world.emit_event(@(DustClaimed { body_id, amount: unclaimed_dust }));
         }
 
-        fn consume_dust(world: IWorldDispatcher, body_id: u32, amount: u128) {
+        fn consume_dust(mut world: WorldStorage, body_id: u32, amount: u128) {
             let dust_balance : DustBalance = world.read_model(body_id);
             assert(dust_balance.balance >= amount, 'insufficient dust');
 
@@ -382,7 +383,7 @@ mod dust_systems {
             world.emit_event(@(DustConsumed { body_id, amount }));
         }
 
-        fn begin_dust_harvest(world: IWorldDispatcher, body_id: u32, harvest_amount: u128) {
+        fn begin_dust_harvest(mut world: WorldStorage, body_id: u32, harvest_amount: u128) {
             let caller = get_caller_address();
             let owner : Owner = world.read_model(body_id);
             assert(caller == owner.address, 'not owner');
@@ -420,7 +421,7 @@ mod dust_systems {
             );
         }
 
-        fn end_dust_harvest(world: IWorldDispatcher, body_id: u32) {
+        fn end_dust_harvest(mut world: WorldStorage, body_id: u32) {
             let caller = get_caller_address();
             let owner : Owner = world.read_model(body_id);
             assert(caller == owner.address, 'not owner');
@@ -468,7 +469,7 @@ mod dust_systems {
             );
         }
 
-        fn cancel_dust_harvest(world: IWorldDispatcher, body_id: u32) {
+        fn cancel_dust_harvest(mut world: WorldStorage, body_id: u32) {
             let caller = get_caller_address();
             let owner : Owner = world.read_model(body_id);
             assert(caller == owner.address, 'not owner');

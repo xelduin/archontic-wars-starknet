@@ -22,6 +22,7 @@ trait IConfigSystems<T> {
 // Dojo decorator
 #[dojo::contract]
 mod config_systems {
+    use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
 

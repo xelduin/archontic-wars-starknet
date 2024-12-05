@@ -1,4 +1,6 @@
 use dojo::world::IWorldDispatcher;
+use dojo::world::WorldStorage;
+use dojo::model::{ModelValueStorage, ModelStorage};
 
 use astraplani::constants::HARVEST_TIME_CONFIG_ID;
 use astraplani::constants::DUST_VALUE_CONFIG_ID;
@@ -72,10 +74,10 @@ fn get_expected_claimable_dust_for_star(
 }
 
 fn get_harvest_end_ts(
-    world: IWorldDispatcher, start_ts: u64, harvest_amount: u128, mass: u64
+    mut world: WorldStorage, start_ts: u64, harvest_amount: u128, mass: u64
 ) -> u64 {
-    let mass_to_dust : DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID).mass_to_dust;
-    let dust_capacity = mass.try_into().unwrap() * mass_to_dust;
+    let dust_value_config : DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID);
+    let dust_capacity = mass.try_into().unwrap() * dust_value_config.mass_to_dust;
 
     assert(dust_capacity >= harvest_amount, 'cant harvest more than the mass');
 

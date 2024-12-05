@@ -14,6 +14,7 @@ trait ICreationSystems<T> {
 // Dojo decorator
 #[dojo::contract]
 mod creation_systems {
+    use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
 
@@ -132,7 +133,7 @@ mod creation_systems {
 
     #[generate_trait]
     impl InternalCreationSystemsImpl of InternalCreationSystemsTrait {
-        fn create_quasar(mut world: IWorldDispatcher, coords: Vec2) -> u32 {
+        fn create_quasar(mut world: WorldStorage, coords: Vec2) -> u32 {
             assert_caller_is_admin(world);
 
             let central_entity_at_pos: OrbitCenterAtPosition = world
@@ -175,7 +176,7 @@ mod creation_systems {
             return body_id;
         }
 
-        fn create_protostar(mut world: IWorldDispatcher, coords: Vec2, quasar_id: u32) -> u32 {
+        fn create_protostar(mut world: WorldStorage, coords: Vec2, quasar_id: u32) -> u32 {
             let quasar_body: CosmicBody = world.read_model(quasar_id);
             assert(quasar_body.body_type == CosmicBodyType::Quasar, 'invalid quasar id');
 
@@ -230,13 +231,13 @@ mod creation_systems {
         }
 
         fn create_asteroid_cluster(
-            mut world: IWorldDispatcher, coords: Vec2, star_id: u32, initial_mass: u64
+            mut world: WorldStorage, coords: Vec2, star_id: u32, initial_mass: u64
         ) -> u32 {
             let star_body : CosmicBody = world.read_model(star_id);
             assert(star_body.body_type == CosmicBodyType::Star, 'invalid star id');
 
             let player = get_caller_address();
-            let star_owner : Owner = world.read_model(star_id),
+            let star_owner : Owner = world.read_model(star_id);
             assert(star_owner.address == player, 'caller must own star');
 
             let loosh_cost = get_loosh_cost(LooshSink::CreateAsteroidCluster);
@@ -268,7 +269,7 @@ mod creation_systems {
         }
 
         fn create_cosmic_body(
-            mut world: IWorldDispatcher,
+            mut world: WorldStorage,
             owner: ContractAddress,
             body_id: u32,
             body_type: CosmicBodyType,
@@ -293,7 +294,7 @@ mod creation_systems {
             );
         }
 
-        fn form_star(mut world: IWorldDispatcher, protostar_id: u32) {
+        fn form_star(mut world: WorldStorage, protostar_id: u32) {
             let player = get_caller_address();
             let protostar_owner : Owner = world.read_model(protostar_id);
             assert(protostar_owner.address == player, 'caller must be owner');
@@ -314,7 +315,7 @@ mod creation_systems {
             world.emit_event(@(StarFormed { body_id: protostar_id, creation_ts: current_ts }));
         }
 
-        fn form_asteroids(mut world: IWorldDispatcher, star_id: u32, cluster_id: u32, mass: u64) {
+        fn form_asteroids(mut world: WorldStorage, star_id: u32, cluster_id: u32, mass: u64) {
             let player = get_caller_address();
             let star_owner : Owner = world.read_model(star_id);
             assert(star_owner.address == player, 'caller must own star');

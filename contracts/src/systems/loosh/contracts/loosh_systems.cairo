@@ -1,5 +1,4 @@
 use starknet::{ContractAddress};
-use dojo::world::IWorldDispatcher;
 use astraplani::models::loosh_sink::LooshSink;
 
 // Define the interface
@@ -13,6 +12,7 @@ trait ILooshSystems<T> {
 // Dojo decorator
 #[dojo::contract]
 mod loosh_systems {
+    use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
 
@@ -73,7 +73,7 @@ mod loosh_systems {
     #[generate_trait]
     pub impl InternalLooshSystemsImpl of InternalLooshSystemsTrait {
         fn transfer_loosh(
-            world: IWorldDispatcher,
+            mut world: WorldStorage,
             sender: ContractAddress,
             receiver: ContractAddress,
             amount: u128
@@ -95,7 +95,7 @@ mod loosh_systems {
             world.emit_event(@(LooshTransferred { sender, receiver, amount }));
         }
 
-        fn mint_loosh(world: IWorldDispatcher, receiver: ContractAddress, amount: u128,) {
+        fn mint_loosh(mut world: WorldStorage, receiver: ContractAddress, amount: u128,) {
             let current_loosh_balance : LooshBalance = world.read_model(receiver);
 
             world.write_model(@(LooshBalance {
@@ -105,7 +105,7 @@ mod loosh_systems {
             world.emit_event(@(LooshMinted { receiver, amount }));
         }
 
-        fn burn_loosh(world: IWorldDispatcher, address: ContractAddress, amount: u128,) {
+        fn burn_loosh(mut world: WorldStorage, address: ContractAddress, amount: u128,) {
             let loosh_balance : LooshBalance = world.read_model(address);
             assert(loosh_balance.balance >= amount, 'insufficient loosh');
             let new_balance = loosh_balance.balance - amount;
@@ -113,7 +113,7 @@ mod loosh_systems {
             world.emit_event(@LooshBurned { sender: address, amount });
         }
 
-        fn spend_loosh(world: IWorldDispatcher, spender: ContractAddress, cost: u128) {
+        fn spend_loosh(mut world: WorldStorage, spender: ContractAddress, cost: u128) {
             Self::burn_loosh(world, spender, cost);
         }
     }

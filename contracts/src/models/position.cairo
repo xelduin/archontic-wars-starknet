@@ -1,6 +1,9 @@
 use astraplani::models::vec2::{Vec2, Vec2Impl};
 use astraplani::models::orbit::Orbit;
 use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
+use dojo::world::WorldStorage;
+use dojo::model::{ModelStorage, ModelValueStorage};  
+
 
 #[derive(Copy, Drop, Serde)]
 #[dojo::model]
@@ -25,9 +28,9 @@ pub struct Position {
 
 #[generate_trait]
 impl PositionCustomImpl of PositionCustomTrait {
-    fn is_equal(self: Position, world: IWorldDispatcher, target: Position) -> bool {
-        let self_orbit = get!(world, self.entity, Orbit);
-        let target_orbit = get!(world, target.entity, Orbit);
+    fn is_equal(self: Position, mut world: WorldStorage, target: Position) -> bool {
+        let self_orbit :  Orbit = world.read_model(self.entity);
+        let target_orbit :  Orbit = world.read_model(target.entity);
 
         return self_orbit.orbit_center == target_orbit.orbit_center
             && self.vec.is_equal(target.vec);

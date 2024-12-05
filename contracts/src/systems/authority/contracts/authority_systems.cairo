@@ -16,6 +16,7 @@ mod authority_systems {
 
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
+    use dojo::world::WorldStorage;
 
     #[derive(Copy, Drop, Serde)]
     #[dojo::event]
@@ -42,7 +43,7 @@ mod authority_systems {
     #[generate_trait]
     impl InternalAuthoritySystemsImpl of InternalAuthoritySystemsTrait {
         fn transfer_ownership(
-            mut world: IWorldDispatcher, body_id: u32, new_owner: ContractAddress
+            mut world: WorldStorage, body_id: u32, new_owner: ContractAddress
         ) {
             world.write_model(@Owner { entity: body_id, address: new_owner });
             world.emit_event(@OwnershipTransferred { body_id, new_owner });

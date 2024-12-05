@@ -10,6 +10,7 @@ trait IMovementSystems<T> {
 // Dojo decorator
 #[dojo::contract]
 mod movement_systems {
+    use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
 
@@ -26,7 +27,6 @@ mod movement_systems {
     use astraplani::models::cosmic_body::{CosmicBody, CosmicBodyType};
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct TravelBegan {
         #[key]
@@ -37,7 +37,6 @@ mod movement_systems {
     }
 
     #[derive(Copy, Drop, Serde)]
-    #[dojo::model]
     #[dojo::event]
     struct TravelEnded {
         #[key]
@@ -59,7 +58,7 @@ mod movement_systems {
 
     #[generate_trait]
     impl InternalMovementSystemsImpl of InternalMovementSystemsTrait {
-        fn begin_travel(world: IWorldDispatcher, body_id: u32, target_position: Vec2) {
+        fn begin_travel(mut world: WorldStorage, body_id: u32, target_position: Vec2) {
             let cur_travel_action : TravelAction = world.read_model(body_id);
             assert(cur_travel_action.arrival_ts == 0, 'body already travelling');
 
@@ -90,7 +89,7 @@ mod movement_systems {
             );
         }
 
-        fn end_travel(world: IWorldDispatcher, body_id: u32) {
+        fn end_travel(mut world: WorldStorage, body_id: u32) {
             let cur_travel_action : TravelAction = world.read_model(body_id);
             let current_ts = get_block_timestamp();
 
