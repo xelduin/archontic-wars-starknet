@@ -1,23 +1,25 @@
+use starknet::{ContractAddress, testing::{set_contract_address, set_account_contract_address}};
+use starknet::contract_address_const;
+
+use dojo::world::{WorldStorage, WorldStorageTrait};
+use dojo::model::{ModelStorage, ModelValueStorage, ModelStorageTest};
+use dojo::event::EventStorage;
+use dojo::world::IWorldDispatcherTrait;
+
+use astraplani::constants::ADMIN_CONFIG_ID;
+use astraplani::utils::testing::{world::spawn_world};
+
 use astraplani::models::owner::Owner;
 use astraplani::models::loosh_balance::LooshBalance;
 use astraplani::models::position::Position;
 use astraplani::models::cosmic_body::{CosmicBody, CosmicBodyType};
 use astraplani::models::vec2::{Vec2, Vec2Impl};
 use astraplani::models::config::AdminConfig;
-use starknet::{ContractAddress, testing::{set_contract_address, set_account_contract_address}};
-use starknet::contract_address_const;
 
 use astraplani::systems::creation::contracts::creation_systems::{
     creation_systems, ICreationSystemsDispatcher, ICreationSystemsDispatcherTrait
 };
 
-use astraplani::constants::ADMIN_CONFIG_ID;
-
-use astraplani::utils::testing::{world::spawn_world};
-
-use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
-
-// Mock setup for the test
 fn setup() -> (IWorldDispatcher, ContractAddress, ContractAddress, ICreationSystemsDispatcher) {
     let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 

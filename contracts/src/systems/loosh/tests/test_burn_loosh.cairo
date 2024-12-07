@@ -1,18 +1,20 @@
-use astraplani::models::owner::Owner;
-use astraplani::models::mass::Mass;
-use astraplani::models::vec2::Vec2;
-use astraplani::models::loosh_balance::LooshBalance;
-
 use starknet::{ContractAddress, testing::{set_contract_address, set_account_contract_address}};
 use starknet::contract_address_const;
+
+use dojo::world::{WorldStorage, WorldStorageTrait};
+use dojo::model::{ModelStorage, ModelValueStorage, ModelStorageTest};
+use dojo::event::EventStorage;
+use dojo::world::IWorldDispatcherTrait;
 
 use astraplani::systems::loosh::contracts::loosh_systems::{
     loosh_systems, ILooshSystemsDispatcher, ILooshSystemsDispatcherTrait
 };
-
 use astraplani::utils::testing::{world::spawn_world};
 
-use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
+use astraplani::models::owner::Owner;
+use astraplani::models::mass::Mass;
+use astraplani::models::vec2::Vec2;
+use astraplani::models::loosh_balance::LooshBalance;
 
 fn setup() -> (IWorldDispatcher, ContractAddress, ILooshSystemsDispatcher) {
     let world = spawn_world();

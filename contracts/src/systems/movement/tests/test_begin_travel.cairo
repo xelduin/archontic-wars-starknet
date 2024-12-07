@@ -1,3 +1,24 @@
+use starknet::{
+    ContractAddress,
+    testing::{set_block_timestamp, set_contract_address, set_account_contract_address}
+};
+use starknet::contract_address_const;
+use starknet::get_block_timestamp;
+
+use dojo::world::{WorldStorage, WorldStorageTrait};
+use dojo::model::{ModelStorage, ModelValueStorage, ModelStorageTest};
+use dojo::event::EventStorage;
+use dojo::world::IWorldDispatcherTrait;
+
+use astraplani::utils::testing::{
+    world::spawn_world, spawners::spawn_star, spawners::spawn_asteroid_cluster,
+    spawners::spawn_quasar
+};
+use astraplani::utils::testing::constants::{
+    BASE_DUST_EMISSION_RATE, BASE_QUASAR_MASS, BASE_STAR_MASS
+};
+use astraplani::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
+
 use astraplani::models::owner::Owner;
 use astraplani::models::mass::Mass;
 use astraplani::models::vec2::{Vec2, Vec2Impl};
@@ -7,31 +28,12 @@ use astraplani::models::position::Position;
 use astraplani::models::cosmic_body::{CosmicBody, CosmicBodyType};
 use astraplani::models::orbit::Orbit;
 
-use astraplani::utils::travel_helpers::{get_arrival_ts, get_loosh_travel_cost};
-
-use starknet::{
-    ContractAddress,
-    testing::{set_block_timestamp, set_contract_address, set_account_contract_address}
-};
-use starknet::contract_address_const;
-use starknet::get_block_timestamp;
 
 use astraplani::systems::movement::contracts::movement_systems::{
     movement_systems, IMovementSystemsDispatcher, IMovementSystemsDispatcherTrait
 };
 
-use astraplani::utils::testing::{
-    world::spawn_world, spawners::spawn_star, spawners::spawn_asteroid_cluster,
-    spawners::spawn_quasar
-};
 
-use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
-
-use astraplani::utils::testing::constants::{
-    BASE_DUST_EMISSION_RATE, BASE_QUASAR_MASS, BASE_STAR_MASS
-};
-
-// Mock setup for the test
 fn setup() -> (
     IWorldDispatcher, u32, u32, Vec2, Vec2, ContractAddress, IMovementSystemsDispatcher
 ) {

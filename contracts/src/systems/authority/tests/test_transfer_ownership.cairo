@@ -1,3 +1,8 @@
+use dojo::world::{WorldStorage, WorldStorageTrait};
+use dojo::model::{ModelStorage, ModelValueStorage, ModelStorageTest};
+use dojo::event::EventStorage;
+use dojo::world::IWorldDispatcherTrait;
+
 use astraplani::models::owner::Owner;
 use starknet::{ContractAddress, testing::{set_contract_address, set_account_contract_address}};
 use starknet::contract_address_const;
@@ -8,26 +13,22 @@ use astraplani::systems::authority::contracts::authority_systems::{
 
 use astraplani::utils::testing::{world::spawn_world};
 
-use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
 
 // Mock setup for the test
-fn setup() -> (
-    IWorldDispatcher, u32, ContractAddress, ContractAddress, IAuthoritySystemsDispatcher
-) {
-    let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
+fn setup() -> (WorldStorage, u32, ContractAddress, ContractAddress, IAuthoritySystemsDispatcher) {
+    let mut world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 
-    let authority_address = world
-        .deploy_contract('salt', authority_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (authority_address, _) = world.dns(@"authority_systems").unwrap();
     let authority_dispatcher = IAuthoritySystemsDispatcher { contract_address: authority_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), authority_address);
 
     // Define initial body ID and contract addresses for old and new owners
     let body_id = 1;
     let old_owner = contract_address_const::<'old_owner'>();
     let new_owner = contract_address_const::<'new_owner'>();
 
-    set!(world, Owner { entity: body_id, address: old_owner });
+    let owner_model = Owner { entity: body_id, address: old_owner };
+
+    world.write_model_test(@owner_model);
 
     // Return the initial world state, body ID, and contract addresses
     (world, body_id, old_owner, new_owner, authority_dispatcher)
@@ -46,7 +47,7 @@ fn test_transfer_ownership_success() {
     authority_dispatcher.transfer_ownership(body_id, new_owner);
 
     // Check that the ownership was successfully transferred
-    let new_owner_data = get!(world, body_id, Owner);
+    let new_owner_data: Owner = world.read_model(body_id);
     assert(new_owner_data.address == new_owner, 'not owner');
 }
 
