@@ -48,10 +48,12 @@ mod movement_systems {
     #[abi(embed_v0)]
     impl MovementSystemsImpl of IMovementSystems<ContractState> {
         fn begin_travel(ref self: ContractState, body_id: u32, target_position: Vec2) {
+            let mut world = self.world(@"ns");
             InternalMovementSystemsImpl::begin_travel(world, body_id, target_position);
         }
 
         fn end_travel(ref self: ContractState, body_id: u32) {
+            let mut world = self.world(@"ns");
             InternalMovementSystemsImpl::end_travel(world, body_id);
         }
     }
@@ -59,20 +61,20 @@ mod movement_systems {
     #[generate_trait]
     impl InternalMovementSystemsImpl of InternalMovementSystemsTrait {
         fn begin_travel(mut world: WorldStorage, body_id: u32, target_position: Vec2) {
-            let cur_travel_action : TravelAction = world.read_model(body_id);
+            let cur_travel_action: TravelAction = world.read_model(body_id);
             assert(cur_travel_action.arrival_ts == 0, 'body already travelling');
 
-            let body_position : Position = world.read_model(body_id);
+            let body_position: Position = world.read_model(body_id);
             assert(body_position.vec.is_equal(target_position) == false, 'already at target pos');
 
-            let traveler_body : CosmicBody = world.read_model(body_id);
+            let traveler_body: CosmicBody = world.read_model(body_id);
             let traveler_body_type = traveler_body.body_type;
             assert(traveler_body_type == CosmicBodyType::AsteroidCluster, 'body type cant travel');
 
-            let orbit : Orbit = world.read_model(body_id);
+            let orbit: Orbit = world.read_model(body_id);
             let orbit_center_id = orbit.orbit_center;
 
-            let orbit_center_body : CosmicBody = world.read_model(orbit_center_id);
+            let orbit_center_body: CosmicBody = world.read_model(orbit_center_id);
             let orbit_center_body_type = orbit_center_body.body_type;
 
             let player = get_caller_address();
@@ -86,21 +88,33 @@ mod movement_systems {
                 world, depart_ts, body_position.vec, target_position, orbit_center_body_type
             );
 
-            world.write_model(@(TravelAction { entity: body_id, depart_ts, arrival_ts, target_position }));
-            world.emit_event(@(TravelBegan {
-                    body_id, origin_vec: body_position.vec, target_vec: target_position, arrival_ts
-                })
-            );
+            world
+                .write_model(
+                    @(TravelAction { entity: body_id, depart_ts, arrival_ts, target_position })
+                );
+
+            world
+                .emit_event(
+                    @(TravelBegan {
+                        body_id,
+                        origin_vec: body_position.vec,
+                        target_vec: target_position,
+                        arrival_ts
+                    })
+                );
         }
 
         fn end_travel(mut world: WorldStorage, body_id: u32) {
-            let cur_travel_action : TravelAction = world.read_model(body_id);
+            let cur_travel_action: TravelAction = world.read_model(body_id);
             let current_ts = get_block_timestamp();
 
             assert(cur_travel_action.arrival_ts != 0, 'invalid travel action');
             assert(current_ts >= cur_travel_action.arrival_ts, 'not arrived');
 
-            world.write_model(@(Position { entity: body_id, vec: cur_travel_action.target_position }));
+            world
+                .write_model(
+                    @(Position { entity: body_id, vec: cur_travel_action.target_position })
+                );
 
             world.erase_model(@(cur_travel_action));
 

@@ -78,38 +78,45 @@ mod loosh_systems {
             receiver: ContractAddress,
             amount: u128
         ) {
-            let current_sender_balance : LooshBalance = world.read_model(sender);
+            let current_sender_balance: LooshBalance = world.read_model(sender);
 
             assert(current_sender_balance.balance >= amount, 'insufficient balance');
 
-            let new_sender_balance = current_sender_balance.balance - amount;
+            let current_receiver_balance: LooshBalance = world.read_model(receiver);
 
-            let current_receiver_balance : LooshBalance = world.read_model(receiver);
-            let new_receiver_balance = current_receiver_balance.balance + amount;
+            let new_sender_balance = LooshBalance {
+                address: sender, balance: current_sender_balance.balance - amount
+            };
+            let new_receiver_balance = LooshBalance {
+                address: receiver, balance: current_receiver_balance.balance + amount
+            };
 
-            world.write_model(@(
-                    LooshBalance { address: sender, balance: new_sender_balance },
-                    LooshBalance { address: receiver, balance: new_receiver_balance }
-                )
-            );
+            world.write_model(@new_sender_balance);
+            world.write_model(@new_receiver_balance);
+
             world.emit_event(@(LooshTransferred { sender, receiver, amount }));
         }
 
         fn mint_loosh(mut world: WorldStorage, receiver: ContractAddress, amount: u128,) {
-            let current_loosh_balance : LooshBalance = world.read_model(receiver);
+            let current_loosh_balance: LooshBalance = world.read_model(receiver);
 
-            world.write_model(@(LooshBalance {
-                    address: receiver, balance: current_loosh_balance.balance + amount
-                })
-            );
+            let new_loosh_balance = LooshBalance {
+                address: receiver, balance: current_loosh_balance.balance + amount
+            };
+
+            world.write_model(@new_loosh_balance);
             world.emit_event(@(LooshMinted { receiver, amount }));
         }
 
         fn burn_loosh(mut world: WorldStorage, address: ContractAddress, amount: u128,) {
-            let loosh_balance : LooshBalance = world.read_model(address);
+            let loosh_balance: LooshBalance = world.read_model(address);
             assert(loosh_balance.balance >= amount, 'insufficient loosh');
             let new_balance = loosh_balance.balance - amount;
-            world.write_model(@(LooshBalance { address, balance: new_balance }));
+
+            let new_loosh_balance = LooshBalance { address, balance: new_balance };
+
+            world.write_model(@new_loosh_balance);
+
             world.emit_event(@LooshBurned { sender: address, amount });
         }
 

@@ -147,7 +147,8 @@ mod creation_systems {
 
             let body_id = world.dispatcher.uuid();
             let universe_id = 0;
-            let body_mass_config : BaseCosmicBodyMassConfig = world.read_model(COSMIC_BODY_MASS_CONFIG_ID);
+            let body_mass_config: BaseCosmicBodyMassConfig = world
+                .read_model(COSMIC_BODY_MASS_CONFIG_ID);
             let mass = body_mass_config.base_quasar_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Quasar, mass, universe_id, coords,
@@ -189,28 +190,32 @@ mod creation_systems {
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
             let body_id = world.dispatcher.uuid();
-            let body_mass_config: BaseCosmicBodyMassConfig = world.read_model(COSMIC_BODY_MASS_CONFIG_ID);
+            let body_mass_config: BaseCosmicBodyMassConfig = world
+                .read_model(COSMIC_BODY_MASS_CONFIG_ID);
             let mass = body_mass_config.base_star_mass;
             Self::create_cosmic_body(
                 world, player, body_id, CosmicBodyType::Protostar, mass, quasar_id, coords,
             );
 
             let creation_ts = get_block_timestamp();
-            let incubation_config : IncubationTimeConfig = world
+            let incubation_config: IncubationTimeConfig = world
                 .read_model(INCUBATION_TIME_CONFIG_ID);
             let incubation_period = incubation_config.base_incubation_time;
             let incubation_end_ts = creation_ts + incubation_period;
             let attributes = 20;
-            world
-                .write_model(
-                    @(
-                        Incubation { entity: body_id, creation_ts, end_ts: incubation_end_ts },
-                        OrbitCenterAtPosition {
-                            x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
-                        },
-                        BasalAttributes { entity: body_id, attributes }
-                    )
-                );
+
+            let new_incubation = Incubation {
+                entity: body_id, creation_ts, end_ts: incubation_end_ts
+            };
+            let new_orbit_center_at_position = OrbitCenterAtPosition {
+                x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
+            };
+            let new_basal_attributes = BasalAttributes { entity: body_id, attributes };
+
+            world.write_model(@new_incubation);
+            world.write_model(@new_orbit_center_at_position);
+            world.write_model(@new_basal_attributes);
+
             world
                 .emit_event(
                     @(ProtostarCreated {
@@ -232,11 +237,11 @@ mod creation_systems {
         fn create_asteroid_cluster(
             mut world: WorldStorage, coords: Vec2, star_id: u32, initial_mass: u64
         ) -> u32 {
-            let star_body : CosmicBody = world.read_model(star_id);
+            let star_body: CosmicBody = world.read_model(star_id);
             assert(star_body.body_type == CosmicBodyType::Star, 'invalid star id');
 
             let player = get_caller_address();
-            let star_owner : Owner = world.read_model(star_id);
+            let star_owner: Owner = world.read_model(star_id);
             assert(star_owner.address == player, 'caller must own star');
 
             let loosh_cost = get_loosh_cost(LooshSink::CreateAsteroidCluster);
@@ -253,16 +258,17 @@ mod creation_systems {
                 coords,
             );
 
-            world.emit_event(
-                @AsteroidClusterCreated {
-                    body_id,
-                    owner: player,
-                    mass: initial_mass,
-                    coords,
-                    parent_id: star_id,
-                    creation_ts: get_block_timestamp(),
-                }
-            );
+            world
+                .emit_event(
+                    @AsteroidClusterCreated {
+                        body_id,
+                        owner: player,
+                        mass: initial_mass,
+                        coords,
+                        parent_id: star_id,
+                        creation_ts: get_block_timestamp(),
+                    }
+                );
 
             return body_id;
         }
@@ -276,39 +282,45 @@ mod creation_systems {
             orbit_center: u32,
             coords: Vec2,
         ) {
-            let orbit_center_orbital_mass : OrbitalMass = world.read_model(orbit_center);
+            let orbit_center_orbital_mass: OrbitalMass = world.read_model(orbit_center);
 
-            world.write_model(
-                @(
-                    CosmicBody { entity: body_id, body_type },
-                    Position { entity: body_id, vec: coords },
-                    Orbit { entity: body_id, orbit_center },
-                    Mass { entity: body_id, mass },
-                    OrbitalMass {
-                        entity: orbit_center,
-                        orbital_mass: orbit_center_orbital_mass.orbital_mass + mass
-                    },
-                    Owner { entity: body_id, address: owner }
-                )
-            );
+            let new_cosmic_body = CosmicBody { entity: body_id, body_type };
+            let new_position = Position { entity: body_id, vec: coords };
+            let new_orbit = Orbit { entity: body_id, orbit_center };
+            let new_mass = Mass { entity: body_id, mass };
+            let new_orbital_mass = OrbitalMass {
+                entity: orbit_center, orbital_mass: orbit_center_orbital_mass.orbital_mass + mass
+            };
+            let new_owner = Owner { entity: body_id, address: owner };
+
+            world.write_model(@new_cosmic_body);
+            world.write_model(@new_position);
+            world.write_model(@new_orbit);
+            world.write_model(@new_mass);
+            world.write_model(@new_orbital_mass);
+            world.write_model(@new_owner);
+            //world.emit_event
         }
 
         fn form_star(mut world: WorldStorage, protostar_id: u32) {
             let player = get_caller_address();
-            let protostar_owner : Owner = world.read_model(protostar_id);
+            let protostar_owner: Owner = world.read_model(protostar_id);
             assert(protostar_owner.address == player, 'caller must be owner');
 
-            let protostar_body : CosmicBody = world.read_model(protostar_id);
+            let protostar_body: CosmicBody = world.read_model(protostar_id);
             assert(protostar_body.body_type == CosmicBodyType::Protostar, 'invalid protostar id');
 
-            let protostar_incubation : Incubation = world.read_model(protostar_id);
+            let protostar_incubation: Incubation = world.read_model(protostar_id);
             let current_ts = get_block_timestamp();
             assert(current_ts >= protostar_incubation.end_ts, 'incubation not over');
 
             let loosh_cost = get_loosh_cost(LooshSink::FormStar);
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
-            world.write_model(@(CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star }));
+            world
+                .write_model(
+                    @(CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star })
+                );
             world.erase_model(@protostar_incubation);
 
             world.emit_event(@(StarFormed { body_id: protostar_id, creation_ts: current_ts }));
@@ -316,34 +328,37 @@ mod creation_systems {
 
         fn form_asteroids(mut world: WorldStorage, star_id: u32, cluster_id: u32, mass: u64) {
             let player = get_caller_address();
-            let star_owner : Owner = world.read_model(star_id);
+            let star_owner: Owner = world.read_model(star_id);
             assert(star_owner.address == player, 'caller must own star');
 
-            let star_body : CosmicBody = world.read_model(star_id);
+            let star_body: CosmicBody = world.read_model(star_id);
             assert(star_body.body_type == CosmicBodyType::Star, 'invalid star id');
 
-            let asteroid_cluster_body :  CosmicBody= world.read_model(cluster_id);
+            let asteroid_cluster_body: CosmicBody = world.read_model(cluster_id);
             assert(
                 asteroid_cluster_body.body_type == CosmicBodyType::AsteroidCluster,
                 'invalid asteroid cluster id'
             );
 
-            let star_position :  Position= world.read_model(star_id);
-            let asteroid_cluster_position :  Position= world.read_model(cluster_id);
+            let star_position: Position = world.read_model(star_id);
+            let asteroid_cluster_position: Position = world.read_model(cluster_id);
             assert(
                 star_position.is_equal(world, asteroid_cluster_position), 'asteroid cluster too far'
             );
 
-            let dust_value_config : DustValueConfig= world.read_model(DUST_VALUE_CONFIG_ID);
+            let dust_value_config: DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID);
             let mass_to_dust = dust_value_config.mass_to_dust;
             let dust_to_consume = mass_to_dust * mass.try_into().unwrap();
 
             InternalDustSystemsImpl::consume_dust(world, star_id, dust_to_consume);
             InternalMassSystemsImpl::increase_mass(world, cluster_id, mass);
 
-            world.emit_event(
-                @(AsteroidsFormed { body_id: cluster_id, mass, creation_ts: get_block_timestamp() })
-            );
+            world
+                .emit_event(
+                    @(AsteroidsFormed {
+                        body_id: cluster_id, mass, creation_ts: get_block_timestamp()
+                    })
+                );
         }
     }
 }
