@@ -32,18 +32,11 @@ use astraplani::systems::movement::contracts::movement_systems::{
     movement_systems, IMovementSystemsDispatcher, IMovementSystemsDispatcherTrait
 };
 
-fn setup() -> (
-    IWorldDispatcher, u32, u32, Vec2, Vec2, ContractAddress, IMovementSystemsDispatcher
-) {
-    let world = spawn_world();
+fn setup() -> (WorldStorage, u32, u32, Vec2, Vec2, ContractAddress, IMovementSystemsDispatcher) {
+    let mut world = spawn_world();
 
-    let movement_address = world
-        .deploy_contract('movement_systems', movement_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (movement_address, _) = world.dns(@"movement_systems").unwrap();
     let movement_dispatcher = IMovementSystemsDispatcher { contract_address: movement_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), movement_address);
-
-    //println!("{}", movement_address);
 
     let sender_owner = contract_address_const::<'sender_owner'>();
 
@@ -66,7 +59,11 @@ fn setup() -> (
     let loosh_cost = get_loosh_travel_cost(
         world, origin_vec, destination_vec, orbit_center_body_type
     );
-    set!(world, (LooshBalance { address: sender_owner, balance: loosh_cost }));
+
+    let loosh_balance = LooshBalance { address: sender_owner, balance: loosh_cost };
+
+    world.write_model_test(@loosh_balance);
+
     (
         world,
         asteroid_cluster_id,

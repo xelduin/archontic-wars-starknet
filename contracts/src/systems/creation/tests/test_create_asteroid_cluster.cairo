@@ -19,15 +19,12 @@ use astraplani::systems::creation::contracts::creation_systems::{
 };
 
 fn setup() -> (
-    IWorldDispatcher, ContractAddress, ContractAddress, u32, u32, ICreationSystemsDispatcher
+    WorldStorage, ContractAddress, ContractAddress, u32, u32, ICreationSystemsDispatcher
 ) {
-    let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
+    let mut world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 
-    let creation_address = world
-        .deploy_contract('salt', creation_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (creation_address, _) = world.dns(@"creation_systems").unwrap();
     let creation_dispatcher = ICreationSystemsDispatcher { contract_address: creation_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), creation_address);
 
     let star_owner = contract_address_const::<'star_owner'>();
     let not_star_owner = contract_address_const::<'not_star_owner'>();
@@ -41,7 +38,7 @@ fn setup() -> (
     let star_mass = 1_000;
     let star_id = spawn_star(world, star_owner, star_coords, quasar_id, star_mass);
 
-    set!(world, (LooshBalance { address: star_owner, balance: 1_000_000_000_000_000 }));
+    world.write_model_test(@(LooshBalance { address: star_owner, balance: 1_000_000_000_000_000 }));
 
     (world, star_owner, not_star_owner, quasar_id, star_id, creation_dispatcher)
 }

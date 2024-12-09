@@ -28,15 +28,12 @@ const BASE_INCUBATION_PERIOD: u64 = 60 * 1000;
 
 // Mock setup for the test
 fn setup() -> (
-    IWorldDispatcher, ContractAddress, ContractAddress, u32, u32, u64, ICreationSystemsDispatcher
+    WorldStorage, ContractAddress, ContractAddress, u32, u32, u64, ICreationSystemsDispatcher
 ) {
-    let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
+    let mut world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 
-    let creation_address = world
-        .deploy_contract('salt', creation_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (creation_address, _) = world.dns(@"creation_systems").unwrap();
     let creation_dispatcher = ICreationSystemsDispatcher { contract_address: creation_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), creation_address);
 
     let protostar_owner = contract_address_const::<'protostar_owner'>();
     let not_protostar_owner = contract_address_const::<'not_protostar_owner'>();
@@ -55,7 +52,10 @@ fn setup() -> (
         world, protostar_owner, protostar_coords, quasar_id, protostar_mass, creation_ts, end_ts
     );
 
-    set!(world, (LooshBalance { address: protostar_owner, balance: 1_000_000_000_000_000 }));
+    world
+        .write_model_test(
+            @(LooshBalance { address: protostar_owner, balance: 1_000_000_000_000_000 })
+        );
 
     (
         world,

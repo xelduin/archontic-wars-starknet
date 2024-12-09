@@ -26,13 +26,10 @@ use astraplani::models::orbit::Orbit;
 use astraplani::utils::dust_farm::{calculate_ARPS};
 
 fn setup() -> (IWorldDispatcher, u32, u32, ContractAddress, IDustSystemsDispatcher) {
-    let world = spawn_world();
+    let mut world = spawn_world();
 
-    let dust_address = world
-        .deploy_contract('salt', dust_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (dust_address, _) = world.dns(@"dust_systems").unwrap();
     let dust_dispatcher = IDustSystemsDispatcher { contract_address: dust_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), dust_address);
 
     // Accounts
     let sender_owner = contract_address_const::<'sender_owner'>();

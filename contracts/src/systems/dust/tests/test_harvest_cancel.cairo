@@ -39,16 +39,11 @@ use astraplani::systems::dust::contracts::dust_systems::{
     dust_systems, IDustSystemsDispatcher, IDustSystemsDispatcherTrait
 };
 
-fn setup() -> (
-    IWorldDispatcher, u32, u32, ContractAddress, ContractAddress, IDustSystemsDispatcher
-) {
-    let world = spawn_world();
+fn setup() -> (WorldStorage, u32, u32, ContractAddress, ContractAddress, IDustSystemsDispatcher) {
+    let mut world = spawn_world();
 
-    let dust_address = world
-        .deploy_contract('salt', dust_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (dust_address, _) = world.dns(@"dust_systems").unwrap();
     let dust_dispatcher = IDustSystemsDispatcher { contract_address: dust_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), dust_address);
 
     // Accounts
     let sender_owner = contract_address_const::<'sender_owner'>();
@@ -66,19 +61,15 @@ fn setup() -> (
         world, sender_owner, coords, quasar_id, 10_000
     );
 
-    set!(
-        world,
-        (
-            Orbit { entity: asteroid_cluster_id, orbit_center: quasar_id },
-            Orbit { entity: star_id, orbit_center: quasar_id },
-            DustCloud {
-                x: coords.x,
-                y: coords.y,
-                orbit_center: quasar_id,
-                dust_balance: dust_decimals * 1_000_000
-            }
-        ),
-    );
+    let asteroid_orbit = Orbit { entity: asteroid_cluster_id, orbit_center: quasar_id };
+    let star_orbit = Orbit { entity: star_id, orbit_center: quasar_id };
+    let dust_cloud = DustCloud {
+        x: coords.x, y: coords.y, orbit_center: quasar_id, dust_balance: dust_decimals * 1_000_000
+    };
+
+    world.write_model_test(@asteroid_orbit);
+    world.write_model_test(@star_orbit);
+    world.write_model_test(@dust_cloud);
 
     (world, asteroid_cluster_id, quasar_id, sender_owner, non_owner, dust_dispatcher)
 }

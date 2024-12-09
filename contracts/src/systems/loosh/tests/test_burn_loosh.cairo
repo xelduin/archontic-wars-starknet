@@ -16,18 +16,17 @@ use astraplani::models::mass::Mass;
 use astraplani::models::vec2::Vec2;
 use astraplani::models::loosh_balance::LooshBalance;
 
-fn setup() -> (IWorldDispatcher, ContractAddress, ILooshSystemsDispatcher) {
-    let world = spawn_world();
+fn setup() -> (WorldStorage, ContractAddress, ILooshSystemsDispatcher) {
+    let mut world = spawn_world();
 
-    let loosh_address = world
-        .deploy_contract('salt', loosh_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (loosh_address, _) = world.dns(@"loosh_systems").unwrap();
     let loosh_dispatcher = ILooshSystemsDispatcher { contract_address: loosh_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), loosh_address);
 
     let sender_owner = contract_address_const::<'sender_owner'>();
 
-    set!(world, LooshBalance { address: sender_owner, balance: 1000 });
+    let loosh_balance = LooshBalance { address: sender_owner, balance: 1000 };
+
+    world.write_model_test(@loosh_balance);
 
     (world, sender_owner, loosh_dispatcher)
 }

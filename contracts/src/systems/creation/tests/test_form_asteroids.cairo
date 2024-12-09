@@ -33,22 +33,12 @@ use astraplani::systems::creation::contracts::creation_systems::{
 
 // Mock setup for the test
 fn setup() -> (
-    IWorldDispatcher,
-    ContractAddress,
-    ContractAddress,
-    u32,
-    u32,
-    u32,
-    u32,
-    ICreationSystemsDispatcher
+    WorldStorage, ContractAddress, ContractAddress, u32, u32, u32, u32, ICreationSystemsDispatcher
 ) {
-    let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
+    let mut world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 
-    let creation_address = world
-        .deploy_contract('salt', creation_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (creation_address, _) = world.dns(@"creation_systems").unwrap();
     let creation_dispatcher = ICreationSystemsDispatcher { contract_address: creation_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), creation_address);
 
     let star_owner = contract_address_const::<'star_owner'>();
     let not_star_owner = contract_address_const::<'not_star_owner'>();
@@ -69,14 +59,19 @@ fn setup() -> (
         world, star_owner, star_coords, quasar_id, asteroid_cluster_mass
     );
 
-    set!(
-        world,
-        (
-            DustBalance { entity: star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION },
-            DustBalance { entity: far_star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION },
-            DustBalance { entity: quasar_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION }
-        )
-    );
+    let star_dust_balance = DustBalance {
+        entity: star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
+    };
+    let far_star_dust_balance = DustBalance {
+        entity: far_star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
+    };
+    let quasar_dust_balance = DustBalance {
+        entity: quasar_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
+    };
+
+    world.write_model_test(@star_dust_balance);
+    world.write_model_test(@far_star_dust_balance);
+    world.write_model_test(@quasar_dust_balance);
 
     (
         world,

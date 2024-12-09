@@ -33,14 +33,11 @@ use astraplani::systems::dust::contracts::dust_systems::{
     dust_systems, IDustSystemsDispatcher, IDustSystemsDispatcherTrait
 };
 
-fn setup() -> (IWorldDispatcher, u32, u32, u32, ContractAddress, IDustSystemsDispatcher) {
-    let world = spawn_world();
+fn setup() -> (WorldStorage, u32, u32, u32, ContractAddress, IDustSystemsDispatcher) {
+    let mut world = spawn_world();
 
-    let dust_address = world
-        .deploy_contract('salt', dust_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (dust_address, _) = world.dns(@"dust_systems").unwrap();
     let dust_dispatcher = IDustSystemsDispatcher { contract_address: dust_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), dust_address);
 
     // Accounts
     let sender_owner = contract_address_const::<'sender_owner'>();
@@ -54,7 +51,7 @@ fn setup() -> (IWorldDispatcher, u32, u32, u32, ContractAddress, IDustSystemsDis
     let star_mass = 200;
     let star_id = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
     add_to_dust_pool(world, dust_dispatcher, quasar_id, star_id);
-    set!(world, (BasalAttributes { entity: star_id, attributes: 20 }));
+    world.write_model_test(@(BasalAttributes { entity: star_id, attributes: 20 }));
 
     let filler_star_one = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
     let filler_star_two = spawn_star(world, sender_owner, coords, quasar_id, star_mass);

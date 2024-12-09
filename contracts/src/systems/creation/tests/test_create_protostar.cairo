@@ -21,14 +21,11 @@ use astraplani::systems::creation::contracts::creation_systems::{
     creation_systems, ICreationSystemsDispatcher, ICreationSystemsDispatcherTrait
 };
 
-fn setup() -> (IWorldDispatcher, ContractAddress, u32, u32, ICreationSystemsDispatcher) {
-    let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
+fn setup() -> (WorldStorage, ContractAddress, u32, u32, ICreationSystemsDispatcher) {
+    let mut world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 
-    let creation_address = world
-        .deploy_contract('salt', creation_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (creation_address, _) = world.dns(@"creation_systems").unwrap();
     let creation_dispatcher = ICreationSystemsDispatcher { contract_address: creation_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), creation_address);
 
     let player = contract_address_const::<'old_owner'>();
 
@@ -41,7 +38,7 @@ fn setup() -> (IWorldDispatcher, ContractAddress, u32, u32, ICreationSystemsDisp
     let far_star_coords = Vec2 { x: 42, y: 23 };
     let far_star_id = spawn_star(world, player, far_star_coords, quasar_id, BASE_STAR_MASS);
 
-    set!(world, (LooshBalance { address: player, balance: 1_000_000_000_000_000 }));
+    world.write_model_test(@(LooshBalance { address: player, balance: 1_000_000_000_000_000 }));
 
     (world, player, quasar_id, far_star_id, creation_dispatcher)
 }

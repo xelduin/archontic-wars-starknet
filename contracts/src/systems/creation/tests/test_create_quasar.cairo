@@ -20,25 +20,20 @@ use astraplani::systems::creation::contracts::creation_systems::{
     creation_systems, ICreationSystemsDispatcher, ICreationSystemsDispatcherTrait
 };
 
-fn setup() -> (IWorldDispatcher, ContractAddress, ContractAddress, ICreationSystemsDispatcher) {
-    let world = spawn_world(); // Assume world::spawn_world sets up the initial world state
+fn setup() -> (WorldStorage, ContractAddress, ContractAddress, ICreationSystemsDispatcher) {
+    let mut world = spawn_world(); // Assume world::spawn_world sets up the initial world state
 
-    let creation_address = world
-        .deploy_contract('salt', creation_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (creation_address, _) = world.dns(@"creation_systems").unwrap();
     let creation_dispatcher = ICreationSystemsDispatcher { contract_address: creation_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), creation_address);
 
     let admin = contract_address_const::<'admin'>();
     let non_admin = contract_address_const::<'non_admin'>();
 
-    set!(
-        world,
-        (
-            LooshBalance { address: admin, balance: 1_000_000_000_000_000 },
-            AdminConfig { config_id: ADMIN_CONFIG_ID, admin_address: admin }
-        )
-    );
+    let loosh_balance = LooshBalance { address: admin, balance: 1_000_000_000_000_000 };
+    let admin_config = AdminConfig { config_id: ADMIN_CONFIG_ID, admin_address: admin };
+
+    world.write_model_test(@loosh_balance);
+    world.write_model_test(@admin_config);
 
     (world, admin, non_admin, creation_dispatcher)
 }

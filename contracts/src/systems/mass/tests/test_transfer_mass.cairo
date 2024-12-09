@@ -22,15 +22,12 @@ use astraplani::systems::mass::contracts::mass_systems::{
 };
 
 fn setup() -> (
-    IWorldDispatcher, u32, u32, u32, u32, ContractAddress, ContractAddress, IMassSystemsDispatcher
+    WorldStorage, u32, u32, u32, u32, ContractAddress, ContractAddress, IMassSystemsDispatcher
 ) {
-    let world = spawn_world();
+    let mut world = spawn_world();
 
-    let mass_address = world
-        .deploy_contract('salt', mass_systems::TEST_CLASS_HASH.try_into().unwrap());
+    let (mass_address, _) = world.dns(@"mass_systems").unwrap();
     let mass_dispatcher = IMassSystemsDispatcher { contract_address: mass_address };
-
-    world.grant_writer(dojo::utils::bytearray_hash(@"astraplani"), mass_address);
 
     let sender_owner = contract_address_const::<'sender_owner'>();
     let receiver_owner = contract_address_const::<'receiver_owner'>();
