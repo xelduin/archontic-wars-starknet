@@ -96,8 +96,8 @@ fn test_end_travel_valid() {
 
     let cur_ts = get_block_timestamp();
 
-    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
-    let orbit_center_body = get!(world, asteroid_cluster_orbit.orbit_center, CosmicBody);
+    let asteroid_cluster_orbit: Orbit = world.read_model(asteroid_cluster_id,);
+    let orbit_center_body: CosmicBody = world.read_model(asteroid_cluster_orbit.orbit_center);
     let arrival_ts = get_arrival_ts(
         world, cur_ts, origin_vec, destination_vec, orbit_center_body.body_type
     );
@@ -106,7 +106,7 @@ fn test_end_travel_valid() {
 
     movement_dispatcher.end_travel(asteroid_cluster_id);
 
-    let travel_action = get!(world, asteroid_cluster_id, TravelAction);
+    let travel_action: TravelAction = world.read_model(asteroid_cluster_id,);
     assert(
         travel_action.arrival_ts == 0
             && travel_action.depart_ts == 0
@@ -114,7 +114,7 @@ fn test_end_travel_valid() {
         'travel action not deleted'
     );
 
-    let asteroid_cluster_pos = get!(world, asteroid_cluster_id, Position);
+    let asteroid_cluster_pos: Position = world.read_model(asteroid_cluster_id,);
     assert(asteroid_cluster_pos.vec.is_equal(destination_vec), 'position not changed');
 }
 

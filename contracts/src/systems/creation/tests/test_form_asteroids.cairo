@@ -93,12 +93,12 @@ fn test_form_asteroids_valid() {
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);
 
-    let initial_mass = get!(world, asteroid_cluster_id, Mass);
+    let initial_mass: Mass = world.read_model(asteroid_cluster_id);
     let mass_increase = 10;
 
     creation_dispatcher.form_asteroids(star_id, asteroid_cluster_id, mass_increase);
 
-    let new_mass = get!(world, asteroid_cluster_id, Mass);
+    let new_mass: Mass = world.read_model(asteroid_cluster_id);
     assert(new_mass.mass == initial_mass.mass + mass_increase, 'failed to increase mass');
 }
 
@@ -106,9 +106,12 @@ fn test_form_asteroids_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient dust', 'ENTRYPOINT_FAILED'))]
 fn test_form_asteroids_no_dust() {
-    let (world, star_owner, _, _, star_id, _, asteroid_cluster_id, creation_dispatcher) = setup();
+    let (mut world, star_owner, _, _, star_id, _, asteroid_cluster_id, creation_dispatcher) =
+        setup();
 
-    set!(world, DustBalance { entity: star_id, balance: 0 });
+    let dust_balance = DustBalance { entity: star_id, balance: 0 };
+
+    world.write_model_test(@dust_balance);
 
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);

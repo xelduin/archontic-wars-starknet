@@ -54,11 +54,11 @@ fn test_create_asteroid_cluster_valid() {
     let coords = Vec2 { x: 20, y: 21 };
     let asteroid_cluster_id = creation_dispatcher.create_asteroid_cluster(coords, star_id);
 
-    let asteroid_cluster_owner = get!(world, asteroid_cluster_id, Owner);
+    let asteroid_cluster_owner: Owner = world.read_model(asteroid_cluster_id);
     assert(asteroid_cluster_owner.address == star_owner, 'invalid owner');
-    let asteroid_cluster_coords = get!(world, asteroid_cluster_id, Position);
+    let asteroid_cluster_coords: Position = world.read_model(asteroid_cluster_id);
     assert(asteroid_cluster_coords.vec.is_equal(coords), 'invalid coords');
-    let asteroid_cluster_body = get!(world, asteroid_cluster_id, CosmicBody);
+    let asteroid_cluster_body: CosmicBody = world.read_model(asteroid_cluster_id);
     assert(asteroid_cluster_body.body_type == CosmicBodyType::AsteroidCluster, 'invalid body type');
 }
 
@@ -66,9 +66,11 @@ fn test_create_asteroid_cluster_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
 fn test_create_asteroid_cluster_no_loosh() {
-    let (world, star_owner, _, _, star_id, creation_dispatcher) = setup();
+    let (mut world, star_owner, _, _, star_id, creation_dispatcher) = setup();
 
-    set!(world, LooshBalance { address: star_owner, balance: 0 });
+    let loosh_balance = LooshBalance { address: star_owner, balance: 0 };
+
+    world.write_model_test(@loosh_balance);
 
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);

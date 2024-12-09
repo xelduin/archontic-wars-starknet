@@ -54,11 +54,11 @@ fn test_create_protostar_valid() {
     let coords = Vec2 { x: 20, y: 21 };
     let protostar_id = creation_dispatcher.create_protostar(coords, quasar_id);
 
-    let protostar_owner = get!(world, protostar_id, Owner);
+    let protostar_owner: Owner = world.read_model(protostar_id);
     assert(protostar_owner.address == player, 'invalid owner');
-    let protostar_coords = get!(world, protostar_id, Position);
+    let protostar_coords: Position = world.read_model(protostar_id);
     assert(protostar_coords.vec.is_equal(coords), 'invalid coords');
-    let protostar_body = get!(world, protostar_id, CosmicBody);
+    let protostar_body: CosmicBody = world.read_model(protostar_id);
     assert(protostar_body.body_type == CosmicBodyType::Protostar, 'invalid body type');
 }
 
@@ -66,9 +66,11 @@ fn test_create_protostar_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
 fn test_create_protostar_no_loosh() {
-    let (world, player, quasar_id, _, creation_dispatcher) = setup();
+    let (mut world, player, quasar_id, _, creation_dispatcher) = setup();
 
-    set!(world, LooshBalance { address: player, balance: 0 });
+    let loosh_balance = LooshBalance { address: player, balance: 0 };
+
+    world.write_model_test(@loosh_balance);
 
     set_contract_address(player);
     set_account_contract_address(player);

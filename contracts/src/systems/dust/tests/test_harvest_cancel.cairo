@@ -82,17 +82,17 @@ fn test_harvest_cancel_valid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
+    let old_dust_balance: DustBalance = world.read_model(asteroid_cluster_id);
 
     let harvest_amount = 1_000;
     dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 
     dust_dispatcher.cancel_dust_harvest(asteroid_cluster_id);
 
-    let new_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
+    let new_dust_balance: DustBalance = world.read_model(asteroid_cluster_id);
     assert(new_dust_balance.balance == old_dust_balance.balance, 'dust balance incorrect');
 
-    let harvest_action = get!(world, asteroid_cluster_id, HarvestAction);
+    let harvest_action: HarvestAction = world.read_model(asteroid_cluster_id);
     assert(harvest_action.end_ts == 0, 'harvest action not destroyed');
 }
 

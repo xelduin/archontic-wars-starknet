@@ -15,7 +15,7 @@ use astraplani::models::vec2::Vec2;
 use astraplani::models::orbital_mass::OrbitalMass;
 
 fn add_to_dust_pool(
-    world: WorldStorage, dust_dispatcher: IDustSystemsDispatcher, pool_id: u32, star_id: u32
+    mut world: WorldStorage, dust_dispatcher: IDustSystemsDispatcher, pool_id: u32, star_id: u32
 ) {
     let star_mass: Mass = world.read_model(star_id);
     let pool_mass: Mass = world.read_model(pool_id);

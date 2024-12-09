@@ -32,7 +32,7 @@ fn setup() -> (
     let sender_owner = contract_address_const::<'sender_owner'>();
     let receiver_owner = contract_address_const::<'receiver_owner'>();
 
-    let quasar_id = world.uuid();
+    let quasar_id = world.dispatcher.uuid();
     let star_coords = Vec2 { x: 20, y: 20 };
     let sender_star_id = spawn_star(world, sender_owner, star_coords, quasar_id, BASE_STAR_MASS);
     let asteroid_mass = 100;
@@ -67,19 +67,19 @@ fn test_transfer_mass_valid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_mass = get!(world, sender_asteroid_id, Mass);
-    let old_receiver_mass = get!(world, receiver_asteroid_id, Mass);
+    let old_sender_mass: Mass = world.read_model(sender_asteroid_id);
+    let old_receiver_mass: Mass = world.read_model(receiver_asteroid_id);
 
     let mass_transfer = old_sender_mass.mass / 2;
 
     mass_dispatcher.transfer_mass(sender_asteroid_id, receiver_asteroid_id, mass_transfer);
 
-    let new_sender_mass = get!(world, sender_asteroid_id, Mass);
+    let new_sender_mass: Mass = world.read_model(sender_asteroid_id);
     assert(
         new_sender_mass.mass == old_sender_mass.mass - mass_transfer, 'sender mass not decreased'
     );
 
-    let new_receiver_mass = get!(world, receiver_asteroid_id, Mass);
+    let new_receiver_mass: Mass = world.read_model(receiver_asteroid_id);
     assert(
         new_receiver_mass.mass == old_receiver_mass.mass + mass_transfer,
         'receiver mass not increased'
@@ -98,7 +98,7 @@ fn test_transfer_mass_not_owner() {
     set_contract_address(receiver_owner);
     set_account_contract_address(receiver_owner);
 
-    let old_sender_mass = get!(world, sender_asteroid_id, Mass);
+    let old_sender_mass: Mass = world.read_model(sender_asteroid_id);
 
     let mass_transfer = old_sender_mass.mass / 2;
 
@@ -115,7 +115,7 @@ fn test_transfer_mass_to_far_asteroid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_mass = get!(world, sender_asteroid_id, Mass);
+    let old_sender_mass: Mass = world.read_model(sender_asteroid_id);
 
     let mass_transfer = old_sender_mass.mass / 2;
 
@@ -133,7 +133,7 @@ fn test_transfer_mass_from_non_asteroid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_mass = get!(world, sender_star_id, Mass);
+    let old_sender_mass: Mass = world.read_model(sender_star_id);
 
     let mass_transfer = old_sender_mass.mass / 2;
 
@@ -150,7 +150,7 @@ fn test_transfer_mass_from_insufficient() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_mass = get!(world, sender_asteroid_id, Mass);
+    let old_sender_mass: Mass = world.read_model(sender_asteroid_id);
 
     let mass_transfer = old_sender_mass.mass;
 

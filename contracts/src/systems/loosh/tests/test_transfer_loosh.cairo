@@ -41,19 +41,19 @@ fn test_transfer_loosh() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_balance = get!(world, sender_owner, LooshBalance);
-    let old_receiver_balance = get!(world, receiver_owner, LooshBalance);
+    let old_sender_balance: LooshBalance = world.read_model(sender_owner);
+    let old_receiver_balance: LooshBalance = world.read_model(receiver_owner);
 
     let loosh_amount = old_sender_balance.balance / 2;
     loosh_dispatcher.transfer_loosh(receiver_owner, loosh_amount);
 
-    let new_sender_balance = get!(world, sender_owner, LooshBalance);
+    let new_sender_balance: LooshBalance = world.read_model(sender_owner);
     assert(
         new_sender_balance.balance == old_sender_balance.balance - loosh_amount,
         'sender loosh not decreased'
     );
 
-    let new_receiver_balance = get!(world, receiver_owner, LooshBalance);
+    let new_receiver_balance: LooshBalance = world.read_model(receiver_owner);
     assert(
         new_receiver_balance.balance == old_receiver_balance.balance + loosh_amount,
         'receiver loosh not increased'
@@ -69,7 +69,7 @@ fn test_transfer_loosh_above_balance() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_balance = get!(world, sender_owner, LooshBalance);
+    let old_sender_balance: LooshBalance = world.read_model(sender_owner);
 
     let loosh_amount = old_sender_balance.balance + 1;
     loosh_dispatcher.transfer_loosh(receiver_owner, loosh_amount);

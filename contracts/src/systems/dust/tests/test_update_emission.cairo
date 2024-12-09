@@ -25,7 +25,7 @@ use astraplani::models::dust_pool::DustPool;
 use astraplani::models::orbit::Orbit;
 use astraplani::utils::dust_farm::{calculate_ARPS};
 
-fn setup() -> (IWorldDispatcher, u32, u32, ContractAddress, IDustSystemsDispatcher) {
+fn setup() -> (WorldStorage, u32, u32, ContractAddress, IDustSystemsDispatcher) {
     let mut world = spawn_world();
 
     let (dust_address, _) = world.dns(@"dust_systems").unwrap();
@@ -61,19 +61,19 @@ fn test_update_emission_valid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_pool_emission = get!(world, quasar_id, DustEmission);
+    let old_pool_emission: DustEmission = world.read_model(quasar_id);
 
     let cur_ts = get_block_timestamp();
     let new_ts = cur_ts + 10;
 
-    let quasar_pool = get!(world, quasar_id, DustPool);
+    let quasar_pool: DustPool = world.read_model(quasar_id);
     let expected_ARPS = calculate_ARPS(new_ts, old_pool_emission, quasar_pool.total_mass);
 
     set_block_timestamp(new_ts);
 
     dust_dispatcher.update_emission(quasar_id);
 
-    let new_pool_emission = get!(world, quasar_id, DustEmission);
+    let new_pool_emission: DustEmission = world.read_model(quasar_id);
 
     assert(new_pool_emission.ARPS == expected_ARPS, 'ARPS not updated');
     assert(new_pool_emission.last_update_ts == new_ts, 'last_update_ts not updated');

@@ -17,7 +17,7 @@ use astraplani::models::orbital_mass::OrbitalMass;
 use astraplani::models::vec2::Vec2;
 
 fn spawn_quasar(
-    world: WorldStorage, owner: ContractAddress, coords: Vec2, mass: u64, emission_rate: u128,
+    mut world: WorldStorage, owner: ContractAddress, coords: Vec2, mass: u64, emission_rate: u128,
 ) -> u32 {
     let body_type = CosmicBodyType::Quasar;
 
@@ -33,7 +33,7 @@ fn spawn_quasar(
 }
 
 fn spawn_protostar(
-    world: WorldStorage,
+    mut world: WorldStorage,
     owner: ContractAddress,
     coords: Vec2,
     orbit_center: u32,
@@ -53,7 +53,7 @@ fn spawn_protostar(
 }
 
 fn spawn_star(
-    world: WorldStorage, owner: ContractAddress, coords: Vec2, orbit_center: u32, mass: u64
+    mut world: WorldStorage, owner: ContractAddress, coords: Vec2, orbit_center: u32, mass: u64
 ) -> u32 {
     let body_type = CosmicBodyType::Star;
 
@@ -63,7 +63,7 @@ fn spawn_star(
 }
 
 fn spawn_asteroid_cluster(
-    world: WorldStorage, owner: ContractAddress, coords: Vec2, orbit_center: u32, mass: u64
+    mut world: WorldStorage, owner: ContractAddress, coords: Vec2, orbit_center: u32, mass: u64
 ) -> u32 {
     let body_type = CosmicBodyType::AsteroidCluster;
 
@@ -73,7 +73,7 @@ fn spawn_asteroid_cluster(
 }
 
 fn spawn_cosmic_body(
-    world: WorldStorage,
+    mut world: WorldStorage,
     body_type: CosmicBodyType,
     owner: ContractAddress,
     coords: Vec2,
@@ -82,7 +82,7 @@ fn spawn_cosmic_body(
 ) -> u32 {
     let body_id = world.dispatcher.uuid();
 
-    let center_orbital_mass = get!(world, orbit_center, orbital_mass::OrbitalMass).orbital_mass;
+    let center_orbital_mass: OrbitalMass = world.read_model(orbit_center);
 
     let new_owner = Owner { entity: body_id, address: owner };
     let new_cosmic_body = CosmicBody { entity: body_id, body_type };
@@ -90,7 +90,7 @@ fn spawn_cosmic_body(
     let new_mass = Mass { entity: body_id, mass };
     let new_orbit = Orbit { entity: body_id, orbit_center };
     let new_orbital_mass = OrbitalMass {
-        entity: orbit_center, orbital_mass: center_orbital_mass + mass
+        entity: orbit_center, orbital_mass: center_orbital_mass.orbital_mass + mass
     };
 
     world.write_model_test(@new_owner);

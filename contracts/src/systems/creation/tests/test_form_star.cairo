@@ -79,9 +79,9 @@ fn test_form_star_valid() {
     set_block_timestamp(end_ts);
 
     creation_dispatcher.form_star(protostar_id);
-    let protostar_body = get!(world, protostar_id, CosmicBody);
+    let protostar_body: CosmicBody = world.read_model(protostar_id);
     assert(protostar_body.body_type == CosmicBodyType::Star, 'invalid body type');
-    let protostar_incubation = get!(world, protostar_id, (Incubation));
+    let protostar_incubation: Incubation = world.read_model(protostar_id,);
     assert(protostar_incubation.end_ts == 0, 'still incubating');
 }
 
@@ -89,9 +89,11 @@ fn test_form_star_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
 fn test_form_star_no_loosh() {
-    let (world, protostar_owner, _, _, protostar_id, end_ts, creation_dispatcher) = setup();
+    let (mut world, protostar_owner, _, _, protostar_id, end_ts, creation_dispatcher) = setup();
 
-    set!(world, LooshBalance { address: protostar_owner, balance: 0 });
+    let loosh_balance = LooshBalance { address: protostar_owner, balance: 0 };
+
+    world.write_model_test(@loosh_balance);
 
     set_contract_address(protostar_owner);
     set_account_contract_address(protostar_owner);

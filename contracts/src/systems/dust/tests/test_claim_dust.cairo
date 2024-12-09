@@ -71,31 +71,29 @@ fn test_claim_dust_valid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_dust_balance = get!(world, star_id, DustBalance);
+    let old_dust_balance: DustBalance = world.read_model(star_id);
 
     let cur_ts = get_block_timestamp();
     let new_ts = cur_ts + 10;
 
-    let star_attributes = get!(world, star_id, BasalAttributes);
+    let star_attributes: BasalAttributes = world.read_model(star_id);
     let star_sense = star_attributes.get_attribute_value(BasalAttributesType::Sense);
+
+    let star_mass: Mass = world.read_model(star_id);
+    let quasar_dust_pool: DustPool = world.read_model(quasar_id);
+    let star_accretion: DustAccretion = world.read_model(star_id);
+    let quasar_emission: DustEmission = world.read_model(quasar_id);
+
     let expected_claimable_dust = get_expected_claimable_dust_for_star(
-        new_ts,
-        get!(world, star_id, Mass),
-        get!(world, quasar_id, DustPool).total_mass,
-        get!(world, star_id, DustAccretion),
-        get!(world, quasar_id, DustEmission),
-        star_sense
+        new_ts, star_mass, quasar_dust_pool.total_mass, star_accretion, quasar_emission, star_sense
     );
     let expected_balance = old_dust_balance.balance + expected_claimable_dust;
 
     set_block_timestamp(new_ts);
 
-    //dust_dispatcher.update_emission(quasar_id);
     dust_dispatcher.claim_dust(star_id);
 
-    //let dust_cloud = get!(world, (100, 100, quasar_id), DustCloud);
-
-    let new_dust_balance = get!(world, star_id, DustBalance);
+    let new_dust_balance: DustBalance = world.read_model(star_id);
 
     assert(new_dust_balance.balance == expected_balance, 'balance incorrect');
 }

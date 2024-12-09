@@ -95,15 +95,15 @@ fn test_begin_travel_valid() {
 
     movement_dispatcher.begin_travel(asteroid_cluster_id, destination_vec);
 
-    let travel_action = get!(world, asteroid_cluster_id, TravelAction);
+    let travel_action: TravelAction = world.read_model(asteroid_cluster_id);
 
     assert(travel_action.target_position.is_equal(destination_vec), 'invalid target position');
 
     let cur_ts = get_block_timestamp();
     assert(travel_action.depart_ts == cur_ts, 'invalid departure ts');
 
-    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
-    let orbit_center_body = get!(world, asteroid_cluster_orbit.orbit_center, CosmicBody);
+    let asteroid_cluster_orbit: Orbit = world.read_model(asteroid_cluster_id);
+    let orbit_center_body: CosmicBody = world.read_model(asteroid_cluster_orbit.orbit_center);
     let arrival_ts = get_arrival_ts(
         world, cur_ts, origin_vec, destination_vec, orbit_center_body.body_type
     );
@@ -152,10 +152,12 @@ fn test_begin_travel_while_travelling() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
 fn test_begin_travel_insufficient_loosh() {
-    let (world, asteroid_cluster_id, _, _, destination_vec, sender_owner, movement_dispatcher) =
+    let (mut world, asteroid_cluster_id, _, _, destination_vec, sender_owner, movement_dispatcher) =
         setup();
 
-    set!(world, (LooshBalance { address: sender_owner, balance: 0 }));
+    let loosh_balance = LooshBalance { address: sender_owner, balance: 0 };
+
+    world.write_model_test(@loosh_balance);
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);

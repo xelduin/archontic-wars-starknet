@@ -39,12 +39,12 @@ fn test_burn_loosh() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_balance = get!(world, sender_owner, LooshBalance);
+    let old_sender_balance: LooshBalance = world.read_model(sender_owner);
     let loosh_amount = old_sender_balance.balance / 2;
 
     loosh_dispatcher.burn_loosh(loosh_amount);
 
-    let new_sender_balance = get!(world, sender_owner, LooshBalance);
+    let new_sender_balance: LooshBalance = world.read_model(sender_owner);
     assert(
         new_sender_balance.balance == old_sender_balance.balance - loosh_amount,
         'sender loosh not decreased'
@@ -60,7 +60,7 @@ fn test_burn_loosh_above_balance() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_sender_balance = get!(world, sender_owner, LooshBalance);
+    let old_sender_balance: LooshBalance = world.read_model(sender_owner);
 
     let loosh_amount = old_sender_balance.balance + 1;
     loosh_dispatcher.burn_loosh(loosh_amount);

@@ -39,7 +39,7 @@ use astraplani::systems::dust::contracts::dust_systems::{
 };
 
 
-fn setup() -> (World, u32, u32, ContractAddress, ContractAddress, IDustSystemsDispatcher) {
+fn setup() -> (WorldStorage, u32, u32, ContractAddress, ContractAddress, IDustSystemsDispatcher) {
     let mut world = spawn_world();
 
     let (dust_address, _) = world.dns(@"dust_systems").unwrap();
@@ -82,17 +82,17 @@ fn test_harvest_end_valid() {
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
+    let old_dust_balance: DustBalance = world.read_model(asteroid_cluster_id);
 
     let harvest_amount = 1_000;
     dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 
-    let harvest_action = get!(world, asteroid_cluster_id, HarvestAction);
+    let harvest_action: HarvestAction = world.read_model(asteroid_cluster_id);
     set_block_timestamp(harvest_action.end_ts);
 
     dust_dispatcher.end_dust_harvest(asteroid_cluster_id);
 
-    let new_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
+    let new_dust_balance: DustBalance = world.read_model(asteroid_cluster_id);
 
     assert(
         new_dust_balance.balance == old_dust_balance.balance + harvest_amount,
@@ -103,12 +103,12 @@ fn test_harvest_end_valid() {
 #[test]
 #[available_gas(3000000000000)]
 fn test_harvest_end_less_dust_now() {
-    let (world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
+    let (mut world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
-    let old_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
+    let old_dust_balance: DustBalance = world.read_model(asteroid_cluster_id);
 
     let harvest_amount = 1_000;
     dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
@@ -117,19 +117,19 @@ fn test_harvest_end_less_dust_now() {
     set_account_contract_address(dust_dispatcher.contract_address);
 
     let new_cloud_balance = 100;
-    let asteroid_cluster_pos = get!(world, asteroid_cluster_id, Position);
-    let asteroid_cluster_orbit = get!(world, asteroid_cluster_id, Orbit);
-    set!(
-        world,
-        (DustCloud {
-            x: asteroid_cluster_pos.vec.x,
-            y: asteroid_cluster_pos.vec.y,
-            orbit_center: asteroid_cluster_orbit.orbit_center,
-            dust_balance: new_cloud_balance
-        })
-    );
+    let asteroid_cluster_pos: Position = world.read_model(asteroid_cluster_id);
+    let asteroid_cluster_orbit: Orbit = world.read_model(asteroid_cluster_id);
 
-    let harvest_action = get!(world, asteroid_cluster_id, HarvestAction);
+    let dust_cloud = DustCloud {
+        x: asteroid_cluster_pos.vec.x,
+        y: asteroid_cluster_pos.vec.y,
+        orbit_center: asteroid_cluster_orbit.orbit_center,
+        dust_balance: new_cloud_balance
+    };
+
+    world.write_model_test(@dust_cloud);
+
+    let harvest_action: HarvestAction = world.read_model(asteroid_cluster_id);
     set_block_timestamp(harvest_action.end_ts);
 
     set_contract_address(sender_owner);
@@ -137,7 +137,7 @@ fn test_harvest_end_less_dust_now() {
 
     dust_dispatcher.end_dust_harvest(asteroid_cluster_id);
 
-    let new_dust_balance = get!(world, asteroid_cluster_id, DustBalance);
+    let new_dust_balance: DustBalance = world.read_model(asteroid_cluster_id);
 
     assert(
         new_dust_balance.balance == old_dust_balance.balance + new_cloud_balance,
@@ -184,7 +184,7 @@ fn test_harvest_end_not_owner() {
     let harvest_amount = 1_000;
     dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 
-    let harvest_action = get!(world, asteroid_cluster_id, HarvestAction);
+    let harvest_action: HarvestAction = world.read_model(asteroid_cluster_id);
     set_block_timestamp(harvest_action.end_ts);
 
     set_contract_address(non_owner);

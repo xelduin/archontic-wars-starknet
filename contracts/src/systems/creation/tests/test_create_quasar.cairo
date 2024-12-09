@@ -49,11 +49,11 @@ fn test_create_quasar_valid() {
     let coords = Vec2 { x: 20, y: 21 };
     let quasar_id = creation_dispatcher.create_quasar(coords);
 
-    let quasar_owner = get!(world, quasar_id, Owner);
+    let quasar_owner: Owner = world.read_model(quasar_id,);
     assert(quasar_owner.address == admin, 'invalid owner');
-    let quasar_coords = get!(world, quasar_id, (Position));
+    let quasar_coords: Position = world.read_model(quasar_id,);
     assert(quasar_coords.vec.is_equal(coords), 'invalid coords');
-    let quasar_body = get!(world, quasar_id, (CosmicBody));
+    let quasar_body: CosmicBody = world.read_model(quasar_id,);
     assert(quasar_body.body_type == CosmicBodyType::Quasar, 'invalid body type');
 }
 
@@ -61,9 +61,11 @@ fn test_create_quasar_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('insufficient loosh', 'ENTRYPOINT_FAILED'))]
 fn test_create_quasar_no_loosh() {
-    let (world, admin, _, creation_dispatcher) = setup();
+    let (mut world, admin, _, creation_dispatcher) = setup();
 
-    set!(world, LooshBalance { address: admin, balance: 0 });
+    let loosh_balance = LooshBalance { address: admin, balance: 0 };
+
+    world.write_model_test(@loosh_balance);
 
     // Set the contract address for the caller as the old owner
     set_contract_address(admin);
