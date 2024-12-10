@@ -36,10 +36,20 @@ use astraplani::models::config::{LooshCostConfig, m_LooshCostConfig};
 use astraplani::models::config::{TravelSpeedConfig, m_TravelSpeedConfig};
 use astraplani::models::config::{IncubationTimeConfig, m_IncubationTimeConfig};
 
-//use astraplani::systems::config::contracts::config_systems::config_systems; TODO: system needs
-//events
 use astraplani::systems::authority::contracts::authority_systems::authority_systems::{
     OwnershipTransferred, e_OwnershipTransferred
+};
+use astraplani::systems::config::contracts::config_systems::config_systems::{
+    AdminConfigUpdated, e_AdminConfigUpdated, 
+    DustValueConfigUpdated, e_DustValueConfigUpdated, 
+    DustEmissionConfigUpdated, e_DustEmissionConfigUpdated, 
+    HarvestTimeConfigUpdated, e_HarvestTimeConfigUpdated, 
+    BaseCosmicBodyMassConfigUpdated, e_BaseCosmicBodyMassConfigUpdated, 
+    MinOrbitCenterMassConfigUpdated, e_MinOrbitCenterMassConfigUpdated, 
+    MaxCosmicBodyMassConfigUpdated, e_MaxCosmicBodyMassConfigUpdated, 
+    LooshCostConfigUpdated, e_LooshCostConfigUpdated, 
+    TravelSpeedConfigUpdated, e_TravelSpeedConfigUpdated, 
+    IncubationTimeConfigUpdated, e_IncubationTimeConfigUpdated, 
 };
 use astraplani::systems::creation::contracts::creation_systems::creation_systems::{
     QuasarCreated, e_QuasarCreated, ProtostarCreated, e_ProtostarCreated, AsteroidClusterCreated,
@@ -105,6 +115,16 @@ fn namespace_def() -> NamespaceDef {
             TestResource::Model(m_IncubationTimeConfig::TEST_CLASS_HASH),
             // EVENTS
             TestResource::Event(e_OwnershipTransferred::TEST_CLASS_HASH),
+            TestResource::Event(e_AdminConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_DustValueConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_DustEmissionConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_HarvestTimeConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_BaseCosmicBodyMassConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_MinOrbitCenterMassConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_MaxCosmicBodyMassConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_LooshCostConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_TravelSpeedConfigUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_IncubationTimeConfigUpdated::TEST_CLASS_HASH),
             TestResource::Event(e_QuasarCreated::TEST_CLASS_HASH),
             TestResource::Event(e_ProtostarCreated::TEST_CLASS_HASH),
             TestResource::Event(e_AsteroidClusterCreated::TEST_CLASS_HASH),
