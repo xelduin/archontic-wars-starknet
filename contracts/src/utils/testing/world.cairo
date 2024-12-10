@@ -36,6 +36,32 @@ use astraplani::models::config::{LooshCostConfig, m_LooshCostConfig};
 use astraplani::models::config::{TravelSpeedConfig, m_TravelSpeedConfig};
 use astraplani::models::config::{IncubationTimeConfig, m_IncubationTimeConfig};
 
+//use astraplani::systems::config::contracts::config_systems::config_systems; TODO: system needs
+//events
+use astraplani::systems::authority::contracts::authority_systems::authority_systems::{
+    OwnershipTransferred, e_OwnershipTransferred
+};
+use astraplani::systems::creation::contracts::creation_systems::creation_systems::{
+    QuasarCreated, e_QuasarCreated, ProtostarCreated, e_ProtostarCreated, AsteroidClusterCreated,
+    e_AsteroidClusterCreated, StarFormed, e_StarFormed, AsteroidsFormed, e_AsteroidsFormed,
+};
+use astraplani::systems::dust::contracts::dust_systems::dust_systems::{
+    DustPoolFormed, e_DustPoolFormed, DustClaimed, e_DustClaimed, DustConsumed, e_DustConsumed,
+    DustPoolMassChange, e_DustPoolMassChange, DustCloudChange, e_DustCloudChange, ARPSUpdated,
+    e_ARPSUpdated, DustPoolEntered, e_DustPoolEntered, DustPoolExited, e_DustPoolExited,
+    HarvestActionBegan, e_HarvestActionBegan, HarvestActionEnded, e_HarvestActionEnded,
+    HarvestActionCancelled, e_HarvestActionCancelled,
+};
+use astraplani::systems::loosh::contracts::loosh_systems::loosh_systems::{
+    LooshTransferred, e_LooshTransferred, LooshBurned, e_LooshBurned, LooshMinted, e_LooshMinted,
+};
+use astraplani::systems::mass::contracts::mass_systems::mass_systems::{
+    BodyMassChange, e_BodyMassChange
+};
+use astraplani::systems::movement::contracts::movement_systems::movement_systems::{
+    TravelBegan, e_TravelBegan, TravelEnded, e_TravelEnded,
+};
+
 use astraplani::systems::authority::contracts::authority_systems::authority_systems;
 use astraplani::systems::config::contracts::config_systems::config_systems;
 use astraplani::systems::creation::contracts::creation_systems::creation_systems;
@@ -77,6 +103,30 @@ fn namespace_def() -> NamespaceDef {
             TestResource::Model(m_LooshCostConfig::TEST_CLASS_HASH),
             TestResource::Model(m_TravelSpeedConfig::TEST_CLASS_HASH),
             TestResource::Model(m_IncubationTimeConfig::TEST_CLASS_HASH),
+            // EVENTS
+            TestResource::Event(e_OwnershipTransferred::TEST_CLASS_HASH),
+            TestResource::Event(e_QuasarCreated::TEST_CLASS_HASH),
+            TestResource::Event(e_ProtostarCreated::TEST_CLASS_HASH),
+            TestResource::Event(e_AsteroidClusterCreated::TEST_CLASS_HASH),
+            TestResource::Event(e_StarFormed::TEST_CLASS_HASH),
+            TestResource::Event(e_AsteroidsFormed::TEST_CLASS_HASH),
+            TestResource::Event(e_DustPoolFormed::TEST_CLASS_HASH),
+            TestResource::Event(e_DustClaimed::TEST_CLASS_HASH),
+            TestResource::Event(e_DustConsumed::TEST_CLASS_HASH),
+            TestResource::Event(e_DustPoolMassChange::TEST_CLASS_HASH),
+            TestResource::Event(e_DustCloudChange::TEST_CLASS_HASH),
+            TestResource::Event(e_ARPSUpdated::TEST_CLASS_HASH),
+            TestResource::Event(e_DustPoolEntered::TEST_CLASS_HASH),
+            TestResource::Event(e_DustPoolExited::TEST_CLASS_HASH),
+            TestResource::Event(e_HarvestActionBegan::TEST_CLASS_HASH),
+            TestResource::Event(e_HarvestActionEnded::TEST_CLASS_HASH),
+            TestResource::Event(e_HarvestActionCancelled::TEST_CLASS_HASH),
+            TestResource::Event(e_LooshTransferred::TEST_CLASS_HASH),
+            TestResource::Event(e_LooshBurned::TEST_CLASS_HASH),
+            TestResource::Event(e_LooshMinted::TEST_CLASS_HASH),
+            TestResource::Event(e_BodyMassChange::TEST_CLASS_HASH),
+            TestResource::Event(e_TravelBegan::TEST_CLASS_HASH),
+            TestResource::Event(e_TravelEnded::TEST_CLASS_HASH),
             // CONTRACTS
             TestResource::Contract(authority_systems::TEST_CLASS_HASH),
             TestResource::Contract(config_systems::TEST_CLASS_HASH),
