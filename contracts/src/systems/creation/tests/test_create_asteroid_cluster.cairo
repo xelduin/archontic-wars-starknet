@@ -10,7 +10,7 @@ use astraplani::utils::testing::{world::spawn_world, spawners::spawn_quasar, spa
 
 use astraplani::models::owner::Owner;
 use astraplani::models::loosh_balance::LooshBalance;
-use astraplani::models::position::Position;
+use astraplani::models::position::{Position, PositionCustomImpl};
 use astraplani::models::cosmic_body::{CosmicBody, CosmicBodyType};
 use astraplani::models::vec2::{Vec2, Vec2Impl};
 
@@ -51,13 +51,13 @@ fn test_create_asteroid_cluster_valid() {
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);
 
-    let coords = Vec2 { x: 20, y: 21 };
-    let asteroid_cluster_id = creation_dispatcher.create_asteroid_cluster(coords, star_id);
+    let asteroid_cluster_id = creation_dispatcher.create_asteroid_cluster(star_id);
 
     let asteroid_cluster_owner: Owner = world.read_model(asteroid_cluster_id);
     assert(asteroid_cluster_owner.address == star_owner, 'invalid owner');
-    let asteroid_cluster_coords: Position = world.read_model(asteroid_cluster_id);
-    assert(asteroid_cluster_coords.vec.is_equal(coords), 'invalid coords');
+    let asteroid_cluster_pos: Position = world.read_model(asteroid_cluster_id);
+    let star_pos: Position = world.read_model(star_id);
+    assert(asteroid_cluster_pos.is_equal(world, star_pos), 'invalid coords');
     let asteroid_cluster_body: CosmicBody = world.read_model(asteroid_cluster_id);
     assert(asteroid_cluster_body.body_type == CosmicBodyType::AsteroidCluster, 'invalid body type');
 }
@@ -75,8 +75,7 @@ fn test_create_asteroid_cluster_no_loosh() {
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);
 
-    let coords = Vec2 { x: 20, y: 21 };
-    creation_dispatcher.create_asteroid_cluster(coords, star_id);
+    creation_dispatcher.create_asteroid_cluster(star_id);
 }
 
 #[test]
@@ -88,8 +87,7 @@ fn test_create_asteroid_cluster_not_star_owner() {
     set_contract_address(not_star_owner);
     set_account_contract_address(not_star_owner);
 
-    let coords = Vec2 { x: 20, y: 21 };
-    creation_dispatcher.create_asteroid_cluster(coords, star_id);
+    creation_dispatcher.create_asteroid_cluster(star_id);
 }
 
 #[test]
@@ -101,6 +99,5 @@ fn test_create_asteroid_cluster_not_in_star() {
     set_contract_address(star_owner);
     set_account_contract_address(star_owner);
 
-    let coords = Vec2 { x: 20, y: 21 };
-    creation_dispatcher.create_asteroid_cluster(coords, quasar_id);
+    creation_dispatcher.create_asteroid_cluster(quasar_id);
 }

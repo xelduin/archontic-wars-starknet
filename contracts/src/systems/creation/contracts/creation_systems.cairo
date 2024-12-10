@@ -6,7 +6,7 @@ use astraplani::models::vec2::Vec2;
 trait ICreationSystems<T> {
     fn create_quasar(ref self: T, coords: Vec2) -> u32;
     fn create_protostar(ref self: T, coords: Vec2, quasar_id: u32) -> u32;
-    fn create_asteroid_cluster(ref self: T, coords: Vec2, star_id: u32) -> u32;
+    fn create_asteroid_cluster(ref self: T, star_id: u32) -> u32;
     fn form_star(ref self: T, protostar_id: u32);
     fn form_asteroids(ref self: T, star_id: u32, cluster_id: u32, amount: u64);
 }
@@ -114,10 +114,10 @@ mod creation_systems {
             return InternalCreationSystemsImpl::create_protostar(world, coords, quasar_id);
         }
 
-        fn create_asteroid_cluster(ref self: ContractState, coords: Vec2, star_id: u32) -> u32 {
+        fn create_asteroid_cluster(ref self: ContractState, star_id: u32) -> u32 {
             let mut world = self.world(@"ns");
             return InternalCreationSystemsImpl::create_asteroid_cluster(
-                world, coords, star_id, initial_mass: 100
+                world, star_id, initial_mass: 100
             );
         }
 
@@ -235,7 +235,7 @@ mod creation_systems {
         }
 
         fn create_asteroid_cluster(
-            mut world: WorldStorage, coords: Vec2, star_id: u32, initial_mass: u64
+            mut world: WorldStorage, star_id: u32, initial_mass: u64
         ) -> u32 {
             let star_body: CosmicBody = world.read_model(star_id);
             assert(star_body.body_type == CosmicBodyType::Star, 'invalid star id');
@@ -247,6 +247,11 @@ mod creation_systems {
             let loosh_cost = get_loosh_cost(LooshSink::CreateAsteroidCluster);
             InternalLooshSystemsImpl::spend_loosh(world, player, loosh_cost);
 
+            let star_orbit: Orbit = world.read_model(star_id);
+            let quasar_id = star_orbit.orbit_center;
+
+            let star_position: Position = world.read_model(star_id);
+
             let body_id = world.dispatcher.uuid();
             Self::create_cosmic_body(
                 world,
@@ -254,8 +259,8 @@ mod creation_systems {
                 body_id,
                 CosmicBodyType::AsteroidCluster,
                 initial_mass,
-                star_id,
-                coords,
+                quasar_id,
+                star_position.vec,
             );
 
             world
@@ -264,7 +269,7 @@ mod creation_systems {
                         body_id,
                         owner: player,
                         mass: initial_mass,
-                        coords,
+                        coords: star_position.vec,
                         parent_id: star_id,
                         creation_ts: get_block_timestamp(),
                     }
