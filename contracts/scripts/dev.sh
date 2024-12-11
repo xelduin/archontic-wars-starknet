@@ -5,9 +5,9 @@ pushd $(dirname "$0")/..
 (
     sleep 5
 
-    sozo build #--typescript --manifest-path ./Scarb.toml --bindings-output ../client/src/dojo/
+    sozo build --profile dev #--typescript --manifest-path ./Scarb.toml --bindings-output ../client/src/dojo/
 
-    sozo migrate apply
+    sozo migrate --profile dev
 ) &
 
-katana --disable-fee --allowed-origins "*"
+katana

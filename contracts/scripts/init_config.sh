@@ -2,10 +2,6 @@
 set -euo pipefail
 pushd $(dirname "$0")/..
 
-export RPC_URL="http://localhost:5050";
-
-export WORLD_ADDRESS=$(cat ./manifests/dev/deployment/manifest.json | jq -r '.world.address')
-
 export DUST_TO_MASS_CONVERSION=1;
 export BASE_DUST_EMISSION_RATE=1000000000000000000;
 export BASE_STAR_MASS=1000000;
@@ -17,9 +13,6 @@ export BASE_TRAVEL_SECONDS_PER_TILE=60;
 export MIN_HARVEST_SECONDS=3600;
 export BASE_HARVEST_SECONDS=86400;
 export BASE_INCUBATION_TIME=60;
-
-
-# sozo execute --world <WORLD_ADDRESS> <CONTRACT> <ENTRYPOINT>
 
 #sozo execute config_systems set_admin_config -c 0, --wait
 sozo execute config_systems set_incubation_time -c 0,$BASE_INCUBATION_TIME --wait
