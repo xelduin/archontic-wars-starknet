@@ -187,7 +187,7 @@ mod dust_systems {
             let current_ts = get_block_timestamp();
 
             let new_dust_emission = DustEmission {
-                entity: body_id, emission_rate, ARPS: 0, last_update_ts: current_ts
+                entity_id: body_id, emission_rate, ARPS: 0, last_update_ts: current_ts
             };
 
             world.write_model(@new_dust_emission);
@@ -212,7 +212,7 @@ mod dust_systems {
             Self::increase_total_pool_mass(world, pool_id, child_mass.mass);
 
             let new_dust_accretion = DustAccretion {
-                entity: body_id,
+                entity_id: body_id,
                 debt: parent_emission.ARPS * child_mass.mass.try_into().unwrap(),
                 in_dust_pool: true
             };
@@ -252,7 +252,7 @@ mod dust_systems {
             let updated_ARPS = calculate_ARPS(current_ts, dust_emission, pool_mass.total_mass);
 
             let new_dust_emission = DustEmission {
-                entity: pool_id,
+                entity_id: pool_id,
                 emission_rate: dust_emission.emission_rate,
                 ARPS: updated_ARPS,
                 last_update_ts: current_ts,
@@ -288,10 +288,12 @@ mod dust_systems {
                 .read_model((body_position.vec.x, body_position.vec.y, pool_id));
 
             let new_dust_balance = DustBalance {
-                entity: body_id, balance: current_dust.balance + body_unclaimed_dust
+                entity_id: body_id, balance: current_dust.balance + body_unclaimed_dust
             };
             let new_dust_accretion = DustAccretion {
-                entity: body_id, debt: body_accretion.debt + unclaimed_pool_dust, in_dust_pool: true
+                entity_id: body_id,
+                debt: body_accretion.debt + unclaimed_pool_dust,
+                in_dust_pool: true
             };
             let new_dust_cloud = DustCloud {
                 x: body_position.vec.x,
@@ -340,7 +342,7 @@ mod dust_systems {
             let dust_pool: DustPool = world.read_model(pool_id);
 
             let new_pool_mass = DustPool {
-                entity: pool_id, total_mass: dust_pool.total_mass + mass
+                entity_id: pool_id, total_mass: dust_pool.total_mass + mass
             };
 
             world.write_model(@new_pool_mass);
@@ -361,7 +363,7 @@ mod dust_systems {
             assert(dust_pool.total_mass >= mass, 'pool mass too low');
 
             let new_pool_mass = DustPool {
-                entity: pool_id, total_mass: dust_pool.total_mass - mass
+                entity_id: pool_id, total_mass: dust_pool.total_mass - mass
             };
 
             world.write_model(@new_pool_mass);
@@ -389,10 +391,10 @@ mod dust_systems {
             let current_dust: DustBalance = world.read_model(body_id);
 
             let new_dust_balance = DustBalance {
-                entity: body_id, balance: current_dust.balance + unclaimed_dust
+                entity_id: body_id, balance: current_dust.balance + unclaimed_dust
             };
             let new_dust_accretion = DustAccretion {
-                entity: body_id, debt: new_dust_balance.balance, in_dust_pool: true
+                entity_id: body_id, debt: new_dust_balance.balance, in_dust_pool: true
             };
 
             world.write_model(@new_dust_balance);
@@ -406,7 +408,7 @@ mod dust_systems {
             assert(dust_balance.balance >= amount, 'insufficient dust');
 
             let new_dust_balance = DustBalance {
-                entity: body_id, balance: dust_balance.balance - amount
+                entity_id: body_id, balance: dust_balance.balance - amount
             };
 
             world.write_model(@new_dust_balance);
@@ -444,7 +446,7 @@ mod dust_systems {
             let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, body_mass.mass);
 
             let new_harvest_action = HarvestAction {
-                entity: body_id, start_ts: cur_ts, end_ts, harvest_amount
+                entity_id: body_id, start_ts: cur_ts, end_ts, harvest_amount
             };
 
             world.write_model(@new_harvest_action);
@@ -485,7 +487,7 @@ mod dust_systems {
             };
 
             let new_dust_balance = DustBalance {
-                entity: body_id, balance: body_dust_balance.balance + harvested_dust
+                entity_id: body_id, balance: body_dust_balance.balance + harvested_dust
             };
             let new_dust_cloud = DustCloud {
                 x: body_position.vec.x,

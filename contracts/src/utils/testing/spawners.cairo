@@ -24,7 +24,7 @@ fn spawn_quasar(
     let body_id = spawn_cosmic_body(world, body_type, owner, coords, 0, mass);
 
     let dust_emission = DustEmission {
-        entity: body_id, emission_rate, ARPS: 0, last_update_ts: 0,
+        entity_id: body_id, emission_rate, ARPS: 0, last_update_ts: 0,
     };
 
     world.write_model_test(@dust_emission);
@@ -45,7 +45,7 @@ fn spawn_protostar(
 
     let body_id = spawn_cosmic_body(world, body_type, owner, coords, orbit_center, mass);
 
-    let incubation = Incubation { entity: body_id, creation_ts, end_ts };
+    let incubation = Incubation { entity_id: body_id, creation_ts, end_ts };
 
     world.write_model_test(@incubation);
 
@@ -84,13 +84,13 @@ fn spawn_cosmic_body(
 
     let center_orbital_mass: OrbitalMass = world.read_model(orbit_center);
 
-    let new_owner = Owner { entity: body_id, address: owner };
-    let new_cosmic_body = CosmicBody { entity: body_id, body_type };
-    let new_position = Position { entity: body_id, vec: coords };
-    let new_mass = Mass { entity: body_id, mass };
-    let new_orbit = Orbit { entity: body_id, orbit_center };
+    let new_owner = Owner { entity_id: body_id, address: owner };
+    let new_cosmic_body = CosmicBody { entity_id: body_id, body_type };
+    let new_position = Position { entity_id: body_id, vec: coords };
+    let new_mass = Mass { entity_id: body_id, mass };
+    let new_orbit = Orbit { entity_id: body_id, orbit_center };
     let new_orbital_mass = OrbitalMass {
-        entity: orbit_center, orbital_mass: center_orbital_mass.orbital_mass + mass
+        entity_id: orbit_center, orbital_mass: center_orbital_mass.orbital_mass + mass
     };
 
     world.write_model_test(@new_owner);

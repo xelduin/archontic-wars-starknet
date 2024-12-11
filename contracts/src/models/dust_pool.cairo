@@ -2,6 +2,6 @@
 #[dojo::model]
 pub struct DustPool {
     #[key]
-    pub entity: u32,
+    pub entity_id: u32,
     pub total_mass: u64,
 }

@@ -61,8 +61,8 @@ fn setup() -> (WorldStorage, u32, u32, ContractAddress, ContractAddress, IDustSy
         world, sender_owner, coords, quasar_id, 10_000
     );
 
-    let asteroid_orbit = Orbit { entity: asteroid_cluster_id, orbit_center: quasar_id };
-    let star_orbit = Orbit { entity: star_id, orbit_center: quasar_id };
+    let asteroid_orbit = Orbit { entity_id: asteroid_cluster_id, orbit_center: quasar_id };
+    let star_orbit = Orbit { entity_id: star_id, orbit_center: quasar_id };
     let dust_cloud = DustCloud {
         x: coords.x, y: coords.y, orbit_center: quasar_id, dust_balance: dust_decimals * 1_000_000
     };

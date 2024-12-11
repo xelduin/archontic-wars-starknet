@@ -75,15 +75,15 @@ mod mass_systems {
             let body_orbit: Orbit = world.read_model(body_id);
             let parent_orbital_mass: OrbitalMass = world.read_model(body_orbit.orbit_center);
 
-            let new_mass_model = Mass { entity: body_id, mass: new_mass };
+            let new_mass_model = Mass { entity_id: body_id, mass: new_mass };
             let new_orbital_mass_model = OrbitalMass {
-                            entity: body_orbit.orbit_center,
-                            orbital_mass: parent_orbital_mass.orbital_mass + mass
+                entity_id: body_orbit.orbit_center,
+                orbital_mass: parent_orbital_mass.orbital_mass + mass
             };
 
             world.write_model(@new_mass_model);
             world.write_model(@new_orbital_mass_model);
-            
+
             Self::on_body_mass_change(world, body_id, body_mass.mass, new_mass);
         }
 
@@ -95,9 +95,9 @@ mod mass_systems {
             let body_orbit: Orbit = world.read_model(body_id);
             let parent_orbital_mass: OrbitalMass = world.read_model(body_orbit.orbit_center);
 
-            let new_mass_model = Mass { entity: body_id, mass: new_mass };
+            let new_mass_model = Mass { entity_id: body_id, mass: new_mass };
             let new_orbital_mass_model = OrbitalMass {
-                entity: body_orbit.orbit_center,
+                entity_id: body_orbit.orbit_center,
                 orbital_mass: parent_orbital_mass.orbital_mass - mass
             };
 

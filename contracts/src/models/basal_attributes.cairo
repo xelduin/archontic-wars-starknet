@@ -7,7 +7,7 @@ pub enum BasalAttributesType {
 #[dojo::model]
 pub struct BasalAttributes {
     #[key]
-    pub entity: u32,
+    pub entity_id: u32,
     pub attributes: u8, // Assuming 12 attributes as stated
 }
 
@@ -21,6 +21,6 @@ impl BasalAttributesImpl of BasalAttributesTrait {
         self: BasalAttributes, attribute_type: BasalAttributesType, attribute_value: u8
     ) -> BasalAttributes {
         assert(attribute_value <= 100, 'attribute over 100');
-        return BasalAttributes { entity: self.entity, attributes: attribute_value };
+        return BasalAttributes { entity_id: self.entity_id, attributes: attribute_value };
     }
 }

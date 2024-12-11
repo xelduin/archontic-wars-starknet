@@ -63,8 +63,8 @@ fn setup() -> (WorldStorage, u32, u32, ContractAddress, ContractAddress, IDustSy
         world, sender_owner, coords, quasar_id, 10_000
     );
 
-    let asteroid_orbit = Orbit { entity: asteroid_cluster_id, orbit_center: quasar_id };
-    let star_orbit = Orbit { entity: star_id, orbit_center: quasar_id };
+    let asteroid_orbit = Orbit { entity_id: asteroid_cluster_id, orbit_center: quasar_id };
+    let star_orbit = Orbit { entity_id: star_id, orbit_center: quasar_id };
     let dust_cloud = DustCloud {
         x: coords.x, y: coords.y, orbit_center: quasar_id, dust_balance: dust_decimals * 1_000_000
     };
@@ -107,7 +107,7 @@ fn test_harvest_begin_no_dust() {
     let (mut world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
 
     // We move to 20,20, where there isnt a DustCloud
-    let new_asteroid_pos = Position { entity: asteroid_cluster_id, vec: Vec2 { x: 20, y: 20 } };
+    let new_asteroid_pos = Position { entity_id: asteroid_cluster_id, vec: Vec2 { x: 20, y: 20 } };
 
     world.write_model_test(@new_asteroid_pos);
 
@@ -171,7 +171,7 @@ fn test_harvest_begin_is_travelling() {
 
     let cur_ts = get_block_timestamp();
     let travel_action = TravelAction {
-        entity: asteroid_cluster_id,
+        entity_id: asteroid_cluster_id,
         depart_ts: cur_ts,
         arrival_ts: cur_ts + 10_000,
         target_position: Vec2 { x: 20, y: 20 }

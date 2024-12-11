@@ -26,7 +26,7 @@ fn setup() -> (WorldStorage, u32, ContractAddress, ContractAddress, IAuthoritySy
     let old_owner = contract_address_const::<'old_owner'>();
     let new_owner = contract_address_const::<'new_owner'>();
 
-    let owner_model = Owner { entity: body_id, address: old_owner };
+    let owner_model = Owner { entity_id: body_id, address: old_owner };
 
     world.write_model_test(@owner_model);
 

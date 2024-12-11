@@ -139,7 +139,7 @@ mod creation_systems {
 
             let central_entity_at_pos: OrbitCenterAtPosition = world
                 .read_model((coords.x, coords.y, 0));
-            assert(central_entity_at_pos.entity == 0, 'coords are occupied');
+            assert(central_entity_at_pos.entity_id == 0, 'coords are occupied');
 
             let player = get_caller_address();
             let loosh_cost = get_loosh_cost(LooshSink::CreateQuasar);
@@ -157,7 +157,7 @@ mod creation_systems {
             world
                 .write_model(
                     @(OrbitCenterAtPosition {
-                        x: coords.x, y: coords.y, orbit_center: universe_id, entity: body_id
+                        x: coords.x, y: coords.y, orbit_center: universe_id, entity_id: body_id
                     })
                 );
             world
@@ -183,7 +183,7 @@ mod creation_systems {
 
             let central_entity_at_pos: OrbitCenterAtPosition = world
                 .read_model((coords.x, coords.y, quasar_id));
-            assert(central_entity_at_pos.entity == 0, 'coords are occupied');
+            assert(central_entity_at_pos.entity_id == 0, 'coords are occupied');
 
             let player = get_caller_address();
             let loosh_cost = get_loosh_cost(LooshSink::CreateProtostar);
@@ -205,12 +205,12 @@ mod creation_systems {
             let attributes = 20;
 
             let new_incubation = Incubation {
-                entity: body_id, creation_ts, end_ts: incubation_end_ts
+                entity_id: body_id, creation_ts, end_ts: incubation_end_ts
             };
             let new_orbit_center_at_position = OrbitCenterAtPosition {
-                x: coords.x, y: coords.y, orbit_center: quasar_id, entity: body_id
+                x: coords.x, y: coords.y, orbit_center: quasar_id, entity_id: body_id
             };
-            let new_basal_attributes = BasalAttributes { entity: body_id, attributes };
+            let new_basal_attributes = BasalAttributes { entity_id: body_id, attributes };
 
             world.write_model(@new_incubation);
             world.write_model(@new_orbit_center_at_position);
@@ -289,14 +289,14 @@ mod creation_systems {
         ) {
             let orbit_center_orbital_mass: OrbitalMass = world.read_model(orbit_center);
 
-            let new_cosmic_body = CosmicBody { entity: body_id, body_type };
-            let new_position = Position { entity: body_id, vec: coords };
-            let new_orbit = Orbit { entity: body_id, orbit_center };
-            let new_mass = Mass { entity: body_id, mass };
+            let new_cosmic_body = CosmicBody { entity_id: body_id, body_type };
+            let new_position = Position { entity_id: body_id, vec: coords };
+            let new_orbit = Orbit { entity_id: body_id, orbit_center };
+            let new_mass = Mass { entity_id: body_id, mass };
             let new_orbital_mass = OrbitalMass {
-                entity: orbit_center, orbital_mass: orbit_center_orbital_mass.orbital_mass + mass
+                entity_id: orbit_center, orbital_mass: orbit_center_orbital_mass.orbital_mass + mass
             };
-            let new_owner = Owner { entity: body_id, address: owner };
+            let new_owner = Owner { entity_id: body_id, address: owner };
 
             world.write_model(@new_cosmic_body);
             world.write_model(@new_position);
@@ -324,7 +324,7 @@ mod creation_systems {
 
             world
                 .write_model(
-                    @(CosmicBody { entity: protostar_id, body_type: CosmicBodyType::Star })
+                    @(CosmicBody { entity_id: protostar_id, body_type: CosmicBodyType::Star })
                 );
             world.erase_model(@protostar_incubation);
 

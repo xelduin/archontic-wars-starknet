@@ -60,13 +60,13 @@ fn setup() -> (
     );
 
     let star_dust_balance = DustBalance {
-        entity: star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
+        entity_id: star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
     };
     let far_star_dust_balance = DustBalance {
-        entity: far_star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
+        entity_id: far_star_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
     };
     let quasar_dust_balance = DustBalance {
-        entity: quasar_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
+        entity_id: quasar_id, balance: 1_000_000_000 * MASS_TO_DUST_CONVERSION
     };
 
     world.write_model_test(@star_dust_balance);
@@ -109,7 +109,7 @@ fn test_form_asteroids_no_dust() {
     let (mut world, star_owner, _, _, star_id, _, asteroid_cluster_id, creation_dispatcher) =
         setup();
 
-    let dust_balance = DustBalance { entity: star_id, balance: 0 };
+    let dust_balance = DustBalance { entity_id: star_id, balance: 0 };
 
     world.write_model_test(@dust_balance);
 

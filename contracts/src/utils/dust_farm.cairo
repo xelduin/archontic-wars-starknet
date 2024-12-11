@@ -43,7 +43,7 @@ fn get_expected_dust_increase(
     let new_ARPS = calculate_ARPS(at_ts, pool_emission, total_pool_mass);
 
     let updated_pool_emission = DustEmission {
-        entity: pool_emission.entity,
+        entity_id: pool_emission.entity_id,
         emission_rate: pool_emission.emission_rate,
         ARPS: new_ARPS,
         last_update_ts: at_ts,
@@ -76,12 +76,12 @@ fn get_expected_claimable_dust_for_star(
 fn get_harvest_end_ts(
     mut world: WorldStorage, start_ts: u64, harvest_amount: u128, mass: u64
 ) -> u64 {
-    let dust_value_config : DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID);
+    let dust_value_config: DustValueConfig = world.read_model(DUST_VALUE_CONFIG_ID);
     let dust_capacity = mass.try_into().unwrap() * dust_value_config.mass_to_dust;
 
     assert(dust_capacity >= harvest_amount, 'cant harvest more than the mass');
 
-    let harvest_time_config : HarvestTimeConfig = world.read_model(HARVEST_TIME_CONFIG_ID);
+    let harvest_time_config: HarvestTimeConfig = world.read_model(HARVEST_TIME_CONFIG_ID);
 
     let min_time = harvest_time_config.min_harvest_time;
     let base_time = harvest_time_config.base_harvest_time;

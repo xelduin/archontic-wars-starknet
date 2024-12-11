@@ -2,6 +2,6 @@
 #[dojo::model]
 pub struct DustBalance {
     #[key]
-    pub entity: u32,
+    pub entity_id: u32,
     pub balance: u128,
 }

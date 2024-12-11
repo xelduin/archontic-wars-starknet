@@ -51,7 +51,7 @@ fn setup() -> (WorldStorage, u32, u32, u32, ContractAddress, IDustSystemsDispatc
     let star_mass = 200;
     let star_id = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
     add_to_dust_pool(world, dust_dispatcher, quasar_id, star_id);
-    world.write_model_test(@(BasalAttributes { entity: star_id, attributes: 20 }));
+    world.write_model_test(@(BasalAttributes { entity_id: star_id, attributes: 20 }));
 
     let filler_star_one = spawn_star(world, sender_owner, coords, quasar_id, star_mass);
     let filler_star_two = spawn_star(world, sender_owner, coords, quasar_id, star_mass);

@@ -90,7 +90,7 @@ mod movement_systems {
 
             world
                 .write_model(
-                    @(TravelAction { entity: body_id, depart_ts, arrival_ts, target_position })
+                    @(TravelAction { entity_id: body_id, depart_ts, arrival_ts, target_position })
                 );
 
             world
@@ -113,7 +113,7 @@ mod movement_systems {
 
             world
                 .write_model(
-                    @(Position { entity: body_id, vec: cur_travel_action.target_position })
+                    @(Position { entity_id: body_id, vec: cur_travel_action.target_position })
                 );
 
             world.erase_model(@(cur_travel_action));

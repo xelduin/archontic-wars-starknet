@@ -2,7 +2,7 @@
 #[dojo::model]
 pub struct CosmicBody {
     #[key]
-    pub entity: u32,
+    pub entity_id: u32,
     pub body_type: CosmicBodyType,
 }
 

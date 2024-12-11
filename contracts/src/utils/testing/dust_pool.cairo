@@ -21,10 +21,10 @@ fn add_to_dust_pool(
     let pool_mass: Mass = world.read_model(pool_id);
     let pool_orbital_mass: OrbitalMass = world.read_model(pool_id);
 
-    let new_star_orbit = Orbit { entity: star_id, orbit_center: pool_id };
-    let new_pool_mass = Mass { entity: pool_id, mass: pool_mass.mass, };
+    let new_star_orbit = Orbit { entity_id: star_id, orbit_center: pool_id };
+    let new_pool_mass = Mass { entity_id: pool_id, mass: pool_mass.mass, };
     let new_pool_orbital_mass = OrbitalMass {
-        entity: pool_id, orbital_mass: pool_orbital_mass.orbital_mass + star_mass.mass,
+        entity_id: pool_id, orbital_mass: pool_orbital_mass.orbital_mass + star_mass.mass,
     };
 
     world.write_model_test(@new_star_orbit);

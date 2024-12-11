@@ -2,6 +2,6 @@
 #[dojo::model]
 pub struct OrbitalMass {
     #[key]
-    pub entity: u32,
+    pub entity_id: u32,
     pub orbital_mass: u64,
 }

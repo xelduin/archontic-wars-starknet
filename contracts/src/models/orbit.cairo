@@ -2,6 +2,6 @@
 #[dojo::model]
 pub struct Orbit {
     #[key]
-    pub entity: u32,
+    pub entity_id: u32,
     pub orbit_center: u32,
 }
