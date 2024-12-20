@@ -9,9 +9,30 @@ trait IDustHarvestSystems<T> {
 mod dust_harvest_systems {
     use super::{IDustHarvestSystems};
 
+    use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
+
     use dojo::world::WorldStorage;
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
+
+    use astraplani::utils::dust_farm::{get_harvest_end_ts};
+
+    use astraplani::constants::DUST_VALUE_CONFIG_ID;
+
+    use astraplani::models::config::DustValueConfig;
+
+    use astraplani::models::dust_balance::DustBalance;
+    use astraplani::models::orbit::Orbit;
+    use astraplani::models::owner::Owner;
+    use astraplani::models::travel_action::TravelAction;
+    use astraplani::models::harvest_action::HarvestAction;
+    use astraplani::models::mass::Mass;
+    use astraplani::models::cosmic_body::{CosmicBody, CosmicBodyType};
+    use astraplani::models::dust_cloud::DustCloud;
+    use astraplani::models::position::Position;
+    use astraplani::models::vec2::Vec2;
+
+    use astraplani::systems::dust::contracts::dust_systems::dust_systems::DustCloudChange;
 
     #[derive(Copy, Drop, Serde)]
     #[dojo::event]
@@ -44,15 +65,15 @@ mod dust_harvest_systems {
     impl DustHarvestSystems of IDustHarvestSystems<ContractState> {
         fn begin_dust_harvest(ref self: ContractState, body_id: u32, harvest_amount: u128) {
             let mut world = self.world(@"ns");
-            InternalDustSystemsImpl::begin_dust_harvest(world, body_id, harvest_amount);
+            InternalDustHarvestSystemsImpl::begin_dust_harvest(world, body_id, harvest_amount);
         }
         fn end_dust_harvest(ref self: ContractState, body_id: u32) {
             let mut world = self.world(@"ns");
-            InternalDustSystemsImpl::end_dust_harvest(world, body_id);
+            InternalDustHarvestSystemsImpl::end_dust_harvest(world, body_id);
         }
         fn cancel_dust_harvest(ref self: ContractState, body_id: u32) {
             let mut world = self.world(@"ns");
-            InternalDustSystemsImpl::cancel_dust_harvest(world, body_id);
+            InternalDustHarvestSystemsImpl::cancel_dust_harvest(world, body_id);
         }
     }
 

@@ -36,16 +36,20 @@ use astraplani::models::position::Position;
 use astraplani::constants::DUST_VALUE_CONFIG_ID;
 use astraplani::models::config::DustValueConfig;
 
-use astraplani::systems::dust::contracts::dust_systems::{
-    dust_systems, IDustSystemsDispatcher, IDustSystemsDispatcherTrait
+use astraplani::systems::dust::contracts::dust_harvest_systems::{
+    dust_harvest_systems, IDustHarvestSystemsDispatcher, IDustHarvestSystemsDispatcherTrait
 };
 
 // Mock setup for the test
-fn setup() -> (WorldStorage, u32, u32, ContractAddress, ContractAddress, IDustSystemsDispatcher) {
+fn setup() -> (
+    WorldStorage, u32, u32, ContractAddress, ContractAddress, IDustHarvestSystemsDispatcher
+) {
     let mut world = spawn_world();
 
-    let (dust_address, _) = world.dns(@"dust_systems").unwrap();
-    let dust_dispatcher = IDustSystemsDispatcher { contract_address: dust_address };
+    let (dust_harvest_address, _) = world.dns(@"dust_harvest_systems").unwrap();
+    let dust_harvest_dispatcher = IDustHarvestSystemsDispatcher {
+        contract_address: dust_harvest_address
+    };
 
     // Accounts
     let sender_owner = contract_address_const::<'sender_owner'>();
@@ -73,13 +77,13 @@ fn setup() -> (WorldStorage, u32, u32, ContractAddress, ContractAddress, IDustSy
     world.write_model_test(@star_orbit);
     world.write_model_test(@dust_cloud);
 
-    (world, asteroid_cluster_id, quasar_id, sender_owner, non_owner, dust_dispatcher)
+    (world, asteroid_cluster_id, quasar_id, sender_owner, non_owner, dust_harvest_dispatcher)
 }
 
 #[test]
 #[available_gas(3000000000000)]
 fn test_harvest_begin_valid() {
-    let (world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
+    let (world, asteroid_cluster_id, _, sender_owner, _, dust_harvest_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
@@ -87,7 +91,7 @@ fn test_harvest_begin_valid() {
     let cur_ts = get_block_timestamp();
 
     let harvest_amount = 1_000;
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
+    dust_harvest_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 
     let asteroid_cluster_mass: Mass = world.read_model(asteroid_cluster_id);
     let end_ts = get_harvest_end_ts(world, cur_ts, harvest_amount, asteroid_cluster_mass.mass);
@@ -104,7 +108,7 @@ fn test_harvest_begin_valid() {
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('not enough dust', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_begin_no_dust() {
-    let (mut world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
+    let (mut world, asteroid_cluster_id, _, sender_owner, _, dust_harvest_dispatcher) = setup();
 
     // We move to 20,20, where there isnt a DustCloud
     let new_asteroid_pos = Position { entity_id: asteroid_cluster_id, vec: Vec2 { x: 20, y: 20 } };
@@ -115,27 +119,27 @@ fn test_harvest_begin_no_dust() {
     set_account_contract_address(sender_owner);
 
     let harvest_amount = 1_000;
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
+    dust_harvest_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 }
 
 #[test]
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('not owner', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_begin_not_owner() {
-    let (_, asteroid_cluster_id, _, _, non_owner, dust_dispatcher) = setup();
+    let (_, asteroid_cluster_id, _, _, non_owner, dust_harvest_dispatcher) = setup();
 
     set_contract_address(non_owner);
     set_account_contract_address(non_owner);
 
     let harvest_amount = 1_000;
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
+    dust_harvest_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 }
 
 #[test]
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('harvest amount too high', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_begin_insufficient_mass() {
-    let (world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
+    let (world, asteroid_cluster_id, _, sender_owner, _, dust_harvest_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
@@ -146,28 +150,28 @@ fn test_harvest_begin_insufficient_mass() {
     let harvest_capacity: u128 = asteroid_cluster_mass.mass.try_into().unwrap()
         * dust_value_config.mass_to_dust;
 
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_capacity + 1);
+    dust_harvest_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_capacity + 1);
 }
 
 #[test]
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('entity already harvesting', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_begin_already_harvesting() {
-    let (_, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
+    let (_, asteroid_cluster_id, _, sender_owner, _, dust_harvest_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
     let harvest_amount = 1_000;
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
+    dust_harvest_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
+    dust_harvest_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 }
 
 #[test]
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('cannot harvest while travelling', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_begin_is_travelling() {
-    let (mut world, asteroid_cluster_id, _, sender_owner, _, dust_dispatcher) = setup();
+    let (mut world, asteroid_cluster_id, _, sender_owner, _, dust_harvest_dispatcher) = setup();
 
     let cur_ts = get_block_timestamp();
     let travel_action = TravelAction {
@@ -183,19 +187,19 @@ fn test_harvest_begin_is_travelling() {
     set_account_contract_address(sender_owner);
 
     let harvest_amount = 1_000;
-    dust_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
+    dust_harvest_dispatcher.begin_dust_harvest(asteroid_cluster_id, harvest_amount);
 }
 
 #[test]
 #[available_gas(3000000000000)]
 #[should_panic(expected: ('invalid body type', 'ENTRYPOINT_FAILED'))]
 fn test_harvest_begin_invalid_body() {
-    let (_, _, star_id, sender_owner, _, dust_dispatcher) = setup();
+    let (_, _, star_id, sender_owner, _, dust_harvest_dispatcher) = setup();
 
     set_contract_address(sender_owner);
     set_account_contract_address(sender_owner);
 
     let harvest_amount = 1_000;
-    dust_dispatcher.begin_dust_harvest(star_id, harvest_amount);
+    dust_harvest_dispatcher.begin_dust_harvest(star_id, harvest_amount);
 }
 

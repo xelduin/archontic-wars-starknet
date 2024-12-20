@@ -40,16 +40,13 @@ use astraplani::systems::authority::contracts::authority_systems::authority_syst
     OwnershipTransferred, e_OwnershipTransferred
 };
 use astraplani::systems::config::contracts::config_systems::config_systems::{
-    AdminConfigUpdated, e_AdminConfigUpdated, 
-    DustValueConfigUpdated, e_DustValueConfigUpdated, 
-    DustEmissionConfigUpdated, e_DustEmissionConfigUpdated, 
-    HarvestTimeConfigUpdated, e_HarvestTimeConfigUpdated, 
-    BaseCosmicBodyMassConfigUpdated, e_BaseCosmicBodyMassConfigUpdated, 
-    MinOrbitCenterMassConfigUpdated, e_MinOrbitCenterMassConfigUpdated, 
-    MaxCosmicBodyMassConfigUpdated, e_MaxCosmicBodyMassConfigUpdated, 
-    LooshCostConfigUpdated, e_LooshCostConfigUpdated, 
-    TravelSpeedConfigUpdated, e_TravelSpeedConfigUpdated, 
-    IncubationTimeConfigUpdated, e_IncubationTimeConfigUpdated, 
+    AdminConfigUpdated, e_AdminConfigUpdated, DustValueConfigUpdated, e_DustValueConfigUpdated,
+    DustEmissionConfigUpdated, e_DustEmissionConfigUpdated, HarvestTimeConfigUpdated,
+    e_HarvestTimeConfigUpdated, BaseCosmicBodyMassConfigUpdated, e_BaseCosmicBodyMassConfigUpdated,
+    MinOrbitCenterMassConfigUpdated, e_MinOrbitCenterMassConfigUpdated,
+    MaxCosmicBodyMassConfigUpdated, e_MaxCosmicBodyMassConfigUpdated, LooshCostConfigUpdated,
+    e_LooshCostConfigUpdated, TravelSpeedConfigUpdated, e_TravelSpeedConfigUpdated,
+    IncubationTimeConfigUpdated, e_IncubationTimeConfigUpdated,
 };
 use astraplani::systems::creation::contracts::creation_systems::creation_systems::{
     QuasarCreated, e_QuasarCreated, ProtostarCreated, e_ProtostarCreated, AsteroidClusterCreated,
@@ -59,6 +56,8 @@ use astraplani::systems::dust::contracts::dust_systems::dust_systems::{
     DustPoolFormed, e_DustPoolFormed, DustClaimed, e_DustClaimed, DustConsumed, e_DustConsumed,
     DustPoolMassChange, e_DustPoolMassChange, DustCloudChange, e_DustCloudChange, ARPSUpdated,
     e_ARPSUpdated, DustPoolEntered, e_DustPoolEntered, DustPoolExited, e_DustPoolExited,
+};
+use astraplani::systems::dust::contracts::dust_harvest_systems::dust_harvest_systems::{
     HarvestActionBegan, e_HarvestActionBegan, HarvestActionEnded, e_HarvestActionEnded,
     HarvestActionCancelled, e_HarvestActionCancelled,
 };
@@ -76,6 +75,7 @@ use astraplani::systems::authority::contracts::authority_systems::authority_syst
 use astraplani::systems::config::contracts::config_systems::config_systems;
 use astraplani::systems::creation::contracts::creation_systems::creation_systems;
 use astraplani::systems::dust::contracts::dust_systems::dust_systems;
+use astraplani::systems::dust::contracts::dust_harvest_systems::dust_harvest_systems;
 use astraplani::systems::loosh::contracts::loosh_systems::loosh_systems;
 use astraplani::systems::mass::contracts::mass_systems::mass_systems;
 use astraplani::systems::movement::contracts::movement_systems::movement_systems;
@@ -152,6 +152,7 @@ fn namespace_def() -> NamespaceDef {
             TestResource::Contract(config_systems::TEST_CLASS_HASH),
             TestResource::Contract(creation_systems::TEST_CLASS_HASH),
             TestResource::Contract(dust_systems::TEST_CLASS_HASH),
+            TestResource::Contract(dust_harvest_systems::TEST_CLASS_HASH),
             TestResource::Contract(loosh_systems::TEST_CLASS_HASH),
             TestResource::Contract(mass_systems::TEST_CLASS_HASH),
             TestResource::Contract(movement_systems::TEST_CLASS_HASH),
@@ -170,6 +171,8 @@ fn contract_defs() -> Span<ContractDef> {
         ContractDefTrait::new(@"ns", @"creation_systems")
             .with_writer_of([dojo::utils::bytearray_hash(@"ns")].span()),
         ContractDefTrait::new(@"ns", @"dust_systems")
+            .with_writer_of([dojo::utils::bytearray_hash(@"ns")].span()),
+        ContractDefTrait::new(@"ns", @"dust_harvest_systems")
             .with_writer_of([dojo::utils::bytearray_hash(@"ns")].span()),
         ContractDefTrait::new(@"ns", @"loosh_systems")
             .with_writer_of([dojo::utils::bytearray_hash(@"ns")].span()),
