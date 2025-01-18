@@ -5,5 +5,11 @@ pub struct HarvestAction {
     pub entity_id: u32,
     pub start_ts: u64,
     pub end_ts: u64,
-    pub harvest_amount: u128,
+    pub params: HarvestParams,
+}
+
+#[derive(Copy, Drop, Serde)]
+pub struct HarvestParams {
+    pub dust_cloud_id: u32,
+    pub amount: u128,
 }
